@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -14,6 +16,7 @@
       font-family: 'DM Sans', system-ui, sans-serif;
       font-size: 15px; line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       min-height: 100vh; overflow-x: hidden;
     }
     #root { min-height: 100vh; }
@@ -32,164 +35,190 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="module">
-    import { createElement as h, useState, useEffect, useCallback, Fragment } from 'https://esm.sh/react@19?bundle';
-    import { createRoot } from 'https://esm.sh/react-dom@19/client?bundle';
+  <script>
+    (function() {
+      'use strict';
 
-    /* ───────── DATA ───────── */
+      var h = React.createElement;
+      var useState = React.useState;
+      var useEffect = React.useEffect;
+      var useCallback = React.useCallback;
+      var Fragment = React.Fragment;
 
-    const AI_TEAM = [
-      { name: 'Claude', color: '#00E5FF' },
-      { name: 'ChatGPT', color: '#74AA9C' },
-      { name: 'Gemini', color: '#8B5CF6' },
-      { name: 'Grok', color: '#EF4444' },
-      { name: 'Manus', color: '#F59E0B' },
-    ];
+      /* ───────── DATA ───────── */
 
-    const BUSINESSES = [
-      { name: 'AI Voice Agency', color: '#00E5FF' },
-      { name: 'ResumeReady', color: '#d4a853' },
-      { name: 'AI100X', color: '#00FF88' },
-      { name: 'Master Prompt Playbook', color: '#F59E0B' },
-      { name: 'SeeBlinds', color: '#7EB8DA' },
-    ];
+      var AI_TEAM = [
+        { name: 'Claude', color: '#00E5FF' },
+        { name: 'ChatGPT', color: '#74AA9C' },
+        { name: 'Gemini', color: '#8B5CF6' },
+        { name: 'Grok', color: '#EF4444' },
+        { name: 'Manus', color: '#F59E0B' }
+      ];
 
-    const SECTIONS = [
-      'Executive Snapshot', 'Decisions Locked', 'Offers & Pricing',
-      'Copy & Messaging', 'Technical Architecture', 'Design Direction',
-      'Open Loops', 'Next Best Moves', 'Truth Guardrails',
-    ];
+      var BUSINESSES = [
+        { name: 'AI Voice Agency', color: '#00E5FF' },
+        { name: 'ResumeReady', color: '#d4a853' },
+        { name: 'AI100X', color: '#00FF88' },
+        { name: 'Master Prompt Playbook', color: '#F59E0B' },
+        { name: 'SeeBlinds', color: '#7EB8DA' }
+      ];
 
-    const SECTION_ICONS = {
-      'Executive Snapshot': '\u{1F4CA}',
-      'Decisions Locked': '\u{1F512}',
-      'Offers & Pricing': '\u{1F4B0}',
-      'Copy & Messaging': '\u{270D}\uFE0F',
-      'Technical Architecture': '\u{2699}\uFE0F',
-      'Design Direction': '\u{1F3A8}',
-      'Open Loops': '\u{1F504}',
-      'Next Best Moves': '\u{1F3AF}',
-      'Truth Guardrails': '\u{1F6E1}\uFE0F',
-    };
+      var SECTIONS = [
+        'Executive Snapshot', 'Decisions Locked', 'Offers & Pricing',
+        'Copy & Messaging', 'Technical Architecture', 'Design Direction',
+        'Open Loops', 'Next Best Moves', 'Truth Guardrails'
+      ];
 
-    /* ───────── STORAGE ───────── */
+      var SECTION_ICONS = {
+        'Executive Snapshot': '\u{1F4CA}',
+        'Decisions Locked': '\u{1F512}',
+        'Offers & Pricing': '\u{1F4B0}',
+        'Copy & Messaging': '\u270D\uFE0F',
+        'Technical Architecture': '\u2699\uFE0F',
+        'Design Direction': '\u{1F3A8}',
+        'Open Loops': '\u{1F504}',
+        'Next Best Moves': '\u{1F3AF}',
+        'Truth Guardrails': '\u{1F6E1}\uFE0F'
+      };
 
-    function loadData() {
-      try { const r = localStorage.getItem('ferrari-os-data'); return r ? JSON.parse(r) : {}; }
-      catch { return {}; }
-    }
-    function saveData(d) { localStorage.setItem('ferrari-os-data', JSON.stringify(d)); }
-    function getKey(b, s) { return b + '::' + s; }
+      /* ───────── STORAGE ───────── */
 
-    /* ───────── EXPORT ───────── */
-
-    function exportMarkdown(bizName, data) {
-      let md = '# ' + bizName + '\n\n_Exported from Ferrari OS Command Center \u2014 ' + new Date().toLocaleString() + '_\n\n';
-      SECTIONS.forEach(function(s) {
-        const val = data[getKey(bizName, s)] || '';
-        md += '## ' + s + '\n\n' + (val || '_No content yet._') + '\n\n---\n\n';
-      });
-      const blob = new Blob([md], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = bizName.replace(/\s+/g, '-').toLowerCase() + '-ferrari-os.md';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    /* ───────── LIVE CLOCK ───────── */
-
-    function LiveClock() {
-      const [time, setTime] = useState(new Date());
-      useEffect(function() {
-        const id = setInterval(function() { setTime(new Date()); }, 1000);
-        return function() { clearInterval(id); };
-      }, []);
-      return h('span', {
-        style: {
-          fontFamily: "'JetBrains Mono', monospace", fontSize: '13px',
-          fontWeight: 500, color: '#00E5FF', letterSpacing: '1px',
-        }
-      }, time.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-    }
-
-    /* ───────── SECTION CARD ───────── */
-
-    function SectionCard(props) {
-      const { biz, section, color, data, onSave } = props;
-      const [editing, setEditing] = useState(false);
-      const [draft, setDraft] = useState('');
-      const key = getKey(biz, section);
-      const value = data[key] || '';
-
-      function handleClick() {
-        if (!editing) { setDraft(value); setEditing(true); }
+      function loadData() {
+        try {
+          var r = localStorage.getItem('ferrari-os-data');
+          return r ? JSON.parse(r) : {};
+        } catch (e) { return {}; }
       }
-      function handleSave() { onSave(key, draft); setEditing(false); }
-      function handleCancel() { setEditing(false); }
 
-      return h('div', {
-        style: {
-          background: '#111118', borderRadius: '12px',
-          border: editing ? '1px solid ' + color + '60' : '1px solid #1e1e2a',
-          padding: '20px', cursor: editing ? 'default' : 'pointer',
-          transition: 'all 0.25s ease', minHeight: '180px',
-          display: 'flex', flexDirection: 'column',
-        },
-        onClick: handleClick,
-        onMouseOver: function(e) { if (!editing) e.currentTarget.style.borderColor = color + '40'; },
-        onMouseOut: function(e) { if (!editing) e.currentTarget.style.borderColor = '#1e1e2a'; },
-      },
-        h('div', {
-          style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }
-        },
-          h('span', {
-            style: {
-              fontFamily: "'Orbitron', sans-serif", fontSize: '11px', fontWeight: 600,
-              letterSpacing: '1.5px', color: '#aaa', textTransform: 'uppercase',
-            }
-          }, section),
-          h('span', { style: { fontSize: '18px' } }, SECTION_ICONS[section])
-        ),
-        editing
-          ? h(Fragment, null,
-              h('textarea', {
+      function saveData(d) {
+        localStorage.setItem('ferrari-os-data', JSON.stringify(d));
+      }
+
+      function getKey(b, s) { return b + '::' + s; }
+
+      /* ───────── EXPORT ───────── */
+
+      function exportMarkdown(bizName, data) {
+        var md = '# ' + bizName + '\n\n_Exported from Ferrari OS Command Center \u2014 ' + new Date().toLocaleString() + '_\n\n';
+        SECTIONS.forEach(function(s) {
+          var val = data[getKey(bizName, s)] || '';
+          md += '## ' + s + '\n\n' + (val || '_No content yet._') + '\n\n---\n\n';
+        });
+        var blob = new Blob([md], { type: 'text/markdown' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = bizName.replace(/\s+/g, '-').toLowerCase() + '-ferrari-os.md';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      /* ───────── LIVE CLOCK ───────── */
+
+      function LiveClock() {
+        var timeState = useState(new Date());
+        var time = timeState[0];
+        var setTime = timeState[1];
+
+        useEffect(function() {
+          var id = setInterval(function() { setTime(new Date()); }, 1000);
+          return function() { clearInterval(id); };
+        }, []);
+
+        return h('span', {
+          style: {
+            fontFamily: "'JetBrains Mono', monospace", fontSize: '13px',
+            fontWeight: 500, color: '#00E5FF', letterSpacing: '1px'
+          }
+        }, time.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      }
+
+      /* ───────── SECTION CARD ───────── */
+
+      function SectionCard(props) {
+        var biz = props.biz;
+        var section = props.section;
+        var color = props.color;
+        var data = props.data;
+        var onSave = props.onSave;
+
+        var editState = useState(false);
+        var editing = editState[0];
+        var setEditing = editState[1];
+
+        var draftState = useState('');
+        var draft = draftState[0];
+        var setDraft = draftState[1];
+
+        var key = getKey(biz, section);
+        var value = data[key] || '';
+
+        function handleClick() {
+          if (!editing) { setDraft(value); setEditing(true); }
+        }
+        function handleSave() { onSave(key, draft); setEditing(false); }
+        function handleCancel() { setEditing(false); }
+
+        var children = [
+          h('div', {
+            key: 'header',
+            style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }
+          },
+            h('span', {
+              style: {
+                fontFamily: "'Orbitron', sans-serif", fontSize: '11px', fontWeight: 600,
+                letterSpacing: '1.5px', color: '#aaa', textTransform: 'uppercase'
+              }
+            }, section),
+            h('span', { style: { fontSize: '18px' } }, SECTION_ICONS[section])
+          )
+        ];
+
+        if (editing) {
+          children.push(
+            h('textarea', {
+              key: 'editor',
+              style: {
+                width: '100%', flex: 1, minHeight: '100px', background: '#0d0d12',
+                border: '1px solid ' + color + '30', borderRadius: '6px', padding: '12px',
+                color: '#ddd', fontFamily: "'DM Sans', sans-serif", fontSize: '14px',
+                lineHeight: '1.7', resize: 'vertical', outline: 'none'
+              },
+              value: draft,
+              onChange: function(e) { setDraft(e.target.value); },
+              onClick: function(e) { e.stopPropagation(); },
+              autoFocus: true,
+              placeholder: 'Enter ' + section.toLowerCase() + ' content...'
+            }),
+            h('div', {
+              key: 'buttons',
+              style: { display: 'flex', gap: '8px', marginTop: '10px', justifyContent: 'flex-end' }
+            },
+              h('button', {
                 style: {
-                  width: '100%', flex: 1, minHeight: '100px', background: '#0d0d12',
-                  border: '1px solid ' + color + '30', borderRadius: '6px', padding: '12px',
-                  color: '#ddd', fontFamily: "'DM Sans', sans-serif", fontSize: '14px',
-                  lineHeight: 1.7, resize: 'vertical', outline: 'none',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: '12px', fontWeight: 600,
+                  padding: '6px 16px', borderRadius: '6px', border: '1px solid #333',
+                  background: 'transparent', color: '#888', cursor: 'pointer'
                 },
-                value: draft,
-                onChange: function(e) { setDraft(e.target.value); },
-                onClick: function(e) { e.stopPropagation(); },
-                autoFocus: true,
-                placeholder: 'Enter ' + section.toLowerCase() + ' content...',
-              }),
-              h('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', justifyContent: 'flex-end' } },
-                h('button', {
-                  style: {
-                    fontFamily: "'DM Sans', sans-serif", fontSize: '12px', fontWeight: 600,
-                    padding: '6px 16px', borderRadius: '6px', border: '1px solid #333',
-                    background: 'transparent', color: '#888', cursor: 'pointer',
-                  },
-                  onClick: function(e) { e.stopPropagation(); handleCancel(); },
-                }, 'Cancel'),
-                h('button', {
-                  style: {
-                    fontFamily: "'DM Sans', sans-serif", fontSize: '12px', fontWeight: 600,
-                    padding: '6px 16px', borderRadius: '6px', border: 'none',
-                    background: color, color: '#0A0A0B', cursor: 'pointer',
-                  },
-                  onClick: function(e) { e.stopPropagation(); handleSave(); },
-                }, 'Save')
-              )
+                onClick: function(e) { e.stopPropagation(); handleCancel(); }
+              }, 'Cancel'),
+              h('button', {
+                style: {
+                  fontFamily: "'DM Sans', sans-serif", fontSize: '12px', fontWeight: 600,
+                  padding: '6px 16px', borderRadius: '6px', border: 'none',
+                  background: color, color: '#0A0A0B', cursor: 'pointer'
+                },
+                onClick: function(e) { e.stopPropagation(); handleSave(); }
+              }, 'Save')
             )
-          : h('div', {
+          );
+        } else {
+          children.push(
+            h('div', {
+              key: 'content',
               style: {
                 fontFamily: "'DM Sans', sans-serif", fontSize: '14px', color: '#999',
-                lineHeight: 1.7, flex: 1, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                lineHeight: '1.7', flex: 1, whiteSpace: 'pre-wrap', wordBreak: 'break-word'
               }
             },
               value
@@ -197,227 +226,251 @@
                 : h('span', {
                     style: {
                       fontFamily: "'JetBrains Mono', monospace", fontSize: '12px',
-                      color: color + '60', fontStyle: 'italic',
+                      color: color + '60', fontStyle: 'italic'
                     }
                   }, 'Click to add content...')
             )
-      );
-    }
+          );
+        }
 
-    /* ───────── MAIN APP ───────── */
-
-    function App() {
-      const [activeTab, setActiveTab] = useState(0);
-      const [data, setData] = useState(loadData);
-
-      const handleSave = useCallback(function(key, value) {
-        setData(function(prev) {
-          const next = Object.assign({}, prev);
-          next[key] = value;
-          saveData(next);
-          return next;
-        });
-      }, []);
-
-      const biz = BUSINESSES[activeTab];
-
-      return h('div', { style: { minHeight: '100vh', background: '#0A0A0B', position: 'relative', overflow: 'hidden' } },
-
-        /* Ambient Glow */
-        h('div', {
+        return h('div', {
           style: {
-            position: 'fixed', top: '-200px', left: '50%', transform: 'translateX(-50%)',
-            width: '900px', height: '600px', borderRadius: '50%',
-            background: 'radial-gradient(ellipse, ' + biz.color + '12 0%, ' + biz.color + '06 40%, transparent 70%)',
-            pointerEvents: 'none', zIndex: 0, transition: 'background 0.8s ease',
-          }
-        }),
-        h('div', {
-          style: {
-            position: 'fixed', bottom: '-300px', left: '50%', transform: 'translateX(-50%)',
-            width: '1200px', height: '500px', borderRadius: '50%',
-            background: 'radial-gradient(ellipse, ' + biz.color + '08 0%, transparent 60%)',
-            pointerEvents: 'none', zIndex: 0, transition: 'background 0.8s ease',
-          }
-        }),
+            background: '#111118', borderRadius: '12px',
+            border: editing ? '1px solid ' + color + '60' : '1px solid #1e1e2a',
+            padding: '20px', cursor: editing ? 'default' : 'pointer',
+            transition: 'all 0.25s ease', minHeight: '180px',
+            display: 'flex', flexDirection: 'column'
+          },
+          onClick: handleClick,
+          onMouseOver: function(e) { if (!editing) e.currentTarget.style.borderColor = color + '40'; },
+          onMouseOut: function(e) { if (!editing) e.currentTarget.style.borderColor = '#1e1e2a'; }
+        }, children);
+      }
 
-        /* Content */
-        h('div', { style: { position: 'relative', zIndex: 1, maxWidth: '1400px', margin: '0 auto', padding: '0 24px 40px' } },
+      /* ───────── MAIN APP ───────── */
 
-          /* Top Bar */
+      function App() {
+        var tabState = useState(0);
+        var activeTab = tabState[0];
+        var setActiveTab = tabState[1];
+
+        var dataState = useState(loadData);
+        var data = dataState[0];
+        var setData = dataState[1];
+
+        var handleSave = useCallback(function(key, value) {
+          setData(function(prev) {
+            var next = Object.assign({}, prev);
+            next[key] = value;
+            saveData(next);
+            return next;
+          });
+        }, []);
+
+        var biz = BUSINESSES[activeTab];
+
+        return h('div', { style: { minHeight: '100vh', background: '#0A0A0B', position: 'relative', overflow: 'hidden' } },
+
+          /* Ambient Glow Top */
           h('div', {
             style: {
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '18px 0', borderBottom: '1px solid #1a1a24', flexWrap: 'wrap', gap: '12px',
+              position: 'fixed', top: '-200px', left: '50%', transform: 'translateX(-50%)',
+              width: '900px', height: '600px', borderRadius: '50%',
+              background: 'radial-gradient(ellipse, ' + biz.color + '12 0%, ' + biz.color + '06 40%, transparent 70%)',
+              pointerEvents: 'none', zIndex: 0, transition: 'background 0.8s ease'
             }
-          },
-            h('div', { style: { display: 'flex', alignItems: 'baseline', gap: '16px', flexWrap: 'wrap' } },
-              h('span', {
-                style: {
-                  fontFamily: "'Orbitron', sans-serif", fontWeight: 900, fontSize: '28px',
-                  background: 'linear-gradient(135deg, #00E5FF, #00FF88)',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  letterSpacing: '3px',
-                }
-              }, 'FERRARI OS'),
-              h('span', {
-                style: {
-                  fontFamily: "'Orbitron', sans-serif", fontSize: '10px', fontWeight: 600,
-                  letterSpacing: '4px', color: '#555', textTransform: 'uppercase',
-                }
-              }, 'COMMAND CENTER')
-            ),
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' } },
-              h('span', {
-                style: {
-                  fontFamily: "'Orbitron', sans-serif", fontSize: '11px', fontWeight: 600,
-                  letterSpacing: '2px', color: '#888',
-                }
-              }, 'SHANE HANDEL'),
-              h(LiveClock)
-            )
-          ),
+          }),
 
-          /* AI Team Bar */
+          /* Ambient Glow Bottom */
           h('div', {
             style: {
-              display: 'flex', alignItems: 'center', gap: '20px', padding: '14px 0',
-              borderBottom: '1px solid #1a1a24', overflowX: 'auto', flexWrap: 'wrap',
+              position: 'fixed', bottom: '-300px', left: '50%', transform: 'translateX(-50%)',
+              width: '1200px', height: '500px', borderRadius: '50%',
+              background: 'radial-gradient(ellipse, ' + biz.color + '08 0%, transparent 60%)',
+              pointerEvents: 'none', zIndex: 0, transition: 'background 0.8s ease'
             }
-          },
-            h('span', {
+          }),
+
+          /* Content Wrapper */
+          h('div', { style: { position: 'relative', zIndex: 1, maxWidth: '1400px', margin: '0 auto', padding: '0 24px 40px' } },
+
+            /* ═══ TOP BAR ═══ */
+            h('div', {
               style: {
-                fontFamily: "'Orbitron', sans-serif", fontSize: '9px', fontWeight: 600,
-                letterSpacing: '3px', color: '#444', textTransform: 'uppercase', whiteSpace: 'nowrap',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '18px 0', borderBottom: '1px solid #1a1a24', flexWrap: 'wrap', gap: '12px'
               }
-            }, 'AI TEAM'),
-            AI_TEAM.map(function(ai) {
-              return h('div', {
-                key: ai.name,
-                style: {
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  padding: '6px 14px', borderRadius: '20px',
-                  background: ai.color + '10', border: '1px solid ' + ai.color + '30',
-                  whiteSpace: 'nowrap',
-                }
-              },
-                h('div', {
-                  style: {
-                    width: '8px', height: '8px', borderRadius: '50%',
-                    background: ai.color, boxShadow: '0 0 8px ' + ai.color + '80',
-                    animation: 'pulse 2s ease-in-out infinite',
-                  }
-                }),
+            },
+              h('div', { style: { display: 'flex', alignItems: 'baseline', gap: '16px', flexWrap: 'wrap' } },
                 h('span', {
                   style: {
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: '12px',
-                    fontWeight: 500, color: '#ccc',
+                    fontFamily: "'Orbitron', sans-serif", fontWeight: 900, fontSize: '28px',
+                    background: 'linear-gradient(135deg, #00E5FF, #00FF88)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text', color: 'transparent',
+                    letterSpacing: '3px'
                   }
-                }, ai.name)
-              );
-            })
-          ),
-
-          /* Stats Row */
-          h('div', {
-            style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', padding: '16px 0' }
-          },
-            [
-              { label: 'Businesses', value: String(BUSINESSES.length), color: '#fff' },
-              { label: 'AIs Active', value: String(AI_TEAM.length), color: '#00E5FF' },
-              { label: 'Notion Pages', value: '58+', color: '#8B5CF6' },
-              { label: 'Current Tab', value: biz.name, color: biz.color, small: true },
-            ].map(function(stat) {
-              return h('div', {
-                key: stat.label,
-                style: { background: '#111118', borderRadius: '10px', padding: '16px 20px', border: '1px solid #1e1e2a' }
-              },
-                h('div', {
+                }, 'FERRARI OS'),
+                h('span', {
                   style: {
-                    fontFamily: "'DM Sans', sans-serif", fontSize: '11px', fontWeight: 500,
-                    color: '#666', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px',
+                    fontFamily: "'Orbitron', sans-serif", fontSize: '10px', fontWeight: 600,
+                    letterSpacing: '4px', color: '#555', textTransform: 'uppercase'
                   }
-                }, stat.label),
-                h('div', {
+                }, 'COMMAND CENTER')
+              ),
+              h('div', { style: { display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' } },
+                h('span', {
                   style: {
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: stat.small ? '16px' : '26px',
-                    fontWeight: 700, color: stat.color,
+                    fontFamily: "'Orbitron', sans-serif", fontSize: '11px', fontWeight: 600,
+                    letterSpacing: '2px', color: '#888'
                   }
-                }, stat.value)
-              );
-            })
-          ),
+                }, 'SHANE HANDEL'),
+                h(LiveClock)
+              )
+            ),
 
-          /* Business Tabs */
-          h('div', { style: { display: 'flex', gap: '6px', padding: '8px 0 20px', overflowX: 'auto', flexWrap: 'wrap' } },
-            BUSINESSES.map(function(b, i) {
-              const active = i === activeTab;
-              return h('button', {
-                key: b.name,
-                style: {
-                  fontFamily: "'DM Sans', sans-serif", fontSize: '13px', fontWeight: 600,
-                  padding: '10px 20px', borderRadius: '8px',
-                  border: active ? '1px solid ' + b.color : '1px solid #1e1e2a',
-                  background: active ? b.color + '18' : '#111118',
-                  color: active ? b.color : '#888',
-                  cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap', outline: 'none',
-                },
-                onClick: function() { setActiveTab(i); },
-                onMouseOver: function(e) { if (!active) e.currentTarget.style.borderColor = b.color + '60'; },
-                onMouseOut: function(e) { if (!active) e.currentTarget.style.borderColor = '#1e1e2a'; },
-              }, b.name);
-            })
-          ),
-
-          /* Section Grid */
-          h('div', {
-            key: activeTab,
-            style: {
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-              gap: '16px', animation: 'fadeIn 0.3s ease',
-            }
-          },
-            SECTIONS.map(function(section) {
-              return h(SectionCard, {
-                key: section, biz: biz.name, section: section,
-                color: biz.color, data: data, onSave: handleSave,
-              });
-            })
-          ),
-
-          /* Export Button */
-          h('div', { style: { textAlign: 'center' } },
-            h('button', {
+            /* ═══ AI TEAM BAR ═══ */
+            h('div', {
               style: {
-                fontFamily: "'Orbitron', sans-serif", fontSize: '11px', fontWeight: 600,
-                letterSpacing: '2px', padding: '12px 28px', borderRadius: '8px',
-                border: '1px solid ' + biz.color + '50', background: biz.color + '12',
-                color: biz.color, cursor: 'pointer', marginTop: '24px', transition: 'all 0.25s ease',
-              },
-              onClick: function() { exportMarkdown(biz.name, data); },
-              onMouseOver: function(e) { e.currentTarget.style.background = biz.color + '25'; },
-              onMouseOut: function(e) { e.currentTarget.style.background = biz.color + '12'; },
-            }, 'EXPORT ' + biz.name.toUpperCase() + ' \u2014 MARKDOWN')
-          ),
-
-          /* Footer */
-          h('div', {
-            style: { textAlign: 'center', padding: '40px 0 24px', borderTop: '1px solid #1a1a24', marginTop: '40px' }
-          },
-            h('span', {
-              style: {
-                fontFamily: "'JetBrains Mono', monospace", fontSize: '11px',
-                fontWeight: 400, color: '#333', letterSpacing: '2px',
+                display: 'flex', alignItems: 'center', gap: '20px', padding: '14px 0',
+                borderBottom: '1px solid #1a1a24', overflowX: 'auto', flexWrap: 'wrap'
               }
-            }, 'FERRARI OS v2026.3 \u2014 BUILT BY CLAUDE + SHANE HANDEL')
-          )
-        )
-      );
-    }
+            },
+              h('span', {
+                style: {
+                  fontFamily: "'Orbitron', sans-serif", fontSize: '9px', fontWeight: 600,
+                  letterSpacing: '3px', color: '#444', textTransform: 'uppercase', whiteSpace: 'nowrap'
+                }
+              }, 'AI TEAM'),
+              AI_TEAM.map(function(ai) {
+                return h('div', {
+                  key: ai.name,
+                  style: {
+                    display: 'flex', alignItems: 'center', gap: '8px',
+                    padding: '6px 14px', borderRadius: '20px',
+                    background: ai.color + '10', border: '1px solid ' + ai.color + '30',
+                    whiteSpace: 'nowrap'
+                  }
+                },
+                  h('div', {
+                    style: {
+                      width: '8px', height: '8px', borderRadius: '50%',
+                      background: ai.color, boxShadow: '0 0 8px ' + ai.color + '80',
+                      animation: 'pulse 2s ease-in-out infinite'
+                    }
+                  }),
+                  h('span', {
+                    style: {
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: '12px',
+                      fontWeight: 500, color: '#ccc'
+                    }
+                  }, ai.name)
+                );
+              })
+            ),
 
-    /* ───────── MOUNT ───────── */
-    createRoot(document.getElementById('root')).render(h(App));
+            /* ═══ STATS ROW ═══ */
+            h('div', {
+              style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', padding: '16px 0' }
+            },
+              [
+                { label: 'Businesses', value: String(BUSINESSES.length), color: '#fff' },
+                { label: 'AIs Active', value: String(AI_TEAM.length), color: '#00E5FF' },
+                { label: 'Notion Pages', value: '58+', color: '#8B5CF6' },
+                { label: 'Current Tab', value: biz.name, color: biz.color, small: true }
+              ].map(function(stat) {
+                return h('div', {
+                  key: stat.label,
+                  style: { background: '#111118', borderRadius: '10px', padding: '16px 20px', border: '1px solid #1e1e2a' }
+                },
+                  h('div', {
+                    style: {
+                      fontFamily: "'DM Sans', sans-serif", fontSize: '11px', fontWeight: 500,
+                      color: '#666', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px'
+                    }
+                  }, stat.label),
+                  h('div', {
+                    style: {
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: stat.small ? '16px' : '26px',
+                      fontWeight: 700, color: stat.color
+                    }
+                  }, stat.value)
+                );
+              })
+            ),
+
+            /* ═══ BUSINESS TABS ═══ */
+            h('div', { style: { display: 'flex', gap: '6px', padding: '8px 0 20px', overflowX: 'auto', flexWrap: 'wrap' } },
+              BUSINESSES.map(function(b, i) {
+                var active = i === activeTab;
+                return h('button', {
+                  key: b.name,
+                  style: {
+                    fontFamily: "'DM Sans', sans-serif", fontSize: '13px', fontWeight: 600,
+                    padding: '10px 20px', borderRadius: '8px',
+                    border: active ? '1px solid ' + b.color : '1px solid #1e1e2a',
+                    background: active ? b.color + '18' : '#111118',
+                    color: active ? b.color : '#888',
+                    cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap', outline: 'none'
+                  },
+                  onClick: function() { setActiveTab(i); },
+                  onMouseOver: function(e) { if (!active) e.currentTarget.style.borderColor = b.color + '60'; },
+                  onMouseOut: function(e) { if (!active) e.currentTarget.style.borderColor = '#1e1e2a'; }
+                }, b.name);
+              })
+            ),
+
+            /* ═══ SECTION GRID ═══ */
+            h('div', {
+              key: 'grid-' + activeTab,
+              style: {
+                display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                gap: '16px', animation: 'fadeIn 0.3s ease'
+              }
+            },
+              SECTIONS.map(function(section) {
+                return h(SectionCard, {
+                  key: section, biz: biz.name, section: section,
+                  color: biz.color, data: data, onSave: handleSave
+                });
+              })
+            ),
+
+            /* ═══ EXPORT BUTTON ═══ */
+            h('div', { style: { textAlign: 'center' } },
+              h('button', {
+                style: {
+                  fontFamily: "'Orbitron', sans-serif", fontSize: '11px', fontWeight: 600,
+                  letterSpacing: '2px', padding: '12px 28px', borderRadius: '8px',
+                  border: '1px solid ' + biz.color + '50', background: biz.color + '12',
+                  color: biz.color, cursor: 'pointer', marginTop: '24px', transition: 'all 0.25s ease'
+                },
+                onClick: function() { exportMarkdown(biz.name, data); },
+                onMouseOver: function(e) { e.currentTarget.style.background = biz.color + '25'; },
+                onMouseOut: function(e) { e.currentTarget.style.background = biz.color + '12'; }
+              }, 'EXPORT ' + biz.name.toUpperCase() + ' \u2014 MARKDOWN')
+            ),
+
+            /* ═══ FOOTER ═══ */
+            h('div', {
+              style: { textAlign: 'center', padding: '40px 0 24px', borderTop: '1px solid #1a1a24', marginTop: '40px' }
+            },
+              h('span', {
+                style: {
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: '11px',
+                  fontWeight: 400, color: '#333', letterSpacing: '2px'
+                }
+              }, 'FERRARI OS v2026.3 \u2014 BUILT BY CLAUDE + SHANE HANDEL')
+            )
+          )
+        );
+      }
+
+      /* ───────── MOUNT ───────── */
+      ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+
+    })();
   </script>
 </body>
 </html>
