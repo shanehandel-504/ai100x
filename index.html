@@ -480,6 +480,48 @@
 
   .ticker-item .arrow { color: var(--cyan); }
 
+  .avacard {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: rgba(0, 212, 255, 0.03);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--cyan);
+  }
+  .avacard-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 10px;
+  }
+  .avacard-time { margin-left: auto; color: var(--text-mute); }
+  .avacard-body {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 48px;
+  }
+  .avacard-wave { width: 28px; height: 40px; flex-shrink: 0; }
+  .avacard-wave .wave-bar { fill: var(--cyan); }
+  .avacard-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+  .avacard-text::after {
+    content: '▎';
+    color: var(--cyan);
+    animation: caret 1s steps(2) infinite;
+    margin-left: 2px;
+  }
+  @keyframes caret { 50% { opacity: 0; } }
+
   /* ─── STACK ─────────────────────────────── */
   .section-header { margin-bottom: 56px; max-width: 780px; }
 
@@ -989,6 +1031,23 @@
             <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
           </div>
         </div>
+
+        <div class="avacard">
+          <div class="avacard-head">
+            <span class="status-dot live" style="background: var(--cyan); width:6px; height:6px; border-radius:50%; box-shadow: 0 0 10px var(--cyan);"></span>
+            AVA · LIVE CALL
+            <span class="avacard-time" id="avacard-time">— now</span>
+          </div>
+          <div class="avacard-body">
+            <svg class="avacard-wave" viewBox="0 0 28 40" preserveAspectRatio="none" aria-hidden="true">
+              <rect class="wave-bar" x="2"  y="14" width="3" height="12" style="animation-delay:-0.1s"/>
+              <rect class="wave-bar" x="9"  y="14" width="3" height="12" style="animation-delay:-0.3s"/>
+              <rect class="wave-bar" x="16" y="14" width="3" height="12" style="animation-delay:-0.5s"/>
+              <rect class="wave-bar" x="23" y="14" width="3" height="12" style="animation-delay:-0.7s"/>
+            </svg>
+            <p class="avacard-text" id="avacard-text"></p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1126,6 +1185,33 @@
     setTimeout(runStoryLoop, story[story.length - 1].delay + 8000);
   }
   runStoryLoop();
+
+  // ── AVA transcript card (one call at a time, types out) ──
+  const transcriptLines = [
+    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
+    '"This is AVA. Pickup or one-way?" → "Round trip, downtown to Scottsdale." → Routed. 24s.',
+    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.'
+  ];
+  const cardText = document.getElementById('avacard-text');
+  let lineIdx = 0;
+  function typeLine(s, done) {
+    if (!cardText) return;
+    cardText.textContent = '';
+    let i = 0;
+    const id = setInterval(() => {
+      cardText.textContent += s[i++] || '';
+      if (i >= s.length) { clearInterval(id); done && done(); }
+    }, 22);
+  }
+  function cycleTranscript() {
+    typeLine(transcriptLines[lineIdx], () => {
+      setTimeout(() => {
+        lineIdx = (lineIdx + 1) % transcriptLines.length;
+        cycleTranscript();
+      }, 6000);
+    });
+  }
+  setTimeout(cycleTranscript, 1500);
 
   // ── Reveal on scroll ──
   const reveals = document.querySelectorAll('.reveal');
