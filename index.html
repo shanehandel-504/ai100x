@@ -513,6 +513,8 @@
     color: var(--text);
     line-height: 1.5;
     letter-spacing: 0.01em;
+    transition: opacity 0.35s ease;
+    opacity: 1;
   }
   .avacard-text::after {
     content: '▎';
@@ -1468,14 +1470,23 @@
   }
   runStoryLoop();
 
-  // ── AVA transcript card (one call at a time, types out) ──
+  // ── AVA transcript card (8 calls, types out, fades out, rotates) ──
   const transcriptLines = [
-    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
     '"This is AVA. Pickup or one-way?" → "Round trip, downtown to Scottsdale." → Routed. 24s.',
-    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.'
+    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
+    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.',
+    '"AVA. What vehicle size do you need?" → "Sprinter van, eight people, airport run." → Routed. 22s.',
+    '"This is AVA. How can I help?" → "I need a quote for a Wednesday wedding shuttle." → Quote queued. 31s.',
+    '"AI Voice Agency. Where are you headed?" → "JFK pickup Monday at 5am, two passengers." → Confirmed. 17s.',
+    '"AVA here. What’s the pickup address?" → "1200 Brickell, going to Miami Beach hotel." → Booked. 14s.',
+    '"AVA. One-way or round trip?" → "Corporate roadshow, three stops, Thursday." → Routed to ops. 41s.'
   ];
   const cardText = document.getElementById('avacard-text');
+  const HOLD_MS = 4000;
+  const FADE_MS = 400;
+  const TYPE_MS = 22;
   let lineIdx = 0;
+  window.__avaLineIdx = () => lineIdx;
   function typeLine(s, done) {
     if (!cardText) return;
     cardText.textContent = '';
@@ -1483,14 +1494,19 @@
     const id = setInterval(() => {
       cardText.textContent += s[i++] || '';
       if (i >= s.length) { clearInterval(id); done && done(); }
-    }, 22);
+    }, TYPE_MS);
   }
   function cycleTranscript() {
+    if (!cardText) return;
+    cardText.style.opacity = '1';
     typeLine(transcriptLines[lineIdx], () => {
       setTimeout(() => {
-        lineIdx = (lineIdx + 1) % transcriptLines.length;
-        cycleTranscript();
-      }, 6000);
+        cardText.style.opacity = '0';
+        setTimeout(() => {
+          lineIdx = (lineIdx + 1) % transcriptLines.length;
+          cycleTranscript();
+        }, FADE_MS);
+      }, HOLD_MS);
     });
   }
   setTimeout(cycleTranscript, 1500);
