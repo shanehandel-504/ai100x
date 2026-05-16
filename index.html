@@ -507,6 +507,35 @@
   }
   .avacard-wave { width: 28px; height: 40px; flex-shrink: 0; }
   .avacard-wave .wave-bar { fill: var(--cyan); }
+  .avacard-play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    background: rgba(0, 212, 255, 0.04);
+    color: var(--cyan);
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .avacard-play:hover {
+    background: rgba(0, 212, 255, 0.12);
+    border-color: var(--cyan);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+  }
+  .avacard-play.playing {
+    background: rgba(0, 212, 255, 0.18);
+    border-color: var(--cyan);
+    animation: play-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes play-pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(0, 212, 255, 0.4); }
+    50%      { box-shadow: 0 0 22px rgba(0, 212, 255, 0.9); }
+  }
+  .avacard-play svg { display: block; width: 18px; height: 18px; fill: currentColor; }
   .avacard-text {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
@@ -1312,6 +1341,11 @@
             <span class="avacard-time" id="avacard-time">— now</span>
           </div>
           <div class="avacard-body">
+            <button class="avacard-play" id="avacard-play" type="button" aria-label="Play call recording">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.07v2.06c2.89.86 5 3.54 5 6.87s-2.11 6.01-5 6.87v2.06c4-.91 7-4.49 7-8.93s-3-8.02-7-8.93z"/>
+              </svg>
+            </button>
             <svg class="avacard-wave" viewBox="0 0 28 40" preserveAspectRatio="none" aria-hidden="true">
               <rect class="wave-bar" x="2"  y="14" width="3" height="12" style="animation-delay:-0.1s"/>
               <rect class="wave-bar" x="9"  y="14" width="3" height="12" style="animation-delay:-0.3s"/>
@@ -1319,6 +1353,7 @@
               <rect class="wave-bar" x="23" y="14" width="3" height="12" style="animation-delay:-0.7s"/>
             </svg>
             <p class="avacard-text" id="avacard-text"></p>
+            <audio id="ava-audio" preload="none"></audio>
           </div>
         </div>
 
@@ -1638,6 +1673,24 @@
       });
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
+  })();
+
+  // ── AVA transcript audio playback ──
+  (function() {
+    const btn = document.getElementById('avacard-play');
+    const audio = document.getElementById('ava-audio');
+    if (!btn || !audio) return;
+    const stopPulse = () => btn.classList.remove('playing');
+    audio.addEventListener('ended', stopPulse);
+    audio.addEventListener('pause', stopPulse);
+    audio.addEventListener('error', stopPulse);
+    btn.addEventListener('click', () => {
+      if (!audio.paused) { audio.pause(); return; }
+      const n = (window.__avaLineIdx ? window.__avaLineIdx() : 0) + 1;
+      audio.src = `/audio/ava-call-${n}.mp3`;
+      btn.classList.add('playing');
+      audio.play().catch(stopPulse);
+    });
   })();
 
   // ── Quick Lookup slide-up (K launcher) ──
