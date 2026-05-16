@@ -1201,16 +1201,17 @@
   /* ─── REVEAL ─────────────────────────────── */
   .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
   .reveal.show {
     opacity: 1;
     transform: translateY(0);
   }
+  /* V6 stagger: 80ms each — eye walks down the stack */
   .pillar.reveal:nth-child(1) { transition-delay: 0ms; }
-  .pillar.reveal:nth-child(2) { transition-delay: 90ms; }
-  .pillar.reveal:nth-child(3) { transition-delay: 180ms; }
+  .pillar.reveal:nth-child(2) { transition-delay: 80ms; }
+  .pillar.reveal:nth-child(3) { transition-delay: 160ms; }
 
   /* ─── RESPONSIVE ─────────────────────────────── */
   @media (min-width: 640px) {
@@ -1853,7 +1854,7 @@
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -70px 0px' });
+  }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
   reveals.forEach(r => io.observe(r));
 
   // ── Command bar ⌘K ──
