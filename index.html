@@ -3,13 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI100X — The Operator's Cockpit</title>
-<meta name="description" content="AI100X — The Operator's Cockpit. The command layer above your AI tools. Built by a 30-year operator.">
-<meta property="og:title" content="AI100X — The Operator's Cockpit">
-<meta property="og:description" content="One screen. Every metric. Your AI runs the business.">
+<title>AI100X — The Operator's Cockpit | One AI Runs the Business</title>
+<meta name="description" content="AI100X is the command layer above your AI tools. Built by a 30-year operator for operators. AVA voice agent live now at 786-937-1218. Cockpit and OS shipping Q3 and Q4 2026.">
+<meta name="keywords" content="AI voice agent, operator cockpit, AI business operating system, AI receptionist, corporate transportation AI">
+<link rel="canonical" href="https://ai100x.ai/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="AI100X — The Operator's Cockpit | One AI Runs the Business">
+<meta property="og:description" content="AI100X is the command layer above your AI tools. Built by a 30-year operator for operators. AVA voice agent live now at 786-937-1218.">
+<meta property="og:image" content="https://ai100x.ai/og-ai100x.png">
+<meta property="og:url" content="https://ai100x.ai/">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ai100x.ai">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI100X — The Operator's Cockpit | One AI Runs the Business">
+<meta name="twitter:description" content="AI100X is the command layer above your AI tools. Built by a 30-year operator for operators. AVA voice agent live now at 786-937-1218.">
+<meta name="twitter:image" content="https://ai100x.ai/og-ai100x.png">
+
 <meta name="theme-color" content="#0A0A0F">
+
+<!-- JSON-LD: Organization + SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "AI100X",
+      "url": "https://ai100x.ai",
+      "founder": { "@type": "Person", "name": "Shane Handel" },
+      "telephone": "+1-786-937-1218"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "AVA",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "https://aivoiceagency.ai"
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -67,11 +103,46 @@
     inset: 0;
     z-index: -2;
     background-image:
-      linear-gradient(rgba(238, 240, 244, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(238, 240, 244, 0.025) 1px, transparent 1px);
+      linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
     background-size: 80px 80px;
     mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
     -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
+    animation: grid-breathe 8s ease-in-out infinite;
+  }
+  @keyframes grid-breathe {
+    0%, 100% { opacity: 0.25; }
+    50%      { opacity: 1.0; }
+  }
+
+  /* V6 pulse points — live data points lighting up at intersections */
+  #grid-points {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .grid-point {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    margin-left: -2px;
+    margin-top: -2px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 14px var(--cyan), 0 0 28px rgba(0, 212, 255, 0.55);
+    opacity: 0;
+    animation: grid-point-flash 1.4s ease-out forwards;
+  }
+  @keyframes grid-point-flash {
+    0%   { opacity: 0; transform: scale(0.4); }
+    25%  { opacity: 1; transform: scale(1.35); }
+    100% { opacity: 0; transform: scale(0.6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body::after { animation: none; }
+    .grid-point { animation: none; }
+    #grid-points { display: none; }
   }
 
   a { color: inherit; text-decoration: none; }
@@ -109,6 +180,51 @@
   .status-left a { color: var(--text); }
   .status-left a:hover { color: var(--cyan); }
 
+  /* V6 status-bar phone halo + tooltip */
+  .status-left a[href^="tel:"] {
+    position: relative;
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
+    animation: tel-halo 3s ease-in-out infinite;
+    transition: text-shadow 0.25s ease, color 0.2s ease;
+  }
+  @keyframes tel-halo {
+    0%, 100% { text-shadow: 0 0 6px  rgba(0, 212, 255, 0.25); }
+    50%      { text-shadow: 0 0 14px rgba(0, 212, 255, 0.6); }
+  }
+  .status-left a[href^="tel:"]:hover,
+  .status-left a[href^="tel:"]:active {
+    animation-play-state: paused;
+    text-shadow: 0 0 14px rgba(0, 212, 255, 0.9), 0 0 28px rgba(0, 212, 255, 0.4);
+  }
+  .status-left a[href^="tel:"]::after {
+    content: 'Tap to call →';
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 6px 10px;
+    background: var(--card-hot);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 212, 255, 0.2);
+  }
+  @media (hover: hover) {
+    .status-left a[href^="tel:"]:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
   .pulse-dot {
     width: 8px; height: 8px;
     background: var(--cyan);
@@ -121,6 +237,15 @@
   @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.4; transform: scale(0.65); }
+  }
+
+  /* Status-bar dot: gentler 2s pulse, scale 1→1.2, opacity 1→0.7 */
+  .status-left .pulse-dot {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+  @keyframes pulse-subtle {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%      { opacity: 0.7; transform: scale(1.2); }
   }
 
   /* ─── SECTIONS ─────────────────────────────── */
@@ -142,6 +267,34 @@
     display: grid;
     align-items: center;
     padding: 56px 0 96px;
+    overflow: hidden;
+  }
+  .hero > .container { position: relative; z-index: 1; }
+
+  /* V6 prismatic scan line — 1px horizontal sweep top→bottom */
+  .hero-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0, 212, 255, 1) 30%,
+      rgba(255, 0, 212, 1) 50%,
+      rgba(255, 212, 0, 1) 70%,
+      transparent 100%);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(0.3px);
+    animation: hero-scan 6s linear infinite;
+  }
+  @keyframes hero-scan {
+    0%   { top: -4px; }
+    100% { top: calc(100% + 4px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scan { animation: none; opacity: 0; }
   }
 
   .hero-grid {
@@ -395,6 +548,16 @@
     color: var(--tile-color);
     line-height: 1;
     font-variant-numeric: tabular-nums;
+    display: inline-block;
+    transform-origin: left center;
+  }
+  .tile-value.tick {
+    animation: tile-tick 0.3s ease-out;
+  }
+  @keyframes tile-tick {
+    0%   { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
+    40%  { transform: scale(1.08); filter: drop-shadow(0 0 14px var(--tile-color)); }
+    100% { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
   }
 
   .signal-map {
@@ -507,12 +670,43 @@
   }
   .avacard-wave { width: 28px; height: 40px; flex-shrink: 0; }
   .avacard-wave .wave-bar { fill: var(--cyan); }
+  .avacard-play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    background: rgba(0, 212, 255, 0.04);
+    color: var(--cyan);
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .avacard-play:hover {
+    background: rgba(0, 212, 255, 0.12);
+    border-color: var(--cyan);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+  }
+  .avacard-play.playing {
+    background: rgba(0, 212, 255, 0.18);
+    border-color: var(--cyan);
+    animation: play-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes play-pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(0, 212, 255, 0.4); }
+    50%      { box-shadow: 0 0 22px rgba(0, 212, 255, 0.9); }
+  }
+  .avacard-play svg { display: block; width: 18px; height: 18px; fill: currentColor; }
   .avacard-text {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     color: var(--text);
     line-height: 1.5;
     letter-spacing: 0.01em;
+    transition: opacity 0.35s ease;
+    opacity: 1;
   }
   .avacard-text::after {
     content: '▎';
@@ -622,23 +816,53 @@
   .pillar.magenta { --accent: var(--magenta); }
   .pillar.gold { --accent: var(--gold); }
 
-  .pillar.cyan { animation: pillar-breath 4.5s ease-in-out infinite; }
+  /* V6 prismatic cascade: each pillar breathes its accent color,
+     offset 0.8s so the three roll down the stack in rhythm */
+  .pillar.cyan    { animation: pillar-glow-cyan    2.5s ease-in-out infinite; }
+  .pillar.magenta { animation: pillar-glow-magenta 2.5s ease-in-out 0.8s infinite; }
+  .pillar.gold    { animation: pillar-glow-gold    2.5s ease-in-out 1.6s infinite; }
   .pillar.cyan::before { animation: pillar-edge 4.5s ease-in-out infinite; }
-  @keyframes pillar-breath {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(0, 212, 255, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-    }
-    50% {
-      box-shadow: 0 0 32px -8px rgba(0, 212, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      border-color: rgba(0, 212, 255, 0.4);
-    }
+
+  @keyframes pillar-glow-cyan {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
+    50%      { box-shadow: 0 0 28px -4px rgba(0, 212, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+               border-color: rgba(0, 212, 255, 0.22); }
+  }
+  @keyframes pillar-glow-magenta {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 212, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
+    50%      { box-shadow: 0 0 28px -4px rgba(255, 0, 212, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+               border-color: rgba(255, 0, 212, 0.22); }
+  }
+  @keyframes pillar-glow-gold {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 212, 0, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
+    50%      { box-shadow: 0 0 28px -4px rgba(255, 212, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+               border-color: rgba(255, 212, 0, 0.22); }
   }
   @keyframes pillar-edge {
     0%, 100% { height: 2px; opacity: 0.75; }
     50%      { height: 3px; opacity: 1; }
   }
+
+  /* Hover/tap burst: glow jumps to 25%, pause the breath so the
+     brighter state settles for 0.4s then resumes on un-hover */
+  .pillar.cyan:hover,    .pillar.cyan:focus-within {
+    animation-play-state: paused;
+    box-shadow: 0 0 36px -2px rgba(0, 212, 255, 0.25);
+    transition: box-shadow 0.4s ease;
+  }
+  .pillar.magenta:hover, .pillar.magenta:focus-within {
+    animation-play-state: paused;
+    box-shadow: 0 0 36px -2px rgba(255, 0, 212, 0.25);
+    transition: box-shadow 0.4s ease;
+  }
+  .pillar.gold:hover,    .pillar.gold:focus-within {
+    animation-play-state: paused;
+    box-shadow: 0 0 36px -2px rgba(255, 212, 0, 0.25);
+    transition: box-shadow 0.4s ease;
+  }
   @media (prefers-reduced-motion: reduce) {
-    .pillar.cyan, .pillar.cyan::before { animation: none; }
+    .pillar.cyan, .pillar.magenta, .pillar.gold,
+    .pillar.cyan::before { animation: none; }
   }
 
   .pillar > * { position: relative; z-index: 1; }
@@ -827,6 +1051,11 @@
     font-variant-numeric: tabular-nums;
     transition: all 0.25s ease;
     position: relative;
+    animation: phone-display-halo 3s ease-in-out infinite;
+  }
+  @keyframes phone-display-halo {
+    0%, 100% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.25); }
+    50%      { text-shadow: 0 0 44px rgba(0, 212, 255, 0.6); }
   }
 
   .phone-display::after {
@@ -842,10 +1071,43 @@
     animation: pulse 2s ease-in-out infinite;
   }
 
-  .phone-display:hover {
+  .phone-display:hover,
+  .phone-display:focus-visible {
     color: var(--cyan-hot);
-    text-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
-    transform: scale(1.02);
+    text-shadow: 0 0 50px rgba(0, 212, 255, 0.7), 0 0 90px rgba(0, 212, 255, 0.4);
+    transform: scale(1.03);
+    animation-play-state: paused;
+  }
+  .phone-display:active {
+    transform: scale(1.03);
+    text-shadow: 0 0 50px rgba(0, 212, 255, 0.7), 0 0 90px rgba(0, 212, 255, 0.4);
+    animation-play-state: paused;
+  }
+  .phone-display::before {
+    content: 'Tap to call AVA right now →';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    padding: 8px 14px;
+    background: var(--card-hot);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 212, 255, 0.2);
+  }
+  @media (hover: hover) {
+    .phone-display:hover::before {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-100%) translateY(-6px);
+    }
   }
 
   .input-label {
@@ -939,16 +1201,17 @@
   /* ─── REVEAL ─────────────────────────────── */
   .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
   .reveal.show {
     opacity: 1;
     transform: translateY(0);
   }
+  /* V6 stagger: 80ms each — eye walks down the stack */
   .pillar.reveal:nth-child(1) { transition-delay: 0ms; }
-  .pillar.reveal:nth-child(2) { transition-delay: 90ms; }
-  .pillar.reveal:nth-child(3) { transition-delay: 180ms; }
+  .pillar.reveal:nth-child(2) { transition-delay: 80ms; }
+  .pillar.reveal:nth-child(3) { transition-delay: 160ms; }
 
   /* ─── RESPONSIVE ─────────────────────────────── */
   @media (min-width: 640px) {
@@ -1091,10 +1354,134 @@
     font-size: 14px;
     cursor: pointer;
   }
-  @media (min-width: 900px) { .cmdk-launcher { display: none; } }
+  /* K launcher visible on all viewports (V6: was mobile-only in V4) */
+
+  /* ─── ANCHOR SMOOTHNESS ─────────────────────────────── */
+  section[id], footer[id] { scroll-margin-top: 80px; }
+
+  /* ─── QUICK LOOKUP SLIDE-UP (K launcher target) ─────── */
+  .ql {
+    position: fixed;
+    inset: 0;
+    z-index: 220;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(8, 8, 12, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .ql.open {
+    display: flex;
+    animation: ql-fade 0.2s ease;
+  }
+  @keyframes ql-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .ql-panel {
+    width: 100%;
+    max-width: 560px;
+    background: linear-gradient(180deg, #14141C, #0E0E15);
+    border-top: 1px solid var(--cyan);
+    border-left: 1px solid var(--border-hot);
+    border-right: 1px solid var(--border-hot);
+    box-shadow:
+      0 -30px 80px rgba(0, 0, 0, 0.7),
+      0 0 60px rgba(0, 212, 255, 0.08);
+    animation: ql-slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes ql-slide-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .ql-title {
+    padding: 18px 20px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .ql-list { list-style: none; }
+  .ql-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s, padding-left 0.15s;
+  }
+  .ql-list li:last-child { border-bottom: 0; }
+  .ql-list li:hover,
+  .ql-list li:active {
+    background: rgba(0, 212, 255, 0.06);
+    padding-left: 26px;
+  }
+  .ql-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 14px;
+  }
+  .ql-close {
+    padding: 12px 20px 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .ql-close:hover { color: var(--text); }
+
+  /* ─── ROUTING INDICATOR ─────────────────────────────── */
+  .routing {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-style: italic;
+    color: #666;
+    letter-spacing: 0.08em;
+    margin: -4px 0 16px;
+    text-align: center;
+    transition: opacity 0.4s ease;
+  }
+
+  /* ─── MICRO FOOTER ─────────────────────────────── */
+  .microfooter {
+    padding: 24px 0;
+    text-align: center;
+  }
+  .microfooter .container {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.12em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 14px;
+  }
+  .microfooter a {
+    color: #666;
+    transition: color 0.2s ease;
+  }
+  .microfooter a:hover { color: var(--cyan); }
+  .microfooter .sep { color: var(--border); }
 </style>
 </head>
 <body>
+
+<div id="grid-points" aria-hidden="true"></div>
 
 <!-- ─── STATUS BAR ─────────────────────────────── -->
 <header class="status-bar">
@@ -1111,6 +1498,7 @@
 
 <!-- ─── HERO ─────────────────────────────── -->
 <section class="hero">
+  <div class="hero-scan" aria-hidden="true"></div>
   <div class="container hero-grid">
     <div>
       <div class="eyebrow">// AI100X</div>
@@ -1118,7 +1506,7 @@
       <div class="hero-subhead">The Operator's Cockpit.</div>
       <p class="hero-tagline">One screen. Every metric. Your AI runs the business.</p>
       <div class="actions">
-        <a href="#wedge" class="btn btn-ghost">By Application Only</a>
+        <a href="#apply" class="btn btn-ghost">By Application Only</a>
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
       </div>
       <div class="hero-credit">
@@ -1190,6 +1578,8 @@
           </div>
         </div>
 
+        <div class="routing" id="routing">// Routing call from Phoenix</div>
+
         <div class="signal-map" aria-hidden="true">
           <div class="signal-node voice">VOICE</div>
           <div class="signal-track"><span></span></div>
@@ -1223,6 +1613,11 @@
             <span class="avacard-time" id="avacard-time">— now</span>
           </div>
           <div class="avacard-body">
+            <button class="avacard-play" id="avacard-play" type="button" aria-label="Play call recording">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.07v2.06c2.89.86 5 3.54 5 6.87s-2.11 6.01-5 6.87v2.06c4-.91 7-4.49 7-8.93s-3-8.02-7-8.93z"/>
+              </svg>
+            </button>
             <svg class="avacard-wave" viewBox="0 0 28 40" preserveAspectRatio="none" aria-hidden="true">
               <rect class="wave-bar" x="2"  y="14" width="3" height="12" style="animation-delay:-0.1s"/>
               <rect class="wave-bar" x="9"  y="14" width="3" height="12" style="animation-delay:-0.3s"/>
@@ -1230,6 +1625,7 @@
               <rect class="wave-bar" x="23" y="14" width="3" height="12" style="animation-delay:-0.7s"/>
             </svg>
             <p class="avacard-text" id="avacard-text"></p>
+            <audio id="ava-audio" preload="none"></audio>
           </div>
         </div>
 
@@ -1248,7 +1644,7 @@
 </section>
 
 <!-- ─── THE STACK ─────────────────────────────── -->
-<section>
+<section id="stack">
   <div class="container">
     <div class="section-header reveal">
       <div class="eyebrow">// THE STACK</div>
@@ -1273,7 +1669,7 @@
         <p class="pillar-body">Tracks every dollar. Routes every metric. Real-time pulse on your whole business — one screen.</p>
         <div class="pillar-readout">ONE SCREEN · EVERY METRIC</div>
         <div class="pillar-footer">
-          <div class="pillar-status"><span class="status-dot"></span> COMING 2026</div>
+          <div class="pillar-status"><span class="status-dot"></span> Shipping Q3 2026</div>
           <span class="pillar-link" style="opacity:.5;">In dev</span>
         </div>
       </article>
@@ -1281,9 +1677,9 @@
       <article class="pillar gold reveal">
         <div class="pillar-label">// THE OS — OPERATING SYSTEM</div>
         <p class="pillar-body">Everything connected. Voice, sales, calendar, CRM, reporting. One AI runs the entire business.</p>
-        <div class="pillar-readout">FULL STACK · 2026</div>
+        <div class="pillar-readout">Full Stack · Q4 2026</div>
         <div class="pillar-footer">
-          <div class="pillar-status"><span class="status-dot"></span> 2026 BUILD</div>
+          <div class="pillar-status"><span class="status-dot"></span> In Build</div>
           <span class="pillar-link" style="opacity:.5;">In dev</span>
         </div>
       </article>
@@ -1293,7 +1689,7 @@
 </section>
 
 <!-- ─── WHY ─────────────────────────────── -->
-<section class="why">
+<section class="why" id="why">
   <div class="container why-inner reveal">
     <div class="eyebrow">// THE WHY</div>
     <p class="why-lead">AI100X is the command layer above your AI tools.</p>
@@ -1325,7 +1721,7 @@
 </main>
 
 <!-- ─── FOOTER ─────────────────────────────── -->
-<footer>
+<footer id="apply">
   <div class="container reveal">
     <h2 class="footer-headline">BY APPLICATION ONLY.</h2>
     <p class="footer-sub">Three new operators per month. No more.</p>
@@ -1337,6 +1733,47 @@
     <div class="footer-fineprint">aivoiceagency.ai · Wisconsin-built · 2026</div>
   </div>
 </footer>
+
+<!-- ─── MICRO FOOTER ─────────────────────────────── -->
+<footer class="microfooter">
+  <div class="container">
+    <span>© 2026 CIRCULANT SYSTEMS</span>
+    <span class="sep">·</span>
+    <span>Built in 47 hours by one operator · Wisconsin</span>
+    <span class="sep">·</span>
+    <a href="https://github.com/shanehandel-504/ai100x" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</footer>
+
+<!-- K launcher + cmdk modal + ql slide-up — must be in DOM before <script> -->
+<button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
+<div id="cmdk" class="cmdk" aria-hidden="true" role="dialog" aria-label="Command bar">
+  <div class="cmdk-panel">
+    <input id="cmdk-input" class="cmdk-input" placeholder="Type a command or press 1–6…" autocomplete="off">
+    <ul class="cmdk-list" id="cmdk-list">
+      <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
+      <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
+      <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
+      <li data-action="#apply" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
+      <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
+    </ul>
+    <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
+  </div>
+</div>
+
+<!-- Quick lookup slide-up (K launcher target) -->
+<div id="ql" class="ql" aria-hidden="true" role="dialog" aria-label="Quick lookup">
+  <div class="ql-panel">
+    <div class="ql-title">// AI100X — QUICK LOOKUP</div>
+    <ul class="ql-list">
+      <li data-action="#why"><span>What is AI100X?</span><span class="ql-arrow">→</span></li>
+      <li data-action="tel:+17869371218"><span>Hear AVA Live</span><span class="ql-arrow">→</span></li>
+      <li data-action="#apply"><span>Apply for access</span><span class="ql-arrow">→</span></li>
+    </ul>
+    <div class="ql-close">Tap outside or press ESC to close</div>
+  </div>
+</div>
 
 <script>
   // ── Live clock in cockpit header ──
@@ -1370,9 +1807,10 @@
   function bump(k, line) {
     const x = m[k]; if (!x.el) return;
     x.v++; x.el.textContent = x.v;
-    x.el.style.transition = 'opacity 140ms ease';
-    x.el.style.opacity = '0.4';
-    setTimeout(() => { x.el.style.opacity = '1'; }, 160);
+    x.el.classList.remove('tick');
+    void x.el.offsetWidth; // force reflow so the animation restarts
+    x.el.classList.add('tick');
+    setTimeout(() => x.el.classList.remove('tick'), 350);
     if (window.__pushTranscript) window.__pushTranscript(line, k);
   }
   function runStoryLoop() {
@@ -1381,14 +1819,23 @@
   }
   runStoryLoop();
 
-  // ── AVA transcript card (one call at a time, types out) ──
+  // ── AVA transcript card (8 calls, types out, fades out, rotates) ──
   const transcriptLines = [
-    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
     '"This is AVA. Pickup or one-way?" → "Round trip, downtown to Scottsdale." → Routed. 24s.',
-    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.'
+    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
+    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.',
+    '"AVA. What vehicle size do you need?" → "Sprinter van, eight people, airport run." → Routed. 22s.',
+    '"This is AVA. How can I help?" → "I need a quote for a Wednesday wedding shuttle." → Quote queued. 31s.',
+    '"AI Voice Agency. Where are you headed?" → "JFK pickup Monday at 5am, two passengers." → Confirmed. 17s.',
+    '"AVA here. What’s the pickup address?" → "1200 Brickell, going to Miami Beach hotel." → Booked. 14s.',
+    '"AVA. One-way or round trip?" → "Corporate roadshow, three stops, Thursday." → Routed to ops. 41s.'
   ];
   const cardText = document.getElementById('avacard-text');
+  const HOLD_MS = 4000;
+  const FADE_MS = 400;
+  const TYPE_MS = 22;
   let lineIdx = 0;
+  window.__avaLineIdx = () => lineIdx;
   function typeLine(s, done) {
     if (!cardText) return;
     cardText.textContent = '';
@@ -1396,14 +1843,19 @@
     const id = setInterval(() => {
       cardText.textContent += s[i++] || '';
       if (i >= s.length) { clearInterval(id); done && done(); }
-    }, 22);
+    }, TYPE_MS);
   }
   function cycleTranscript() {
+    if (!cardText) return;
+    cardText.style.opacity = '1';
     typeLine(transcriptLines[lineIdx], () => {
       setTimeout(() => {
-        lineIdx = (lineIdx + 1) % transcriptLines.length;
-        cycleTranscript();
-      }, 6000);
+        cardText.style.opacity = '0';
+        setTimeout(() => {
+          lineIdx = (lineIdx + 1) % transcriptLines.length;
+          cycleTranscript();
+        }, FADE_MS);
+      }, HOLD_MS);
     });
   }
   setTimeout(cycleTranscript, 1500);
@@ -1432,7 +1884,7 @@
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -70px 0px' });
+  }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
   reveals.forEach(r => io.observe(r));
 
   // ── Command bar ⌘K ──
@@ -1504,7 +1956,6 @@
     cmdk.addEventListener('click', (e) => {
       if (e.target === cmdk) close();
     });
-    if (launcher) launcher.addEventListener('click', open);
   })();
 
   // ── Scroll-aware status bar ──
@@ -1537,23 +1988,122 @@
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
   })();
-</script>
 
-<button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
-<div id="cmdk" class="cmdk" aria-hidden="true" role="dialog" aria-label="Command bar">
-  <div class="cmdk-panel">
-    <input id="cmdk-input" class="cmdk-input" placeholder="Type a command or press 1–6…" autocomplete="off">
-    <ul class="cmdk-list" id="cmdk-list">
-      <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
-      <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
-      <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
-      <li data-action="#wedge" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
-      <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
-      <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
-    </ul>
-    <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
-  </div>
-</div>
+  // ── Grid pulse points — random intersections flash cyan ──
+  (function() {
+    const container = document.getElementById('grid-points');
+    if (!container) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const GRID = 80;
+    function spawnOne() {
+      const cols = Math.max(1, Math.floor(window.innerWidth / GRID));
+      const rows = Math.max(1, Math.floor(window.innerHeight / GRID));
+      const x = Math.floor(Math.random() * cols) * GRID;
+      const y = Math.floor(Math.random() * rows) * GRID;
+      const dot = document.createElement('span');
+      dot.className = 'grid-point';
+      dot.style.left = x + 'px';
+      dot.style.top  = y + 'px';
+      container.appendChild(dot);
+      setTimeout(() => dot.remove(), 1500);
+    }
+    function spawnGroup() {
+      const count = 3 + Math.floor(Math.random() * 3); // 3–5
+      for (let i = 0; i < count; i++) {
+        setTimeout(spawnOne, Math.random() * 1400);
+      }
+      setTimeout(spawnGroup, 4000 + Math.random() * 3000); // every 4–7s
+    }
+    setTimeout(spawnGroup, 2500);
+  })();
+
+  // ── Anchor links: explicit smooth-scroll click handler ──
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const id = link.getAttribute('href');
+    if (!id || id.length <= 1) return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ── Rotating routing-from-city indicator ──
+  (function() {
+    const el = document.getElementById('routing');
+    if (!el) return;
+    const cities = ['Phoenix', 'Miami', 'Scottsdale', 'Chicago', 'Denver', 'Austin'];
+    let i = 0;
+    setInterval(() => {
+      el.style.opacity = '0';
+      setTimeout(() => {
+        i = (i + 1) % cities.length;
+        el.textContent = `// Routing call from ${cities[i]}`;
+        el.style.opacity = '1';
+      }, 380);
+    }, 6000);
+  })();
+
+  // ── AVA transcript audio playback ──
+  (function() {
+    const btn = document.getElementById('avacard-play');
+    const audio = document.getElementById('ava-audio');
+    if (!btn || !audio) return;
+    const stopPulse = () => btn.classList.remove('playing');
+    audio.addEventListener('ended', stopPulse);
+    audio.addEventListener('pause', stopPulse);
+    audio.addEventListener('error', stopPulse);
+    btn.addEventListener('click', () => {
+      if (!audio.paused) { audio.pause(); return; }
+      const n = (window.__avaLineIdx ? window.__avaLineIdx() : 0) + 1;
+      audio.src = `/audio/ava-call-${n}.mp3`;
+      btn.classList.add('playing');
+      audio.play().catch(stopPulse);
+    });
+  })();
+
+  // ── Quick Lookup slide-up (K launcher) ──
+  (function() {
+    const ql = document.getElementById('ql');
+    const launcher = document.getElementById('cmdk-launcher');
+    if (!ql || !launcher) return;
+    const open = () => {
+      ql.classList.add('open');
+      ql.setAttribute('aria-hidden', 'false');
+    };
+    const close = () => {
+      ql.classList.remove('open');
+      ql.setAttribute('aria-hidden', 'true');
+    };
+    launcher.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      open();
+    });
+    ql.addEventListener('click', (e) => {
+      if (e.target === ql) { close(); return; }
+      const li = e.target.closest('li[data-action]');
+      if (li) {
+        const a = li.dataset.action;
+        close();
+        if (a.startsWith('#')) {
+          document.querySelector(a)?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.location.href = a;
+        }
+        return;
+      }
+      if (e.target.closest('.ql-close')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && ql.classList.contains('open')) {
+        e.preventDefault();
+        close();
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>
