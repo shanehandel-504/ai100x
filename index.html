@@ -159,6 +159,15 @@
     50% { opacity: 0.4; transform: scale(0.65); }
   }
 
+  /* Status-bar dot: gentler 2s pulse, scale 1→1.2, opacity 1→0.7 */
+  .status-left .pulse-dot {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+  @keyframes pulse-subtle {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%      { opacity: 0.7; transform: scale(1.2); }
+  }
+
   /* ─── SECTIONS ─────────────────────────────── */
   section { position: relative; padding: 112px 0; }
 
@@ -909,10 +918,41 @@
     animation: pulse 2s ease-in-out infinite;
   }
 
-  .phone-display:hover {
+  .phone-display:hover,
+  .phone-display:focus-visible {
     color: var(--cyan-hot);
     text-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
-    transform: scale(1.02);
+    transform: scale(1.03);
+  }
+  .phone-display:active {
+    transform: scale(1.03);
+    text-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
+  }
+  .phone-display::before {
+    content: 'Tap to call AVA right now →';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    padding: 8px 14px;
+    background: var(--card-hot);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 212, 255, 0.2);
+  }
+  @media (hover: hover) {
+    .phone-display:hover::before {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-100%) translateY(-6px);
+    }
   }
 
   .input-label {
@@ -1246,6 +1286,41 @@
     transition: color 0.15s;
   }
   .ql-close:hover { color: var(--text); }
+
+  /* ─── ROUTING INDICATOR ─────────────────────────────── */
+  .routing {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-style: italic;
+    color: #666;
+    letter-spacing: 0.08em;
+    margin: -4px 0 16px;
+    text-align: center;
+    transition: opacity 0.4s ease;
+  }
+
+  /* ─── MICRO FOOTER ─────────────────────────────── */
+  .microfooter {
+    padding: 24px 0;
+    text-align: center;
+  }
+  .microfooter .container {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.12em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 14px;
+  }
+  .microfooter a {
+    color: #666;
+    transition: color 0.2s ease;
+  }
+  .microfooter a:hover { color: var(--cyan); }
+  .microfooter .sep { color: var(--border); }
 </style>
 </head>
 <body>
@@ -1343,6 +1418,8 @@
             <div class="tile-value" id="metric-booked">8</div>
           </div>
         </div>
+
+        <div class="routing" id="routing">// Routing call from Phoenix</div>
 
         <div class="signal-map" aria-hidden="true">
           <div class="signal-node voice">VOICE</div>
@@ -1495,6 +1572,17 @@
     </div>
     <div class="footer-divider"></div>
     <div class="footer-fineprint">aivoiceagency.ai · Wisconsin-built · 2026</div>
+  </div>
+</footer>
+
+<!-- ─── MICRO FOOTER ─────────────────────────────── -->
+<footer class="microfooter">
+  <div class="container">
+    <span>© 2026 CIRCULANT SYSTEMS</span>
+    <span class="sep">·</span>
+    <span>Built in 47 hours by one operator · Wisconsin</span>
+    <span class="sep">·</span>
+    <a href="https://github.com/shanehandel-504/ai100x" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
 
@@ -1709,6 +1797,22 @@
       });
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
+  })();
+
+  // ── Rotating routing-from-city indicator ──
+  (function() {
+    const el = document.getElementById('routing');
+    if (!el) return;
+    const cities = ['Phoenix', 'Miami', 'Scottsdale', 'Chicago', 'Denver', 'Austin'];
+    let i = 0;
+    setInterval(() => {
+      el.style.opacity = '0';
+      setTimeout(() => {
+        i = (i + 1) % cities.length;
+        el.textContent = `// Routing call from ${cities[i]}`;
+        el.style.opacity = '1';
+      }, 380);
+    }, 6000);
   })();
 
   // ── AVA transcript audio playback ──
