@@ -3,211 +3,1557 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AI100X — The Operator's Cockpit. One screen. Every metric. Your AI runs the business. Built by a 30-year operator.">
+<title>AI100X — The Operator's Cockpit</title>
+<meta name="description" content="AI100X — The Operator's Cockpit. The command layer above your AI tools. Built by a 30-year operator.">
 <meta property="og:title" content="AI100X — The Operator's Cockpit">
 <meta property="og:description" content="One screen. Every metric. Your AI runs the business.">
-<meta property="og:url" content="https://ai100x.ai">
 <meta property="og:type" content="website">
-<title>AI100X — The Operator's Cockpit</title>
+<meta property="og:url" content="https://ai100x.ai">
+<meta name="theme-color" content="#0A0A0F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --void: #0A0A0F;
-  --void-2: #0E0E16;
-  --text: #EEF0F4;
-  --text-dim: #8A8F9C;
-  --cyan: #00D4FF;
-  --cyan-active: #00E5FF;
-  --magenta: #FF00D4;
-  --gold: #FFD400;
-  --card: #14141C;
-  --border: #1F1F2E;
-  --border-2: #2A2A3D;
-}
+  :root {
+    --void: #0A0A0F;
+    --void-2: #0E0E15;
+    --void-3: #08080C;
+    --card: #14141C;
+    --card-hot: #1A1A26;
+    --text: #EEF0F4;
+    --text-dim: #8B8D98;
+    --text-mute: #595B66;
+    --cyan: #00D4FF;
+    --cyan-hot: #00E5FF;
+    --magenta: #FF00D4;
+    --gold: #FFD400;
+    --border: #1F1F2E;
+    --border-hot: #2A2A3E;
+  }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--void);
-  color: var(--text);
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-/* HERO */
-.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 80px 24px 60px; position: relative; overflow: hidden; }
-.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 30%, rgba(0, 212, 255, 0.08), transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(255, 0, 212, 0.06), transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(255, 212, 0, 0.04), transparent 60%); pointer-events: none; z-index: 0; }
-.hero-inner { max-width: 1100px; margin: 0 auto; width: 100%; position: relative; z-index: 1; }
-.eyebrow { font-size: 13px; font-weight: 600; color: var(--cyan); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 32px; opacity: 0.9; }
-.hero h1 { font-size: clamp(56px, 12vw, 144px); font-weight: 700; letter-spacing: -0.04em; line-height: 0.95; margin-bottom: 12px; }
-.hero h1 .gradient { background: linear-gradient(90deg, #00D4FF 0%, #FF00D4 50%, #FFD400 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.hero h2 { font-size: clamp(28px, 5vw, 56px); font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin-bottom: 28px; }
-.hero-tag { font-size: clamp(18px, 2.2vw, 22px); color: var(--text-dim); max-width: 560px; margin-bottom: 48px; line-height: 1.5; }
-.cta-row { display: flex; flex-wrap: wrap; gap: 16px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 28px; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; transition: all 0.18s ease; white-space: nowrap; }
-.btn-primary { background: var(--cyan); color: var(--void); border: 1px solid var(--cyan); }
-.btn-primary:hover { background: var(--cyan-active); border-color: var(--cyan-active); transform: translateY(-1px); }
-.btn-secondary { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); }
-.btn-secondary:hover { background: rgba(0, 212, 255, 0.08); color: var(--cyan-active); border-color: var(--cyan-active); }
+  body {
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    background: var(--void);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-/* SECTIONS */
-section { padding: 100px 24px; position: relative; }
-.section-inner { max-width: 1100px; margin: 0 auto; }
-.section-eyebrow { font-size: 13px; font-weight: 600; color: var(--cyan); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 24px; }
-.section-title { font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 24px; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
-/* STACK */
-.stack { border-top: 1px solid var(--border); }
-.stack-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 48px; }
-@media (min-width: 768px) { .stack-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
-.pillar { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px 28px; position: relative; display: flex; flex-direction: column; transition: border-color 0.2s ease, transform 0.2s ease; }
-.pillar:hover { transform: translateY(-2px); }
-.pillar.ava:hover { border-color: var(--cyan); }
-.pillar.x:hover { border-color: var(--magenta); }
-.pillar.os:hover { border-color: var(--gold); }
-.pillar-label { font-size: 12px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
-.pillar.ava .pillar-label { color: var(--cyan); }
-.pillar.x .pillar-label { color: var(--magenta); }
-.pillar.os .pillar-label { color: var(--gold); }
-.pillar-body { font-size: 16px; color: var(--text); line-height: 1.6; margin-bottom: 28px; flex: 1; }
-.pillar-status { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 12px; border-radius: 4px; border: 1px solid; align-self: flex-start; }
-.pillar.ava .pillar-status { color: var(--cyan); border-color: var(--cyan); background: rgba(0, 212, 255, 0.06); }
-.pillar.x .pillar-status { color: var(--magenta); border-color: var(--magenta); background: rgba(255, 0, 212, 0.06); }
-.pillar.os .pillar-status { color: var(--gold); border-color: var(--gold); background: rgba(255, 212, 0, 0.06); }
-.pillar-link { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; color: var(--cyan); margin-top: 16px; transition: color 0.15s ease; }
-.pillar-link:hover { color: var(--cyan-active); }
+  /* Atmosphere */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+      radial-gradient(ellipse 60% 50% at 18% 12%, rgba(0, 212, 255, 0.13), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 38%, rgba(255, 0, 212, 0.09), transparent 65%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(255, 212, 0, 0.05), transparent 65%),
+      var(--void);
+  }
 
-/* WHY */
-.why { border-top: 1px solid var(--border); text-align: center; }
-.why-inner { max-width: 700px; margin: 0 auto; }
-.why p { font-size: clamp(20px, 2.6vw, 26px); line-height: 1.5; margin-bottom: 24px; color: var(--text); font-weight: 400; }
-.why p:last-child { margin-bottom: 0; }
-.why strong { font-weight: 600; color: var(--cyan); }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-image:
+      linear-gradient(rgba(238, 240, 244, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(238, 240, 244, 0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
+  }
 
-/* WEDGE */
-.wedge { border-top: 1px solid var(--border); }
-.wedge-card { background: var(--card); border: 1px solid var(--border-2); border-radius: 16px; padding: 56px 40px; text-align: center; position: relative; overflow: hidden; }
-.wedge-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center top, rgba(0, 212, 255, 0.08), transparent 60%); pointer-events: none; }
-.wedge-card > * { position: relative; }
-.wedge-heading { font-size: clamp(28px, 4.5vw, 44px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 24px; }
-.wedge-body { font-size: clamp(17px, 2.1vw, 20px); color: var(--text-dim); max-width: 600px; margin: 0 auto 16px; line-height: 1.6; }
-.wedge-sub { font-size: 15px; color: var(--text-dim); font-style: italic; margin-bottom: 40px; }
-.wedge-cta { display: inline-flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
-.phone-link { display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', monospace; font-size: clamp(20px, 3vw, 28px); font-weight: 700; letter-spacing: 0.05em; color: var(--cyan); margin: 32px 0 12px; transition: color 0.15s ease; }
-.phone-link:hover { color: var(--cyan-active); }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
 
-/* FOOTER */
-.footer { border-top: 1px solid var(--border); text-align: center; padding: 100px 24px 80px; }
-.footer-heading { font-size: clamp(32px, 5vw, 52px); font-weight: 700; letter-spacing: -0.02em; color: var(--cyan); margin-bottom: 16px; line-height: 1.05; }
-.footer-sub { font-size: 18px; color: var(--text-dim); margin-bottom: 40px; }
-.footer-links { display: flex; flex-direction: column; gap: 12px; font-size: 16px; margin-bottom: 56px; }
-.footer-links a { color: var(--text); transition: color 0.15s ease; display: inline-block; }
-.footer-links a:hover { color: var(--cyan); }
-.footer-links .arrow { color: var(--cyan); margin-right: 8px; }
-.divider { width: 60px; height: 1px; background: var(--border-2); margin: 0 auto 32px; }
-.fineprint { font-size: 13px; color: var(--text-dim); letter-spacing: 0.05em; }
-.fineprint a { color: var(--text-dim); }
-.fineprint a:hover { color: var(--cyan); }
+  .container {
+    width: min(1200px, calc(100% - 40px));
+    margin: 0 auto;
+  }
 
-/* MOBILE */
-@media (max-width: 640px) {
-  .hero { padding: 60px 20px 40px; }
-  section { padding: 70px 20px; }
-  .wedge-card { padding: 40px 24px; }
-  .pillar { padding: 28px 24px; }
-  .cta-row { flex-direction: column; align-items: stretch; }
-  .btn { width: 100%; }
-  .footer { padding: 70px 20px 60px; }
-}
+  /* ─── STATUS BAR ─────────────────────────────── */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 10, 15, 0.72);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .status-inner {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .status-left { display: flex; align-items: center; gap: 12px; }
+  .status-left a { color: var(--text); }
+  .status-left a:hover { color: var(--cyan); }
+
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 14px var(--cyan), 0 0 28px rgba(0, 212, 255, 0.4);
+    animation: pulse 2.2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.65); }
+  }
+
+  /* ─── SECTIONS ─────────────────────────────── */
+  section { position: relative; padding: 112px 0; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+
+  /* ─── HERO ─────────────────────────────── */
+  .hero {
+    min-height: calc(100vh - 48px);
+    display: grid;
+    align-items: center;
+    padding: 56px 0 96px;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .hero-headline {
+    font-size: clamp(72px, 18vw, 220px);
+    line-height: 0.86;
+    letter-spacing: -0.055em;
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+
+  .prism {
+    background: linear-gradient(90deg, #00D4FF 0%, #FF00D4 50%, #FFD400 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: prism-shift 10s ease-in-out infinite;
+    filter: drop-shadow(0 0 40px rgba(255, 0, 212, 0.18));
+  }
+
+  @keyframes prism-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .hero-subhead {
+    font-size: clamp(28px, 5.4vw, 60px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    margin-bottom: 20px;
+  }
+
+  .hero-tagline {
+    font-size: clamp(17px, 2.1vw, 22px);
+    color: var(--text-dim);
+    max-width: 580px;
+    margin-bottom: 48px;
+    line-height: 1.5;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 0 28px;
+    border: 1px solid var(--cyan);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--cyan);
+    color: var(--void);
+  }
+  .btn-primary:hover {
+    background: var(--cyan-hot);
+    border-color: var(--cyan-hot);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 212, 255, 0.28);
+  }
+
+  .btn-ghost {
+    color: var(--cyan);
+    background: rgba(0, 212, 255, 0.04);
+  }
+  .btn-ghost:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--cyan-hot);
+    color: var(--cyan-hot);
+    box-shadow: 0 0 24px rgba(0, 212, 255, 0.18);
+  }
+
+  .hero-credit {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    color: var(--text-mute);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hero-credit strong { color: var(--text); font-weight: 500; }
+  .hero-credit .sep { color: var(--border-hot); margin: 0 10px; }
+
+  /* ─── LIVE COCKPIT ─────────────────────────────── */
+  .cockpit {
+    position: relative;
+    border: 1px solid var(--border-hot);
+    background: linear-gradient(180deg, var(--void-2) 0%, var(--void-3) 100%);
+    overflow: hidden;
+    box-shadow:
+      0 40px 120px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .cockpit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.6;
+  }
+
+  .cockpit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .cockpit-header-left { display: flex; align-items: center; gap: 8px; }
+
+  .cockpit-header-tag {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+
+  .cockpit-header-right { color: var(--text-mute); }
+
+  .cockpit-body {
+    padding: 24px 20px;
+  }
+
+  .boot-sequence {
+    display: grid;
+    gap: 6px;
+    padding: 4px 0 18px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+  }
+  .boot-sequence div {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: bootline 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .boot-sequence div:nth-child(1) { animation-delay: 0.15s; color: var(--cyan); }
+  .boot-sequence div:nth-child(2) { animation-delay: 0.45s; color: var(--cyan); }
+  .boot-sequence div:nth-child(3) { animation-delay: 0.75s; color: var(--magenta); }
+  .boot-sequence div:nth-child(4) { animation-delay: 1.05s; color: var(--gold); }
+  @keyframes bootline { to { opacity: 0.8; transform: none; } }
+
+  /* Waveform */
+  .waveform-wrap {
+    height: 96px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .waveform-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 212, 255, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  .waveform { width: 100%; height: 100%; display: block; }
+
+  .wave-bar {
+    fill: var(--cyan);
+    animation: wave 1.2s ease-in-out infinite;
+    transform-origin: center;
+    filter: drop-shadow(0 0 6px var(--cyan));
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.25); }
+    50% { transform: scaleY(1); }
+  }
+
+  /* Telemetry tiles */
+  .telemetry {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .tile {
+    padding: 14px 12px;
+    background: rgba(20, 20, 28, 0.6);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--tile-color);
+    opacity: 0.7;
+  }
+
+  .tile-cyan { --tile-color: var(--cyan); }
+  .tile-magenta { --tile-color: var(--magenta); }
+  .tile-gold { --tile-color: var(--gold); }
+
+  .tile-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 6px;
+  }
+
+  .tile-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 600;
+    color: var(--tile-color);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .signal-map {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .signal-node {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    border: 1px solid var(--border);
+    padding: 7px 9px;
+    background: rgba(10, 10, 15, 0.6);
+    font-weight: 600;
+  }
+  .signal-node.voice   { color: var(--cyan); }
+  .signal-node.cockpit { color: var(--magenta); }
+  .signal-node.os      { color: var(--gold); }
+  .signal-track {
+    position: relative;
+    height: 1px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .signal-track span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 38%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    filter: drop-shadow(0 0 6px var(--cyan));
+    animation: packet 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+  .signal-track.two span {
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    filter: drop-shadow(0 0 6px var(--gold));
+    animation-delay: 1.35s;
+  }
+  @keyframes packet {
+    0%   { transform: translateX(-120%); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translateX(280%); opacity: 0; }
+  }
+
+  /* Event ticker */
+  .ticker {
+    border-top: 1px solid var(--border);
+    margin: 0 -20px;
+    padding: 14px 20px 4px;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 32px;
+    animation: ticker-scroll 28s linear infinite;
+    width: max-content;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ticker-item .arrow { color: var(--cyan); }
+
+  .avacard {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: rgba(0, 212, 255, 0.03);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--cyan);
+  }
+  .avacard-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 10px;
+  }
+  .avacard-time { margin-left: auto; color: var(--text-mute); }
+  .avacard-body {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 48px;
+  }
+  .avacard-wave { width: 28px; height: 40px; flex-shrink: 0; }
+  .avacard-wave .wave-bar { fill: var(--cyan); }
+  .avacard-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+  .avacard-text::after {
+    content: '▎';
+    color: var(--cyan);
+    animation: caret 1s steps(2) infinite;
+    margin-left: 2px;
+  }
+  @keyframes caret { 50% { opacity: 0; } }
+
+  .heartbeat {
+    margin-top: 14px;
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .heartbeat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .heartbeat-svg {
+    width: 100%;
+    height: 24px;
+    display: block;
+  }
+  #hb-now {
+    filter: drop-shadow(0 0 6px var(--cyan));
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  .heartbeat-axis {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-mute);
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── STACK ─────────────────────────────── */
+  .section-header { margin-bottom: 56px; max-width: 780px; }
+
+  .section-title {
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .section-subtitle {
+    font-size: clamp(16px, 1.8vw, 19px);
+    color: var(--text-dim);
+    max-width: 680px;
+    line-height: 1.5;
+  }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .pillar {
+    position: relative;
+    padding: 36px 32px 32px;
+    background: linear-gradient(180deg, var(--card) 0%, rgba(13, 13, 20, 0.96) 100%);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
+  }
+
+  .pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 24px var(--accent);
+    transition: all 0.35s ease;
+  }
+
+  .pillar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--accent), transparent 65%);
+    opacity: 0.05;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .pillar:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+    background: linear-gradient(180deg, var(--card-hot) 0%, rgba(13, 13, 20, 0.98) 100%);
+  }
+  .pillar:hover::before { height: 3px; }
+  .pillar:hover::after { opacity: 0.1; }
+
+  .pillar.cyan { --accent: var(--cyan); }
+  .pillar.magenta { --accent: var(--magenta); }
+  .pillar.gold { --accent: var(--gold); }
+
+  .pillar.cyan { animation: pillar-breath 4.5s ease-in-out infinite; }
+  .pillar.cyan::before { animation: pillar-edge 4.5s ease-in-out infinite; }
+  @keyframes pillar-breath {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(0, 212, 255, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+    50% {
+      box-shadow: 0 0 32px -8px rgba(0, 212, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      border-color: rgba(0, 212, 255, 0.4);
+    }
+  }
+  @keyframes pillar-edge {
+    0%, 100% { height: 2px; opacity: 0.75; }
+    50%      { height: 3px; opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pillar.cyan, .pillar.cyan::before { animation: none; }
+  }
+
+  .pillar > * { position: relative; z-index: 1; }
+
+  .pillar-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .pillar-body {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 28px;
+    flex-grow: 1;
+  }
+
+  .pillar-readout {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .pillar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .pillar-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .status-dot.live {
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  .pillar-link {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s ease;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pillar-link:hover { gap: 10px; }
+
+  /* ─── WHY ─────────────────────────────── */
+  .why { text-align: center; }
+  .why-inner { max-width: 800px; margin: 0 auto; }
+
+  .why-lead {
+    font-size: clamp(28px, 4.4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00D4FF 0%, #FF00D4 50%, #FFD400 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.18));
+    margin-bottom: 48px;
+  }
+
+  .why-rule {
+    width: 40px;
+    height: 1px;
+    background: var(--border-hot);
+    margin: 0 auto 48px;
+  }
+
+  .why-line {
+    font-size: clamp(20px, 2.6vw, 30px);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin-bottom: 26px;
+    font-weight: 500;
+  }
+
+  .why-line.dim { color: var(--text-dim); }
+
+  .why-line:last-of-type {
+    font-weight: 600;
+    margin-top: 12px;
+    margin-bottom: 0;
+  }
+
+  .why-line em {
+    font-style: normal;
+    background: linear-gradient(90deg, #00D4FF, #FF00D4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+
+  /* ─── WEDGE ─────────────────────────────── */
+  .wedge-section { padding: 96px 0 120px; }
+
+  .wedge {
+    position: relative;
+    background: linear-gradient(180deg, var(--card) 0%, var(--void-3) 100%);
+    border: 1px solid var(--border);
+    padding: 64px 28px;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 0 50px 140px rgba(0, 0, 0, 0.4);
+  }
+
+  .wedge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 90% 60% at 50% 0%, rgba(0, 212, 255, 0.14), transparent 60%);
+    pointer-events: none;
+  }
+
+  .wedge::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  }
+
+  .wedge > * { position: relative; z-index: 1; }
+
+  .wedge-heading {
+    font-size: clamp(30px, 5.2vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .wedge-body {
+    font-size: clamp(16px, 1.8vw, 19px);
+    color: var(--text-dim);
+    max-width: 540px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+  }
+
+  .phone-display {
+    display: block;
+    font-size: clamp(40px, 10vw, 104px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--cyan);
+    padding: 32px 0;
+    margin-bottom: 36px;
+    font-variant-numeric: tabular-nums;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .phone-display::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    width: 12px;
+    height: 2px;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan);
+    transform: translateX(-50%);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .phone-display:hover {
+    color: var(--cyan-hot);
+    text-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
+    transform: scale(1.02);
+  }
+
+  .input-label {
+    font-family: 'JetBrains Mono', monospace;
+    margin: 28px auto 0;
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .input-rail {
+    width: min(520px, 82%);
+    height: 1px;
+    margin: -20px auto 24px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .input-rail span {
+    display: block;
+    width: 34%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: railscan 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px var(--cyan));
+  }
+  @keyframes railscan {
+    0%   { transform: translateX(-120%); }
+    100% { transform: translateX(330%); }
+  }
+
+  .wedge-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* ─── FOOTER ─────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 96px 0 52px;
+    text-align: center;
+  }
+
+  .footer-headline {
+    font-size: clamp(34px, 5.5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--cyan);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .footer-sub {
+    font-size: clamp(16px, 1.8vw, 18px);
+    color: var(--text-dim);
+    margin-bottom: 52px;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 60px;
+    font-size: 16px;
+  }
+
+  .footer-links a {
+    color: var(--text);
+    transition: color 0.2s ease;
+    display: inline-block;
+  }
+  .footer-links a:hover { color: var(--cyan); }
+
+  .footer-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 auto 28px;
+  }
+
+  .footer-fineprint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+
+  /* ─── REVEAL ─────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .pillar.reveal:nth-child(1) { transition-delay: 0ms; }
+  .pillar.reveal:nth-child(2) { transition-delay: 90ms; }
+  .pillar.reveal:nth-child(3) { transition-delay: 180ms; }
+
+  /* ─── RESPONSIVE ─────────────────────────────── */
+  @media (min-width: 640px) {
+    .stack-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .wedge { padding: 80px 48px; }
+    .wedge-actions { flex-direction: row; }
+    .wedge-actions .btn { flex: 1; }
+  }
+
+  @media (min-width: 900px) {
+    .hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: 72px; }
+    .stack-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .pillar { padding: 44px 36px 36px; }
+    .wedge { padding: 96px 64px; }
+    section { padding: 144px 0; }
+    .cockpit-body { padding: 32px 28px; }
+    .waveform-wrap { height: 120px; }
+  }
+
+  @media (max-width: 767px) {
+    .status-inner { font-size: 10px; letter-spacing: 0.12em; }
+    .status-bar .right-meta { display: none; }
+    .hero { padding-top: 32px; padding-bottom: 64px; }
+  }
+
+  .right-meta { transition: opacity 0.2s ease; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+  }
+
+  .cmdk {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 14vh;
+    background: rgba(8, 8, 12, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .cmdk.open {
+    display: flex;
+    animation: cmdk-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes cmdk-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .cmdk-panel {
+    width: min(560px, calc(100% - 32px));
+    background: linear-gradient(180deg, #14141C, #0E0E15);
+    border: 1px solid var(--border-hot);
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(0, 212, 255, 0.08),
+      0 0 60px rgba(0, 212, 255, 0.06);
+  }
+  .cmdk-input {
+    width: 100%;
+    padding: 18px 20px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    outline: none;
+  }
+  .cmdk-input::placeholder { color: var(--text-mute); }
+  .cmdk-list {
+    list-style: none;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  .cmdk-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .cmdk-list li[aria-selected="true"] {
+    background: rgba(0, 212, 255, 0.06);
+    border-left-color: var(--cyan);
+  }
+  .cmdk-k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-mute);
+    border: 1px solid var(--border);
+    padding: 3px 7px;
+    letter-spacing: 0.1em;
+  }
+  .cmdk-meta {
+    margin-left: auto;
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .cmdk-foot {
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .cmdk-launcher {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 60;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--cyan);
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(10px);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  @media (min-width: 900px) { .cmdk-launcher { display: none; } }
 </style>
 </head>
 <body>
 
+<!-- ─── STATUS BAR ─────────────────────────────── -->
+<header class="status-bar">
+  <div class="container status-inner">
+    <div class="status-left">
+      <span class="pulse-dot" aria-hidden="true"></span>
+      <span>AVA LIVE · <a href="tel:+17869371218">786 · 937 · 1218</a></span>
+    </div>
+    <div class="right-meta">// CIRCULANT SYSTEMS</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ─── HERO ─────────────────────────────── -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-inner">
-    <div class="eyebrow">// AI100X</div>
-    <h1>AI<span class="gradient">100X</span></h1>
-    <h2>The Operator's Cockpit.</h2>
-    <p class="hero-tag">One screen. Every metric. Your AI runs the business.</p>
-    <div class="cta-row">
-      <a href="#wedge" class="btn btn-secondary">By Application Only</a>
-      <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">// AI100X</div>
+      <h1 class="hero-headline">AI<span class="prism">100X</span></h1>
+      <div class="hero-subhead">The Operator's Cockpit.</div>
+      <p class="hero-tagline">One screen. Every metric. Your AI runs the business.</p>
+      <div class="actions">
+        <a href="#wedge" class="btn btn-ghost">By Application Only</a>
+        <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
+      </div>
+      <div class="hero-credit">
+        Built by <strong>Shane Handel</strong><span class="sep">·</span>30 years operator<span class="sep">·</span>Wisconsin-built
+      </div>
     </div>
+
+    <!-- LIVE COCKPIT -->
+    <div class="cockpit" aria-label="Live AVA telemetry">
+      <div class="cockpit-header">
+        <div class="cockpit-header-left">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span class="cockpit-header-tag">AI100X PREVIEW</span>
+          <span>· SIMULATED FEED</span>
+        </div>
+        <div class="cockpit-header-right" id="clock">--:--:--</div>
+      </div>
+      <div class="cockpit-body">
+        <div class="boot-sequence" aria-hidden="true">
+          <div>› AVA LINE DETECTED</div>
+          <div>› VOICE SIGNAL ACTIVE</div>
+          <div>› COCKPIT ARMING</div>
+          <div>› OS BUILD QUEUED</div>
+        </div>
+        <div class="waveform-wrap">
+          <svg class="waveform" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
+            <g>
+              <rect class="wave-bar" x="2"   y="20" width="3" height="20" style="animation-delay:-0.1s"/>
+              <rect class="wave-bar" x="10"  y="20" width="3" height="20" style="animation-delay:-0.2s"/>
+              <rect class="wave-bar" x="18"  y="20" width="3" height="20" style="animation-delay:-0.3s"/>
+              <rect class="wave-bar" x="26"  y="20" width="3" height="20" style="animation-delay:-0.4s"/>
+              <rect class="wave-bar" x="34"  y="20" width="3" height="20" style="animation-delay:-0.5s"/>
+              <rect class="wave-bar" x="42"  y="20" width="3" height="20" style="animation-delay:-0.6s"/>
+              <rect class="wave-bar" x="50"  y="20" width="3" height="20" style="animation-delay:-0.7s"/>
+              <rect class="wave-bar" x="58"  y="20" width="3" height="20" style="animation-delay:-0.8s"/>
+              <rect class="wave-bar" x="66"  y="20" width="3" height="20" style="animation-delay:-0.9s"/>
+              <rect class="wave-bar" x="74"  y="20" width="3" height="20" style="animation-delay:-1.0s"/>
+              <rect class="wave-bar" x="82"  y="20" width="3" height="20" style="animation-delay:-1.1s"/>
+              <rect class="wave-bar" x="90"  y="20" width="3" height="20" style="animation-delay:0s"/>
+              <rect class="wave-bar" x="98"  y="20" width="3" height="20" style="animation-delay:-0.15s"/>
+              <rect class="wave-bar" x="106" y="20" width="3" height="20" style="animation-delay:-0.25s"/>
+              <rect class="wave-bar" x="114" y="20" width="3" height="20" style="animation-delay:-0.35s"/>
+              <rect class="wave-bar" x="122" y="20" width="3" height="20" style="animation-delay:-0.45s"/>
+              <rect class="wave-bar" x="130" y="20" width="3" height="20" style="animation-delay:-0.55s"/>
+              <rect class="wave-bar" x="138" y="20" width="3" height="20" style="animation-delay:-0.65s"/>
+              <rect class="wave-bar" x="146" y="20" width="3" height="20" style="animation-delay:-0.75s"/>
+              <rect class="wave-bar" x="154" y="20" width="3" height="20" style="animation-delay:-0.85s"/>
+              <rect class="wave-bar" x="162" y="20" width="3" height="20" style="animation-delay:-0.95s"/>
+              <rect class="wave-bar" x="170" y="20" width="3" height="20" style="animation-delay:-1.05s"/>
+              <rect class="wave-bar" x="178" y="20" width="3" height="20" style="animation-delay:-1.15s"/>
+              <rect class="wave-bar" x="186" y="20" width="3" height="20" style="animation-delay:-0.05s"/>
+              <rect class="wave-bar" x="194" y="20" width="3" height="20" style="animation-delay:-0.5s"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="telemetry">
+          <div class="tile tile-cyan">
+            <div class="tile-label">Calls</div>
+            <div class="tile-value" id="metric-calls">247</div>
+          </div>
+          <div class="tile tile-magenta">
+            <div class="tile-label">Leads</div>
+            <div class="tile-value" id="metric-leads">19</div>
+          </div>
+          <div class="tile tile-gold">
+            <div class="tile-label">Booked</div>
+            <div class="tile-value" id="metric-booked">8</div>
+          </div>
+        </div>
+
+        <div class="signal-map" aria-hidden="true">
+          <div class="signal-node voice">VOICE</div>
+          <div class="signal-track"><span></span></div>
+          <div class="signal-node cockpit">COCKPIT</div>
+          <div class="signal-track two"><span></span></div>
+          <div class="signal-node os">OS</div>
+        </div>
+
+        <div class="ticker">
+          <div class="ticker-track">
+            <div class="ticker-item"><span class="arrow">→</span> 21:47 · Call answered · 14s</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:46 · Lead captured · West Phoenix</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:44 · Appointment booked · Tue 3:00pm</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:42 · Call answered · 9s</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:39 · Quote routed · Corporate fleet</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
+            <!-- Duplicate for seamless loop -->
+            <div class="ticker-item"><span class="arrow">→</span> 21:47 · Call answered · 14s</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:46 · Lead captured · West Phoenix</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:44 · Appointment booked · Tue 3:00pm</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:42 · Call answered · 9s</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:39 · Quote routed · Corporate fleet</div>
+            <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
+          </div>
+        </div>
+
+        <div class="avacard">
+          <div class="avacard-head">
+            <span class="status-dot live" style="background: var(--cyan); width:6px; height:6px; border-radius:50%; box-shadow: 0 0 10px var(--cyan);"></span>
+            AVA · LIVE CALL
+            <span class="avacard-time" id="avacard-time">— now</span>
+          </div>
+          <div class="avacard-body">
+            <svg class="avacard-wave" viewBox="0 0 28 40" preserveAspectRatio="none" aria-hidden="true">
+              <rect class="wave-bar" x="2"  y="14" width="3" height="12" style="animation-delay:-0.1s"/>
+              <rect class="wave-bar" x="9"  y="14" width="3" height="12" style="animation-delay:-0.3s"/>
+              <rect class="wave-bar" x="16" y="14" width="3" height="12" style="animation-delay:-0.5s"/>
+              <rect class="wave-bar" x="23" y="14" width="3" height="12" style="animation-delay:-0.7s"/>
+            </svg>
+            <p class="avacard-text" id="avacard-text"></p>
+          </div>
+        </div>
+
+        <div class="heartbeat">
+          <div class="heartbeat-label">24H · CALL VOLUME</div>
+          <svg class="heartbeat-svg" viewBox="0 0 240 24" preserveAspectRatio="none" aria-hidden="true">
+            <polyline id="hb-line" fill="none" stroke="#00D4FF" stroke-width="1.2" stroke-opacity="0.6"/>
+            <circle id="hb-now" r="2.6" fill="#00D4FF"/>
+          </svg>
+          <div class="heartbeat-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<section class="stack">
-  <div class="section-inner">
-    <div class="section-eyebrow">// The Stack</div>
-    <h2 class="section-title">Three layers. One operating system.</h2>
+<!-- ─── THE STACK ─────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">// THE STACK</div>
+      <h2 class="section-title">Three layers. One operator running the whole thing.</h2>
+      <p class="section-subtitle">AVA is the first live module. AI100X is the cockpit. The OS comes next.</p>
+    </div>
+
     <div class="stack-grid">
-      <div class="pillar ava">
-        <div class="pillar-label">// AVA — The Voice</div>
-        <p class="pillar-body">Answers every call. First ring. 24/7. Captures every lead. Books every appointment. Never miss business again.</p>
-        <div class="pillar-status">Live Now</div>
-        <a href="https://aivoiceagency.ai" class="pillar-link">aivoiceagency.ai →</a>
-      </div>
-      <div class="pillar x">
-        <div class="pillar-label">// AI100X — The Cockpit</div>
+
+      <article class="pillar cyan reveal">
+        <div class="pillar-label">// AVA — THE VOICE</div>
+        <p class="pillar-body">Answers every call. First ring. 24/7. Captures every lead. Books every appointment.</p>
+        <div class="pillar-readout">FIRST RING · 24/7</div>
+        <div class="pillar-footer">
+          <div class="pillar-status"><span class="status-dot live"></span> LIVE NOW</div>
+          <a href="https://aivoiceagency.ai" class="pillar-link">aivoiceagency.ai →</a>
+        </div>
+      </article>
+
+      <article class="pillar magenta reveal">
+        <div class="pillar-label">// AI100X — THE COCKPIT</div>
         <p class="pillar-body">Tracks every dollar. Routes every metric. Real-time pulse on your whole business — one screen.</p>
-        <div class="pillar-status">Coming 2026</div>
-      </div>
-      <div class="pillar os">
-        <div class="pillar-label">// The OS — Operating System</div>
+        <div class="pillar-readout">ONE SCREEN · EVERY METRIC</div>
+        <div class="pillar-footer">
+          <div class="pillar-status"><span class="status-dot"></span> COMING 2026</div>
+          <span class="pillar-link" style="opacity:.5;">In dev</span>
+        </div>
+      </article>
+
+      <article class="pillar gold reveal">
+        <div class="pillar-label">// THE OS — OPERATING SYSTEM</div>
         <p class="pillar-body">Everything connected. Voice, sales, calendar, CRM, reporting. One AI runs the entire business.</p>
-        <div class="pillar-status">2026 Build</div>
-      </div>
+        <div class="pillar-readout">FULL STACK · 2026</div>
+        <div class="pillar-footer">
+          <div class="pillar-status"><span class="status-dot"></span> 2026 BUILD</div>
+          <span class="pillar-link" style="opacity:.5;">In dev</span>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
 
+<!-- ─── WHY ─────────────────────────────── -->
 <section class="why">
-  <div class="section-inner why-inner">
-    <div class="section-eyebrow">// Why</div>
-    <p>Built by a 30-year operator. 25 years running phone-heavy businesses. Built and exited a Phoenix operation.</p>
-    <p>Most AI is built by engineers for engineers.</p>
-    <p>I build it for operators because <strong>I've BEEN one for three decades</strong>.</p>
+  <div class="container why-inner reveal">
+    <div class="eyebrow">// THE WHY</div>
+    <p class="why-lead">AI100X is the command layer above your AI tools.</p>
+    <div class="why-rule"></div>
+    <p class="why-line">Built by a 30-year operator. 25 years running phone-heavy businesses. Built and exited a Phoenix operation.</p>
+    <p class="why-line dim">Most AI is built by engineers for engineers.</p>
+    <p class="why-line">I build it for operators because I've <em>been</em> one for three decades.</p>
   </div>
 </section>
 
-<section class="wedge" id="wedge">
-  <div class="section-inner">
-    <div class="wedge-card">
-      <div class="section-eyebrow">// The Proof</div>
-      <h2 class="wedge-heading">AVA is live right now.</h2>
-      <p class="wedge-body">Call 786-937-1218 to hear it. No demo signup. No form. Just a real AI voice answering a real phone line.</p>
-      <p class="wedge-sub">This is what AI on a service business actually looks like in 2026.</p>
-      <a href="tel:+17869371218" class="phone-link">786 · 937 · 1218</a>
-      <div class="wedge-cta">
+<!-- ─── WEDGE ─────────────────────────────── -->
+<section id="wedge" class="wedge-section">
+  <div class="container">
+    <div class="wedge reveal">
+      <div class="eyebrow">// LIVE PROOF</div>
+      <h2 class="wedge-heading">AVA IS LIVE RIGHT NOW.</h2>
+      <p class="wedge-body">Call to hear it. No demo signup. No form. Just a real AI voice answering a real phone line.</p>
+      <div class="input-label">PUBLIC AVA DEMO LINE</div>
+      <a href="tel:+17869371218" class="phone-display">786 · 937 · 1218</a>
+      <div class="input-rail" aria-hidden="true"><span></span></div>
+      <div class="wedge-actions">
         <a href="tel:+17869371218" class="btn btn-primary">Call AVA Live</a>
-        <a href="https://aivoiceagency.ai" class="btn btn-secondary">aivoiceagency.ai →</a>
+        <a href="https://aivoiceagency.ai" class="btn btn-ghost">aivoiceagency.ai →</a>
       </div>
     </div>
   </div>
 </section>
 
-<footer class="footer">
-  <div class="section-inner">
-    <h2 class="footer-heading">By Application Only.</h2>
+</main>
+
+<!-- ─── FOOTER ─────────────────────────────── -->
+<footer>
+  <div class="container reveal">
+    <h2 class="footer-headline">BY APPLICATION ONLY.</h2>
     <p class="footer-sub">Three new operators per month. No more.</p>
     <div class="footer-links">
-      <a href="https://linkedin.com/in/shanehandel"><span class="arrow">→</span>DM Shane on LinkedIn</a>
-      <a href="tel:+17869371218"><span class="arrow">→</span>Or call the AVA line directly: 786-937-1218</a>
+      <a href="https://linkedin.com/in/shanehandel" target="_blank" rel="noopener">→ DM Shane on LinkedIn</a>
+      <a href="tel:+17869371218">→ Or call the AVA line directly: 786-937-1218</a>
     </div>
-    <div class="divider"></div>
-    <p class="fineprint"><a href="https://aivoiceagency.ai">aivoiceagency.ai</a> · Wisconsin-built · 2026</p>
+    <div class="footer-divider"></div>
+    <div class="footer-fineprint">aivoiceagency.ai · Wisconsin-built · 2026</div>
   </div>
 </footer>
+
+<script>
+  // ── Live clock in cockpit header ──
+  const clockEl = document.getElementById('clock');
+  function tick() {
+    if (!clockEl) return;
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const s = String(d.getSeconds()).padStart(2,'0');
+    clockEl.textContent = `${h}:${m}:${s} CT`;
+  }
+  tick(); setInterval(tick, 1000);
+
+  // ── Story-driven telemetry (deterministic, no Math.random) ──
+  const story = [
+    { delay: 2200,  kind: 'calls',  line: 'Call answered · 14s · airport pickup' },
+    { delay: 9800,  kind: 'leads',  line: 'Lead captured · round-trip request' },
+    { delay: 18500, kind: 'calls',  line: 'Call answered · 9s · quote requested' },
+    { delay: 26000, kind: 'booked', line: 'Appointment booked · Tue 09:00' },
+    { delay: 38000, kind: 'calls',  line: 'Call answered · 22s · corporate fleet' },
+    { delay: 48500, kind: 'leads',  line: 'Lead captured · after-hours route' },
+    { delay: 62000, kind: 'calls',  line: 'Call answered · 11s · repeat caller' },
+    { delay: 76500, kind: 'booked', line: 'Appointment booked · Fri 18:30' }
+  ];
+  const m = {
+    calls:  { el: document.getElementById('metric-calls'),  v: 247 },
+    leads:  { el: document.getElementById('metric-leads'),  v:  19 },
+    booked: { el: document.getElementById('metric-booked'), v:   8 }
+  };
+  function bump(k, line) {
+    const x = m[k]; if (!x.el) return;
+    x.v++; x.el.textContent = x.v;
+    x.el.style.transition = 'opacity 140ms ease';
+    x.el.style.opacity = '0.4';
+    setTimeout(() => { x.el.style.opacity = '1'; }, 160);
+    if (window.__pushTranscript) window.__pushTranscript(line, k);
+  }
+  function runStoryLoop() {
+    story.forEach(e => setTimeout(() => bump(e.kind, e.line), e.delay));
+    setTimeout(runStoryLoop, story[story.length - 1].delay + 8000);
+  }
+  runStoryLoop();
+
+  // ── AVA transcript card (one call at a time, types out) ──
+  const transcriptLines = [
+    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
+    '"This is AVA. Pickup or one-way?" → "Round trip, downtown to Scottsdale." → Routed. 24s.',
+    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.'
+  ];
+  const cardText = document.getElementById('avacard-text');
+  let lineIdx = 0;
+  function typeLine(s, done) {
+    if (!cardText) return;
+    cardText.textContent = '';
+    let i = 0;
+    const id = setInterval(() => {
+      cardText.textContent += s[i++] || '';
+      if (i >= s.length) { clearInterval(id); done && done(); }
+    }, 22);
+  }
+  function cycleTranscript() {
+    typeLine(transcriptLines[lineIdx], () => {
+      setTimeout(() => {
+        lineIdx = (lineIdx + 1) % transcriptLines.length;
+        cycleTranscript();
+      }, 6000);
+    });
+  }
+  setTimeout(cycleTranscript, 1500);
+
+  // ── 24h heartbeat sparkline ──
+  (function() {
+    const data = [2,1,1,0,1,2,4,7,11,14,12,10,9,8,11,15,18,16,12,9,7,5,4,3];
+    const hour = new Date().getHours();
+    const max = Math.max(...data);
+    const pts = data.map((v,i) => `${(i/23)*240},${24-(v/max)*22}`).join(' ');
+    const line = document.getElementById('hb-line');
+    const now = document.getElementById('hb-now');
+    if (!line || !now) return;
+    line.setAttribute('points', pts);
+    const [x, y] = pts.split(' ')[hour].split(',');
+    now.setAttribute('cx', x);
+    now.setAttribute('cy', y);
+  })();
+
+  // ── Reveal on scroll ──
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('show');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -70px 0px' });
+  reveals.forEach(r => io.observe(r));
+
+  // ── Command bar ⌘K ──
+  (function() {
+    const cmdk = document.getElementById('cmdk');
+    const list = document.getElementById('cmdk-list');
+    const input = document.getElementById('cmdk-input');
+    const launcher = document.getElementById('cmdk-launcher');
+    if (!cmdk || !list || !input) return;
+    let items = [...list.querySelectorAll('li')];
+    let idx = 0;
+    const setSel = (i) => {
+      const visible = items.filter(el => el.style.display !== 'none');
+      idx = Math.max(0, Math.min(i, visible.length - 1));
+      items.forEach(el => el.setAttribute('aria-selected', 'false'));
+      if (visible[idx]) visible[idx].setAttribute('aria-selected', 'true');
+    };
+    const open = () => {
+      cmdk.classList.add('open');
+      cmdk.setAttribute('aria-hidden', 'false');
+      items.forEach(el => el.style.display = '');
+      setSel(0);
+      setTimeout(() => input.focus(), 50);
+    };
+    const close = () => {
+      cmdk.classList.remove('open');
+      cmdk.setAttribute('aria-hidden', 'true');
+      input.value = '';
+    };
+    const exec = (el) => {
+      if (!el) return;
+      const a = el.dataset.action;
+      if (a.startsWith('#')) {
+        close();
+        document.querySelector(a)?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = a;
+      }
+    };
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      const isTyping = ['INPUT', 'TEXTAREA'].includes(tag);
+      if ((e.key === 'k' || e.key === 'K') && !cmdk.classList.contains('open') && !isTyping) {
+        e.preventDefault(); open();
+        return;
+      }
+      if (!cmdk.classList.contains('open')) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      const visible = items.filter(el => el.style.display !== 'none');
+      if (e.key === 'ArrowDown') { e.preventDefault(); setSel((idx + 1) % visible.length); }
+      if (e.key === 'ArrowUp')   { e.preventDefault(); setSel((idx - 1 + visible.length) % visible.length); }
+      if (e.key === 'Enter')     { e.preventDefault(); exec(visible[idx]); }
+      if (/^[1-6]$/.test(e.key)) {
+        const t = items.find(i => i.dataset.key === e.key);
+        if (t) { e.preventDefault(); exec(t); }
+      }
+    });
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase();
+      items.forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      setSel(0);
+    });
+    list.addEventListener('click', (e) => {
+      const li = e.target.closest('li');
+      if (li) exec(li);
+    });
+    cmdk.addEventListener('click', (e) => {
+      if (e.target === cmdk) close();
+    });
+    if (launcher) launcher.addEventListener('click', open);
+  })();
+
+  // ── Scroll-aware status bar ──
+  (function() {
+    const statusRight = document.querySelector('.right-meta');
+    if (!statusRight) return;
+    const stages = [
+      { sel: '.hero',       label: '// LIVE · 786 · 937 · 1218' },
+      { sel: '.stack-grid', label: '// STACK · 3 LAYERS' },
+      { sel: '.why',        label: '// WHY · 30 YEARS' },
+      { sel: '#wedge',      label: '// WEDGE · CALL NOW' },
+      { sel: 'footer',      label: '// APPLY · 3 SEATS / MO' }
+    ];
+    const targets = stages.map(s => ({ ...s, node: document.querySelector(s.sel) })).filter(s => s.node);
+    let current = '';
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const match = targets.find(t => t.node === e.target);
+          if (match && match.label !== current) {
+            statusRight.style.opacity = 0;
+            setTimeout(() => {
+              statusRight.textContent = match.label;
+              statusRight.style.opacity = 1;
+              current = match.label;
+            }, 160);
+          }
+        }
+      });
+    }, { threshold: 0.35 });
+    targets.forEach(t => obs.observe(t.node));
+  })();
+</script>
+
+<button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
+<div id="cmdk" class="cmdk" aria-hidden="true" role="dialog" aria-label="Command bar">
+  <div class="cmdk-panel">
+    <input id="cmdk-input" class="cmdk-input" placeholder="Type a command or press 1–6…" autocomplete="off">
+    <ul class="cmdk-list" id="cmdk-list">
+      <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
+      <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
+      <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
+      <li data-action="#wedge" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
+      <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
+    </ul>
+    <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
+  </div>
+</div>
 
 </body>
 </html>
