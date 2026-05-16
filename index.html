@@ -1198,7 +1198,7 @@
     font-size: 14px;
     cursor: pointer;
   }
-  @media (min-width: 900px) { .cmdk-launcher { display: none; } }
+  /* K launcher visible on all viewports (V6: was mobile-only in V4) */
 
   /* ─── ANCHOR SMOOTHNESS ─────────────────────────────── */
   section[id], footer[id] { scroll-margin-top: 80px; }
@@ -1798,6 +1798,18 @@
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
   })();
+
+  // ── Anchor links: explicit smooth-scroll click handler ──
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const id = link.getAttribute('href');
+    if (!id || id.length <= 1) return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
   // ── Rotating routing-from-city indicator ──
   (function() {
