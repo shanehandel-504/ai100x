@@ -522,6 +522,38 @@
   }
   @keyframes caret { 50% { opacity: 0; } }
 
+  .heartbeat {
+    margin-top: 14px;
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .heartbeat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .heartbeat-svg {
+    width: 100%;
+    height: 24px;
+    display: block;
+  }
+  #hb-now {
+    filter: drop-shadow(0 0 6px var(--cyan));
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  .heartbeat-axis {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-mute);
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+  }
+
   /* ─── STACK ─────────────────────────────── */
   .section-header { margin-bottom: 56px; max-width: 780px; }
 
@@ -1048,6 +1080,15 @@
             <p class="avacard-text" id="avacard-text"></p>
           </div>
         </div>
+
+        <div class="heartbeat">
+          <div class="heartbeat-label">24H · CALL VOLUME</div>
+          <svg class="heartbeat-svg" viewBox="0 0 240 24" preserveAspectRatio="none" aria-hidden="true">
+            <polyline id="hb-line" fill="none" stroke="#00D4FF" stroke-width="1.2" stroke-opacity="0.6"/>
+            <circle id="hb-now" r="2.6" fill="#00D4FF"/>
+          </svg>
+          <div class="heartbeat-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+        </div>
       </div>
     </div>
 
@@ -1212,6 +1253,21 @@
     });
   }
   setTimeout(cycleTranscript, 1500);
+
+  // ── 24h heartbeat sparkline ──
+  (function() {
+    const data = [2,1,1,0,1,2,4,7,11,14,12,10,9,8,11,15,18,16,12,9,7,5,4,3];
+    const hour = new Date().getHours();
+    const max = Math.max(...data);
+    const pts = data.map((v,i) => `${(i/23)*240},${24-(v/max)*22}`).join(' ');
+    const line = document.getElementById('hb-line');
+    const now = document.getElementById('hb-now');
+    if (!line || !now) return;
+    line.setAttribute('points', pts);
+    const [x, y] = pts.split(' ')[hour].split(',');
+    now.setAttribute('cx', x);
+    now.setAttribute('cy', y);
+  })();
 
   // ── Reveal on scroll ──
   const reveals = document.querySelectorAll('.reveal');
