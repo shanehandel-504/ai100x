@@ -848,6 +848,34 @@
     transform: scale(1.02);
   }
 
+  .input-label {
+    font-family: 'JetBrains Mono', monospace;
+    margin: 28px auto 0;
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .input-rail {
+    width: min(520px, 82%);
+    height: 1px;
+    margin: -20px auto 24px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .input-rail span {
+    display: block;
+    width: 34%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: railscan 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px var(--cyan));
+  }
+  @keyframes railscan {
+    0%   { transform: translateX(-120%); }
+    100% { transform: translateX(330%); }
+  }
+
   .wedge-actions {
     display: flex;
     flex-direction: column;
@@ -1178,7 +1206,9 @@
       <div class="eyebrow">// LIVE PROOF</div>
       <h2 class="wedge-heading">AVA IS LIVE RIGHT NOW.</h2>
       <p class="wedge-body">Call to hear it. No demo signup. No form. Just a real AI voice answering a real phone line.</p>
+      <div class="input-label">PUBLIC AVA DEMO LINE</div>
       <a href="tel:+17869371218" class="phone-display">786 · 937 · 1218</a>
+      <div class="input-rail" aria-hidden="true"><span></span></div>
       <div class="wedge-actions">
         <a href="tel:+17869371218" class="btn btn-primary">Call AVA Live</a>
         <a href="https://aivoiceagency.ai" class="btn btn-ghost">aivoiceagency.ai →</a>
