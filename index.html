@@ -187,6 +187,34 @@
     display: grid;
     align-items: center;
     padding: 56px 0 96px;
+    overflow: hidden;
+  }
+  .hero > .container { position: relative; z-index: 1; }
+
+  /* V6 prismatic scan line — 1px horizontal sweep top→bottom */
+  .hero-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0, 212, 255, 1) 30%,
+      rgba(255, 0, 212, 1) 50%,
+      rgba(255, 212, 0, 1) 70%,
+      transparent 100%);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(0.3px);
+    animation: hero-scan 6s linear infinite;
+  }
+  @keyframes hero-scan {
+    0%   { top: -4px; }
+    100% { top: calc(100% + 4px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scan { animation: none; opacity: 0; }
   }
 
   .hero-grid {
@@ -1370,6 +1398,7 @@
 
 <!-- ─── HERO ─────────────────────────────── -->
 <section class="hero">
+  <div class="hero-scan" aria-hidden="true"></div>
   <div class="container hero-grid">
     <div>
       <div class="eyebrow">// AI100X</div>
