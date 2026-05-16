@@ -974,6 +974,8 @@
     .hero { padding-top: 32px; padding-bottom: 64px; }
   }
 
+  .right-meta { transition: opacity 0.2s ease; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -1503,6 +1505,37 @@
       if (e.target === cmdk) close();
     });
     if (launcher) launcher.addEventListener('click', open);
+  })();
+
+  // ── Scroll-aware status bar ──
+  (function() {
+    const statusRight = document.querySelector('.right-meta');
+    if (!statusRight) return;
+    const stages = [
+      { sel: '.hero',       label: '// LIVE · 786 · 937 · 1218' },
+      { sel: '.stack-grid', label: '// STACK · 3 LAYERS' },
+      { sel: '.why',        label: '// WHY · 30 YEARS' },
+      { sel: '#wedge',      label: '// WEDGE · CALL NOW' },
+      { sel: 'footer',      label: '// APPLY · 3 SEATS / MO' }
+    ];
+    const targets = stages.map(s => ({ ...s, node: document.querySelector(s.sel) })).filter(s => s.node);
+    let current = '';
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const match = targets.find(t => t.node === e.target);
+          if (match && match.label !== current) {
+            statusRight.style.opacity = 0;
+            setTimeout(() => {
+              statusRight.textContent = match.label;
+              statusRight.style.opacity = 1;
+              current = match.label;
+            }, 160);
+          }
+        }
+      });
+    }, { threshold: 0.35 });
+    targets.forEach(t => obs.observe(t.node));
   })();
 </script>
 
