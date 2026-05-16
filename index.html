@@ -548,6 +548,16 @@
     color: var(--tile-color);
     line-height: 1;
     font-variant-numeric: tabular-nums;
+    display: inline-block;
+    transform-origin: left center;
+  }
+  .tile-value.tick {
+    animation: tile-tick 0.3s ease-out;
+  }
+  @keyframes tile-tick {
+    0%   { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
+    40%  { transform: scale(1.08); filter: drop-shadow(0 0 14px var(--tile-color)); }
+    100% { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
   }
 
   .signal-map {
@@ -1766,9 +1776,10 @@
   function bump(k, line) {
     const x = m[k]; if (!x.el) return;
     x.v++; x.el.textContent = x.v;
-    x.el.style.transition = 'opacity 140ms ease';
-    x.el.style.opacity = '0.4';
-    setTimeout(() => { x.el.style.opacity = '1'; }, 160);
+    x.el.classList.remove('tick');
+    void x.el.offsetWidth; // force reflow so the animation restarts
+    x.el.classList.add('tick');
+    setTimeout(() => x.el.classList.remove('tick'), 350);
     if (window.__pushTranscript) window.__pushTranscript(line, k);
   }
   function runStoryLoop() {
