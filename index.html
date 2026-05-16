@@ -1745,6 +1745,36 @@
   </div>
 </footer>
 
+<!-- K launcher + cmdk modal + ql slide-up — must be in DOM before <script> -->
+<button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
+<div id="cmdk" class="cmdk" aria-hidden="true" role="dialog" aria-label="Command bar">
+  <div class="cmdk-panel">
+    <input id="cmdk-input" class="cmdk-input" placeholder="Type a command or press 1–6…" autocomplete="off">
+    <ul class="cmdk-list" id="cmdk-list">
+      <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
+      <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
+      <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
+      <li data-action="#apply" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
+      <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
+    </ul>
+    <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
+  </div>
+</div>
+
+<!-- Quick lookup slide-up (K launcher target) -->
+<div id="ql" class="ql" aria-hidden="true" role="dialog" aria-label="Quick lookup">
+  <div class="ql-panel">
+    <div class="ql-title">// AI100X — QUICK LOOKUP</div>
+    <ul class="ql-list">
+      <li data-action="#why"><span>What is AI100X?</span><span class="ql-arrow">→</span></li>
+      <li data-action="tel:+17869371218"><span>Hear AVA Live</span><span class="ql-arrow">→</span></li>
+      <li data-action="#apply"><span>Apply for access</span><span class="ql-arrow">→</span></li>
+    </ul>
+    <div class="ql-close">Tap outside or press ESC to close</div>
+  </div>
+</div>
+
 <script>
   // ── Live clock in cockpit header ──
   const clockEl = document.getElementById('clock');
@@ -2074,35 +2104,6 @@
     });
   })();
 </script>
-
-<button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
-<div id="cmdk" class="cmdk" aria-hidden="true" role="dialog" aria-label="Command bar">
-  <div class="cmdk-panel">
-    <input id="cmdk-input" class="cmdk-input" placeholder="Type a command or press 1–6…" autocomplete="off">
-    <ul class="cmdk-list" id="cmdk-list">
-      <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
-      <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
-      <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
-      <li data-action="#apply" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
-      <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
-      <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
-    </ul>
-    <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
-  </div>
-</div>
-
-<!-- Quick lookup slide-up (K launcher target) -->
-<div id="ql" class="ql" aria-hidden="true" role="dialog" aria-label="Quick lookup">
-  <div class="ql-panel">
-    <div class="ql-title">// AI100X — QUICK LOOKUP</div>
-    <ul class="ql-list">
-      <li data-action="#why"><span>What is AI100X?</span><span class="ql-arrow">→</span></li>
-      <li data-action="tel:+17869371218"><span>Hear AVA Live</span><span class="ql-arrow">→</span></li>
-      <li data-action="#apply"><span>Apply for access</span><span class="ql-arrow">→</span></li>
-    </ul>
-    <div class="ql-close">Tap outside or press ESC to close</div>
-  </div>
-</div>
 
 </body>
 </html>
