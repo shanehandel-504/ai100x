@@ -1013,24 +1013,35 @@
   }
   tick(); setInterval(tick, 1000);
 
-  // ── Animated metric counters (live feel) ──
-  const metrics = [
-    { el: document.getElementById('metric-calls'),  v: 247, max: 999, every: 4500 },
-    { el: document.getElementById('metric-leads'),  v:  19, max:  99, every: 9000 },
-    { el: document.getElementById('metric-booked'), v:   8, max:  49, every: 14000 }
+  // ── Story-driven telemetry (deterministic, no Math.random) ──
+  const story = [
+    { delay: 2200,  kind: 'calls',  line: 'Call answered · 14s · airport pickup' },
+    { delay: 9800,  kind: 'leads',  line: 'Lead captured · round-trip request' },
+    { delay: 18500, kind: 'calls',  line: 'Call answered · 9s · quote requested' },
+    { delay: 26000, kind: 'booked', line: 'Appointment booked · Tue 09:00' },
+    { delay: 38000, kind: 'calls',  line: 'Call answered · 22s · corporate fleet' },
+    { delay: 48500, kind: 'leads',  line: 'Lead captured · after-hours route' },
+    { delay: 62000, kind: 'calls',  line: 'Call answered · 11s · repeat caller' },
+    { delay: 76500, kind: 'booked', line: 'Appointment booked · Fri 18:30' }
   ];
-  metrics.forEach(m => {
-    if (!m.el) return;
-    setInterval(() => {
-      if (m.v < m.max && Math.random() > 0.45) {
-        m.v += 1;
-        m.el.textContent = m.v;
-        m.el.style.transition = 'opacity 120ms ease';
-        m.el.style.opacity = '0.4';
-        setTimeout(() => { m.el.style.opacity = '1'; }, 140);
-      }
-    }, m.every);
-  });
+  const m = {
+    calls:  { el: document.getElementById('metric-calls'),  v: 247 },
+    leads:  { el: document.getElementById('metric-leads'),  v:  19 },
+    booked: { el: document.getElementById('metric-booked'), v:   8 }
+  };
+  function bump(k, line) {
+    const x = m[k]; if (!x.el) return;
+    x.v++; x.el.textContent = x.v;
+    x.el.style.transition = 'opacity 140ms ease';
+    x.el.style.opacity = '0.4';
+    setTimeout(() => { x.el.style.opacity = '1'; }, 160);
+    if (window.__pushTranscript) window.__pushTranscript(line, k);
+  }
+  function runStoryLoop() {
+    story.forEach(e => setTimeout(() => bump(e.kind, e.line), e.delay));
+    setTimeout(runStoryLoop, story[story.length - 1].delay + 8000);
+  }
+  runStoryLoop();
 
   // ── Reveal on scroll ──
   const reveals = document.querySelectorAll('.reveal');
