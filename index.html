@@ -987,6 +987,109 @@
     outline: 2px solid var(--cyan);
     outline-offset: 3px;
   }
+
+  .cmdk {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 14vh;
+    background: rgba(8, 8, 12, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .cmdk.open {
+    display: flex;
+    animation: cmdk-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes cmdk-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .cmdk-panel {
+    width: min(560px, calc(100% - 32px));
+    background: linear-gradient(180deg, #14141C, #0E0E15);
+    border: 1px solid var(--border-hot);
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(0, 212, 255, 0.08),
+      0 0 60px rgba(0, 212, 255, 0.06);
+  }
+  .cmdk-input {
+    width: 100%;
+    padding: 18px 20px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    outline: none;
+  }
+  .cmdk-input::placeholder { color: var(--text-mute); }
+  .cmdk-list {
+    list-style: none;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  .cmdk-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .cmdk-list li[aria-selected="true"] {
+    background: rgba(0, 212, 255, 0.06);
+    border-left-color: var(--cyan);
+  }
+  .cmdk-k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-mute);
+    border: 1px solid var(--border);
+    padding: 3px 7px;
+    letter-spacing: 0.1em;
+  }
+  .cmdk-meta {
+    margin-left: auto;
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .cmdk-foot {
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .cmdk-launcher {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 60;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--cyan);
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(10px);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  @media (min-width: 900px) { .cmdk-launcher { display: none; } }
 </style>
 </head>
 <body>
@@ -1329,7 +1432,95 @@
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -70px 0px' });
   reveals.forEach(r => io.observe(r));
+
+  // ── Command bar ⌘K ──
+  (function() {
+    const cmdk = document.getElementById('cmdk');
+    const list = document.getElementById('cmdk-list');
+    const input = document.getElementById('cmdk-input');
+    const launcher = document.getElementById('cmdk-launcher');
+    if (!cmdk || !list || !input) return;
+    let items = [...list.querySelectorAll('li')];
+    let idx = 0;
+    const setSel = (i) => {
+      const visible = items.filter(el => el.style.display !== 'none');
+      idx = Math.max(0, Math.min(i, visible.length - 1));
+      items.forEach(el => el.setAttribute('aria-selected', 'false'));
+      if (visible[idx]) visible[idx].setAttribute('aria-selected', 'true');
+    };
+    const open = () => {
+      cmdk.classList.add('open');
+      cmdk.setAttribute('aria-hidden', 'false');
+      items.forEach(el => el.style.display = '');
+      setSel(0);
+      setTimeout(() => input.focus(), 50);
+    };
+    const close = () => {
+      cmdk.classList.remove('open');
+      cmdk.setAttribute('aria-hidden', 'true');
+      input.value = '';
+    };
+    const exec = (el) => {
+      if (!el) return;
+      const a = el.dataset.action;
+      if (a.startsWith('#')) {
+        close();
+        document.querySelector(a)?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = a;
+      }
+    };
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      const isTyping = ['INPUT', 'TEXTAREA'].includes(tag);
+      if ((e.key === 'k' || e.key === 'K') && !cmdk.classList.contains('open') && !isTyping) {
+        e.preventDefault(); open();
+        return;
+      }
+      if (!cmdk.classList.contains('open')) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      const visible = items.filter(el => el.style.display !== 'none');
+      if (e.key === 'ArrowDown') { e.preventDefault(); setSel((idx + 1) % visible.length); }
+      if (e.key === 'ArrowUp')   { e.preventDefault(); setSel((idx - 1 + visible.length) % visible.length); }
+      if (e.key === 'Enter')     { e.preventDefault(); exec(visible[idx]); }
+      if (/^[1-6]$/.test(e.key)) {
+        const t = items.find(i => i.dataset.key === e.key);
+        if (t) { e.preventDefault(); exec(t); }
+      }
+    });
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase();
+      items.forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      setSel(0);
+    });
+    list.addEventListener('click', (e) => {
+      const li = e.target.closest('li');
+      if (li) exec(li);
+    });
+    cmdk.addEventListener('click', (e) => {
+      if (e.target === cmdk) close();
+    });
+    if (launcher) launcher.addEventListener('click', open);
+  })();
 </script>
+
+<button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
+<div id="cmdk" class="cmdk" aria-hidden="true" role="dialog" aria-label="Command bar">
+  <div class="cmdk-panel">
+    <input id="cmdk-input" class="cmdk-input" placeholder="Type a command or press 1–6…" autocomplete="off">
+    <ul class="cmdk-list" id="cmdk-list">
+      <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
+      <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
+      <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
+      <li data-action="#wedge" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
+      <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
+    </ul>
+    <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
+  </div>
+</div>
 
 </body>
 </html>
