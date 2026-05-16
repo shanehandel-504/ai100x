@@ -2501,6 +2501,10 @@
   })();
 
   // ── AVA transcript audio playback ──
+  //   Plays /audio/ava-call-{1..8}.mp3 matching the current
+  //   transcript line. V8: silent-fail to the user on missing
+  //   audio files (Shane uploads via ElevenLabs separately) but
+  //   logs a console.warn so a missing file is visible in DevTools.
   (function() {
     const btn = document.getElementById('avacard-play');
     const audio = document.getElementById('ava-audio');
@@ -2508,13 +2512,19 @@
     const stopPulse = () => btn.classList.remove('playing');
     audio.addEventListener('ended', stopPulse);
     audio.addEventListener('pause', stopPulse);
-    audio.addEventListener('error', stopPulse);
+    audio.addEventListener('error', () => {
+      stopPulse();
+      console.warn('[AVA audio] file missing or failed to load:', audio.currentSrc || audio.src);
+    });
     btn.addEventListener('click', () => {
       if (!audio.paused) { audio.pause(); return; }
       const n = (window.__avaLineIdx ? window.__avaLineIdx() : 0) + 1;
       audio.src = `/audio/ava-call-${n}.mp3`;
       btn.classList.add('playing');
-      audio.play().catch(stopPulse);
+      audio.play().catch((err) => {
+        stopPulse();
+        console.warn('[AVA audio] play() rejected for ava-call-' + n + '.mp3:', err && err.name);
+      });
     });
   })();
 
