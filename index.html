@@ -516,6 +516,15 @@
     50% { transform: scaleY(1); }
   }
 
+  /* V8: when dashboard scrolls out of view, pause its CSS animations
+     to save battery + paint cost (counters/transcript also pause via JS) */
+  .cockpit.paused .wave-bar,
+  .cockpit.paused .signal-track span,
+  .cockpit.paused .ticker-track,
+  .cockpit.paused #hb-now {
+    animation-play-state: paused;
+  }
+
   /* Telemetry tiles */
   .telemetry {
     display: grid;
@@ -1801,36 +1810,85 @@
   }
   tick(); setInterval(tick, 1000);
 
-  // ── Story-driven telemetry (deterministic, no Math.random) ──
-  const story = [
-    { delay: 2200,  kind: 'calls',  line: 'Call answered · 14s · airport pickup' },
-    { delay: 9800,  kind: 'leads',  line: 'Lead captured · round-trip request' },
-    { delay: 18500, kind: 'calls',  line: 'Call answered · 9s · quote requested' },
-    { delay: 26000, kind: 'booked', line: 'Appointment booked · Tue 09:00' },
-    { delay: 38000, kind: 'calls',  line: 'Call answered · 22s · corporate fleet' },
-    { delay: 48500, kind: 'leads',  line: 'Lead captured · after-hours route' },
-    { delay: 62000, kind: 'calls',  line: 'Call answered · 11s · repeat caller' },
-    { delay: 76500, kind: 'booked', line: 'Appointment booked · Fri 18:30' }
-  ];
+  // ── V8: always-ticking telemetry, gated by IO on the .cockpit ──
+  //   Counters tick at randomized intervals only while the dashboard
+  //   is in view. Soft-reset every ~3 min of dwell so a long reader
+  //   sees fresh "shifts" of activity. Transcript cycle is also
+  //   visibility-gated and freezes/resumes from the current index.
+  const BASE = { calls: 252, leads: 22, booked: 10 };
+  const SOFT_RESET_MS = 3 * 60 * 1000;
   const m = {
-    calls:  { el: document.getElementById('metric-calls'),  v: 247 },
-    leads:  { el: document.getElementById('metric-leads'),  v:  19 },
-    booked: { el: document.getElementById('metric-booked'), v:   8 }
+    calls:  { el: document.getElementById('metric-calls'),  v: BASE.calls,  min: 6,  max: 14,
+              lines: [
+                'Call answered · 14s · airport pickup',
+                'Call answered · 9s · quote requested',
+                'Call answered · 22s · corporate fleet',
+                'Call answered · 11s · repeat caller',
+                'Call answered · 18s · after-hours line',
+                'Call answered · 7s · returning operator' ] },
+    leads:  { el: document.getElementById('metric-leads'),  v: BASE.leads,  min: 18, max: 45,
+              lines: [
+                'Lead captured · round-trip request',
+                'Lead captured · after-hours route',
+                'Lead captured · Wisconsin operator',
+                'Lead captured · sprinter van quote' ] },
+    booked: { el: document.getElementById('metric-booked'), v: BASE.booked, min: 60, max: 180,
+              lines: [
+                'Appointment booked · Tue 09:00',
+                'Appointment booked · Fri 18:30',
+                'Appointment booked · Thu 06:00',
+                'Appointment booked · Mon 14:15' ] }
   };
+  // initial paint
+  ['calls', 'leads', 'booked'].forEach(k => { if (m[k].el) m[k].el.textContent = m[k].v; });
+
   function bump(k, line) {
     const x = m[k]; if (!x.el) return;
     x.v++; x.el.textContent = x.v;
     x.el.classList.remove('tick');
-    void x.el.offsetWidth; // force reflow so the animation restarts
+    void x.el.offsetWidth;
     x.el.classList.add('tick');
     setTimeout(() => x.el.classList.remove('tick'), 350);
-    if (window.__pushTranscript) window.__pushTranscript(line, k);
   }
-  function runStoryLoop() {
-    story.forEach(e => setTimeout(() => bump(e.kind, e.line), e.delay));
-    setTimeout(runStoryLoop, story[story.length - 1].delay + 8000);
+  function setCounter(k, val) {
+    const x = m[k]; if (!x.el) return;
+    x.v = val; x.el.textContent = val;
+    x.el.classList.remove('tick');
+    void x.el.offsetWidth;
+    x.el.classList.add('tick');
+    setTimeout(() => x.el.classList.remove('tick'), 350);
   }
-  runStoryLoop();
+  function rnd(min, max) { return (min + Math.random() * (max - min)) * 1000; }
+
+  const counterTimers = { calls: null, leads: null, booked: null };
+  function startCounter(k) {
+    if (counterTimers[k]) return;
+    const tick = () => {
+      const lines = m[k].lines;
+      bump(k, lines[Math.floor(Math.random() * lines.length)]);
+      counterTimers[k] = setTimeout(tick, rnd(m[k].min, m[k].max));
+    };
+    counterTimers[k] = setTimeout(tick, rnd(m[k].min, m[k].max));
+  }
+  function stopCounter(k) {
+    if (counterTimers[k]) { clearTimeout(counterTimers[k]); counterTimers[k] = null; }
+  }
+  function startCounters() { ['calls', 'leads', 'booked'].forEach(startCounter); }
+  function stopCounters()  { ['calls', 'leads', 'booked'].forEach(stopCounter); }
+
+  let resetTimer = null;
+  function softReset() {
+    setCounter('calls',  BASE.calls);
+    setCounter('leads',  BASE.leads);
+    setCounter('booked', BASE.booked);
+  }
+  function startResetTimer() {
+    if (resetTimer) return;
+    resetTimer = setInterval(softReset, SOFT_RESET_MS);
+  }
+  function stopResetTimer() {
+    if (resetTimer) { clearInterval(resetTimer); resetTimer = null; }
+  }
 
   // ── AVA transcript card (8 calls, types out, fades out, rotates) ──
   const transcriptLines = [
@@ -1844,34 +1902,80 @@
     '"AVA. One-way or round trip?" → "Corporate roadshow, three stops, Thursday." → Routed to ops. 41s.'
   ];
   const cardText = document.getElementById('avacard-text');
-  const HOLD_MS = 4000;
+  const HOLD_MS = 7500;   // V8: ~12s per call total (type ~3s + hold 7.5s + fade .4s + reset)
   const FADE_MS = 400;
   const TYPE_MS = 22;
   let lineIdx = 0;
+  let cycleActive = false;
+  let typingId = null;
   window.__avaLineIdx = () => lineIdx;
+
   function typeLine(s, done) {
     if (!cardText) return;
+    if (typingId) { clearInterval(typingId); typingId = null; }
     cardText.textContent = '';
     let i = 0;
-    const id = setInterval(() => {
+    typingId = setInterval(() => {
+      if (!cycleActive) { clearInterval(typingId); typingId = null; return; }
       cardText.textContent += s[i++] || '';
-      if (i >= s.length) { clearInterval(id); done && done(); }
+      if (i >= s.length) { clearInterval(typingId); typingId = null; done && done(); }
     }, TYPE_MS);
   }
   function cycleTranscript() {
-    if (!cardText) return;
+    if (!cycleActive || !cardText) return;
     cardText.style.opacity = '1';
     typeLine(transcriptLines[lineIdx], () => {
+      if (!cycleActive) return;
       setTimeout(() => {
+        if (!cycleActive) return;
         cardText.style.opacity = '0';
         setTimeout(() => {
+          if (!cycleActive) return;
           lineIdx = (lineIdx + 1) % transcriptLines.length;
           cycleTranscript();
         }, FADE_MS);
       }, HOLD_MS);
     });
   }
-  setTimeout(cycleTranscript, 1500);
+  function startTranscript() {
+    if (cycleActive) return;
+    cycleActive = true;
+    cycleTranscript();
+  }
+  function stopTranscript() {
+    cycleActive = false;
+    if (typingId) { clearInterval(typingId); typingId = null; }
+  }
+
+  // ── Visibility gate: dashboard in/out of viewport pauses all of the above ──
+  (function() {
+    const cockpitEl = document.querySelector('.cockpit');
+    if (!cockpitEl) {
+      // No dashboard — start everything unconditionally (fallback)
+      startCounters(); startTranscript(); startResetTimer();
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      startCounters(); startTranscript(); startResetTimer();
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          cockpitEl.classList.remove('paused');
+          startCounters();
+          startTranscript();
+          startResetTimer();
+        } else {
+          cockpitEl.classList.add('paused');
+          stopCounters();
+          stopTranscript();
+          stopResetTimer();
+        }
+      });
+    }, { threshold: 0.1 });
+    io.observe(cockpitEl);
+  })();
 
   // ── 24h heartbeat sparkline ──
   (function() {
