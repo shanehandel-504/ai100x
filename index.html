@@ -1092,6 +1092,93 @@
     cursor: pointer;
   }
   @media (min-width: 900px) { .cmdk-launcher { display: none; } }
+
+  /* ─── ANCHOR SMOOTHNESS ─────────────────────────────── */
+  section[id], footer[id] { scroll-margin-top: 80px; }
+
+  /* ─── QUICK LOOKUP SLIDE-UP (K launcher target) ─────── */
+  .ql {
+    position: fixed;
+    inset: 0;
+    z-index: 220;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(8, 8, 12, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .ql.open {
+    display: flex;
+    animation: ql-fade 0.2s ease;
+  }
+  @keyframes ql-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .ql-panel {
+    width: 100%;
+    max-width: 560px;
+    background: linear-gradient(180deg, #14141C, #0E0E15);
+    border-top: 1px solid var(--cyan);
+    border-left: 1px solid var(--border-hot);
+    border-right: 1px solid var(--border-hot);
+    box-shadow:
+      0 -30px 80px rgba(0, 0, 0, 0.7),
+      0 0 60px rgba(0, 212, 255, 0.08);
+    animation: ql-slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes ql-slide-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .ql-title {
+    padding: 18px 20px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .ql-list { list-style: none; }
+  .ql-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s, padding-left 0.15s;
+  }
+  .ql-list li:last-child { border-bottom: 0; }
+  .ql-list li:hover,
+  .ql-list li:active {
+    background: rgba(0, 212, 255, 0.06);
+    padding-left: 26px;
+  }
+  .ql-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 14px;
+  }
+  .ql-close {
+    padding: 12px 20px 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .ql-close:hover { color: var(--text); }
 </style>
 </head>
 <body>
@@ -1118,7 +1205,7 @@
       <div class="hero-subhead">The Operator's Cockpit.</div>
       <p class="hero-tagline">One screen. Every metric. Your AI runs the business.</p>
       <div class="actions">
-        <a href="#wedge" class="btn btn-ghost">By Application Only</a>
+        <a href="#apply" class="btn btn-ghost">By Application Only</a>
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
       </div>
       <div class="hero-credit">
@@ -1248,7 +1335,7 @@
 </section>
 
 <!-- ─── THE STACK ─────────────────────────────── -->
-<section>
+<section id="stack">
   <div class="container">
     <div class="section-header reveal">
       <div class="eyebrow">// THE STACK</div>
@@ -1293,7 +1380,7 @@
 </section>
 
 <!-- ─── WHY ─────────────────────────────── -->
-<section class="why">
+<section class="why" id="why">
   <div class="container why-inner reveal">
     <div class="eyebrow">// THE WHY</div>
     <p class="why-lead">AI100X is the command layer above your AI tools.</p>
@@ -1325,7 +1412,7 @@
 </main>
 
 <!-- ─── FOOTER ─────────────────────────────── -->
-<footer>
+<footer id="apply">
   <div class="container reveal">
     <h2 class="footer-headline">BY APPLICATION ONLY.</h2>
     <p class="footer-sub">Three new operators per month. No more.</p>
@@ -1504,7 +1591,6 @@
     cmdk.addEventListener('click', (e) => {
       if (e.target === cmdk) close();
     });
-    if (launcher) launcher.addEventListener('click', open);
   })();
 
   // ── Scroll-aware status bar ──
@@ -1537,6 +1623,47 @@
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
   })();
+
+  // ── Quick Lookup slide-up (K launcher) ──
+  (function() {
+    const ql = document.getElementById('ql');
+    const launcher = document.getElementById('cmdk-launcher');
+    if (!ql || !launcher) return;
+    const open = () => {
+      ql.classList.add('open');
+      ql.setAttribute('aria-hidden', 'false');
+    };
+    const close = () => {
+      ql.classList.remove('open');
+      ql.setAttribute('aria-hidden', 'true');
+    };
+    launcher.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      open();
+    });
+    ql.addEventListener('click', (e) => {
+      if (e.target === ql) { close(); return; }
+      const li = e.target.closest('li[data-action]');
+      if (li) {
+        const a = li.dataset.action;
+        close();
+        if (a.startsWith('#')) {
+          document.querySelector(a)?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.location.href = a;
+        }
+        return;
+      }
+      if (e.target.closest('.ql-close')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && ql.classList.contains('open')) {
+        e.preventDefault();
+        close();
+      }
+    });
+  })();
 </script>
 
 <button class="cmdk-launcher" id="cmdk-launcher" aria-label="Open command bar">K</button>
@@ -1547,11 +1674,24 @@
       <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
       <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
       <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
-      <li data-action="#wedge" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="#apply" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
       <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
       <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
     </ul>
     <div class="cmdk-foot">↑↓ navigate · ↵ execute · ESC close</div>
+  </div>
+</div>
+
+<!-- Quick lookup slide-up (K launcher target) -->
+<div id="ql" class="ql" aria-hidden="true" role="dialog" aria-label="Quick lookup">
+  <div class="ql-panel">
+    <div class="ql-title">// AI100X — QUICK LOOKUP</div>
+    <ul class="ql-list">
+      <li data-action="#why"><span>What is AI100X?</span><span class="ql-arrow">→</span></li>
+      <li data-action="tel:+17869371218"><span>Hear AVA Live</span><span class="ql-arrow">→</span></li>
+      <li data-action="#apply"><span>Apply for access</span><span class="ql-arrow">→</span></li>
+    </ul>
+    <div class="ql-close">Tap outside or press ESC to close</div>
   </div>
 </div>
 
