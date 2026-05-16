@@ -103,11 +103,46 @@
     inset: 0;
     z-index: -2;
     background-image:
-      linear-gradient(rgba(238, 240, 244, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(238, 240, 244, 0.025) 1px, transparent 1px);
+      linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
     background-size: 80px 80px;
     mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
     -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
+    animation: grid-breathe 8s ease-in-out infinite;
+  }
+  @keyframes grid-breathe {
+    0%, 100% { opacity: 0.25; }
+    50%      { opacity: 1.0; }
+  }
+
+  /* V6 pulse points — live data points lighting up at intersections */
+  #grid-points {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .grid-point {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    margin-left: -2px;
+    margin-top: -2px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 14px var(--cyan), 0 0 28px rgba(0, 212, 255, 0.55);
+    opacity: 0;
+    animation: grid-point-flash 1.4s ease-out forwards;
+  }
+  @keyframes grid-point-flash {
+    0%   { opacity: 0; transform: scale(0.4); }
+    25%  { opacity: 1; transform: scale(1.35); }
+    100% { opacity: 0; transform: scale(0.6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body::after { animation: none; }
+    .grid-point { animation: none; }
+    #grid-points { display: none; }
   }
 
   a { color: inherit; text-decoration: none; }
@@ -1383,6 +1418,8 @@
 </head>
 <body>
 
+<div id="grid-points" aria-hidden="true"></div>
+
 <!-- ─── STATUS BAR ─────────────────────────────── -->
 <header class="status-bar">
   <div class="container status-inner">
@@ -1856,6 +1893,34 @@
       });
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
+  })();
+
+  // ── Grid pulse points — random intersections flash cyan ──
+  (function() {
+    const container = document.getElementById('grid-points');
+    if (!container) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const GRID = 80;
+    function spawnOne() {
+      const cols = Math.max(1, Math.floor(window.innerWidth / GRID));
+      const rows = Math.max(1, Math.floor(window.innerHeight / GRID));
+      const x = Math.floor(Math.random() * cols) * GRID;
+      const y = Math.floor(Math.random() * rows) * GRID;
+      const dot = document.createElement('span');
+      dot.className = 'grid-point';
+      dot.style.left = x + 'px';
+      dot.style.top  = y + 'px';
+      container.appendChild(dot);
+      setTimeout(() => dot.remove(), 1500);
+    }
+    function spawnGroup() {
+      const count = 3 + Math.floor(Math.random() * 3); // 3–5
+      for (let i = 0; i < count; i++) {
+        setTimeout(spawnOne, Math.random() * 1400);
+      }
+      setTimeout(spawnGroup, 4000 + Math.random() * 3000); // every 4–7s
+    }
+    setTimeout(spawnGroup, 2500);
   })();
 
   // ── Anchor links: explicit smooth-scroll click handler ──
