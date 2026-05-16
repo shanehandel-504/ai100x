@@ -277,9 +277,14 @@
   }
   .hero > .container { position: relative; z-index: 1; }
 
-  /* V6 prismatic scan line — 1px horizontal sweep top→bottom */
+  /* V6 prismatic scan line — 1px horizontal sweep top→bottom
+     V8: animate transform: translateY (compositor) instead of
+     top (layout) to kill the mobile-scroll jerk. JS sets
+     --hero-scan-end to the hero's measured height on load +
+     resize so the sweep ends precisely at the hero's bottom. */
   .hero-scan {
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
     height: 1px;
@@ -293,11 +298,13 @@
     z-index: 0;
     pointer-events: none;
     filter: blur(0.3px);
+    transform: translateY(-4px);
+    will-change: transform;
     animation: hero-scan 6s linear infinite;
   }
   @keyframes hero-scan {
-    0%   { top: -4px; }
-    100% { top: calc(100% + 4px); }
+    0%   { transform: translateY(-4px); }
+    100% { transform: translateY(var(--hero-scan-end, 100vh)); }
   }
   @media (prefers-reduced-motion: reduce) {
     .hero-scan { animation: none; opacity: 0; }
@@ -824,9 +831,9 @@
 
   /* V6 prismatic cascade: each pillar breathes its accent color,
      offset 0.8s so the three roll down the stack in rhythm */
-  .pillar.cyan    { animation: pillar-glow-cyan    2.5s ease-in-out infinite; }
-  .pillar.magenta { animation: pillar-glow-magenta 2.5s ease-in-out 0.8s infinite; }
-  .pillar.gold    { animation: pillar-glow-gold    2.5s ease-in-out 1.6s infinite; }
+  .pillar.cyan    { animation: pillar-glow-cyan    2.5s ease-in-out infinite; will-change: box-shadow; }
+  .pillar.magenta { animation: pillar-glow-magenta 2.5s ease-in-out 0.8s infinite; will-change: box-shadow; }
+  .pillar.gold    { animation: pillar-glow-gold    2.5s ease-in-out 1.6s infinite; will-change: box-shadow; }
   .pillar.cyan::before { animation: pillar-edge 4.5s ease-in-out infinite; }
 
   @keyframes pillar-glow-cyan {
@@ -1993,6 +2000,22 @@
       });
     }, { threshold: 0.35 });
     targets.forEach(t => obs.observe(t.node));
+  })();
+
+  // ── V8: feed the hero's measured height to the scan-line animation
+  //        so transform: translateY ends exactly at the hero's bottom ──
+  (function() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    const setScanEnd = () => {
+      hero.style.setProperty('--hero-scan-end', (hero.offsetHeight + 4) + 'px');
+    };
+    setScanEnd();
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(setScanEnd).observe(hero);
+    } else {
+      window.addEventListener('resize', setScanEnd, { passive: true });
+    }
   })();
 
   // ── Grid pulse points — random intersections flash cyan ──
