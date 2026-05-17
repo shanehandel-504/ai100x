@@ -597,7 +597,7 @@
 
   /* V9: pause expensive CSS animations when dashboard scrolls out of view */
   .cockpit.paused .wave-bar,
-  .cockpit.paused .signal-track span,
+  .cockpit.paused .packet,
   .cockpit.paused .tile-state,
   .cockpit.paused #hb-now {
     animation-play-state: paused;
@@ -659,7 +659,8 @@
     50%      { opacity: 0.7;  text-shadow: 0 0 14px var(--tile-color); }
   }
 
-  .signal-map {
+  /* V9 signal route map — pill nodes + animated dot packets, 60% opacity */
+  .route-map {
     position: relative;
     display: grid;
     grid-template-columns: auto 1fr auto 1fr auto;
@@ -667,43 +668,54 @@
     gap: 10px;
     margin: 8px 0 20px;
     font-family: 'JetBrains Mono', monospace;
+    opacity: 0.6;
   }
-  .signal-node {
+  .route-node {
     font-size: 9px;
-    letter-spacing: 0.18em;
-    border: 1px solid var(--border);
-    padding: 7px 9px;
+    letter-spacing: 0.2em;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 6px 12px;
     background: rgba(10, 10, 15, 0.6);
     font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
-  .signal-node.voice   { color: var(--cyan); }
-  .signal-node.cockpit { color: var(--magenta); }
-  .signal-node.os      { color: var(--gold); }
-  .signal-track {
+  .route-node.voice   { color: var(--cyan); }
+  .route-node.cockpit { color: var(--magenta); }
+  .route-node.os      { color: var(--gold); }
+  .route-track {
     position: relative;
     height: 1px;
     background: var(--border);
-    overflow: hidden;
+    overflow: visible;
   }
-  .signal-track span {
+  .packet {
     position: absolute;
-    inset: 0 auto 0 0;
-    width: 38%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    filter: drop-shadow(0 0 6px var(--cyan));
-    animation: packet 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) translateZ(0);
+    pointer-events: none;
+    will-change: left, opacity;
   }
-  .signal-track.two span {
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    filter: drop-shadow(0 0 6px var(--gold));
-    animation-delay: 1.35s;
+  .packet-cyan {
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan), 0 0 14px rgba(0, 212, 255, 0.55);
+    animation: packet-flow 3s linear infinite;
   }
-  @keyframes packet {
-    0%   { transform: translateX(-120%); opacity: 0; }
-    15%  { opacity: 1; }
-    85%  { opacity: 1; }
-    100% { transform: translateX(280%); opacity: 0; }
+  .packet-gold {
+    background: var(--gold);
+    box-shadow: 0 0 6px var(--gold), 0 0 14px rgba(255, 212, 0, 0.55);
+    animation: packet-flow 3s linear infinite;
+    animation-delay: 1.5s;
+  }
+  @keyframes packet-flow {
+    0%   { left: 0%;   opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
   }
 
   /* V9 signal-router ticker — single line, fades through 5 labels every 4s */
@@ -1817,12 +1829,16 @@
           </div>
         </div>
 
-        <div class="signal-map" aria-hidden="true">
-          <div class="signal-node voice">VOICE</div>
-          <div class="signal-track"><span></span></div>
-          <div class="signal-node cockpit">COCKPIT</div>
-          <div class="signal-track two"><span></span></div>
-          <div class="signal-node os">OS</div>
+        <div class="route-map" aria-hidden="true">
+          <div class="route-node voice">VOICE</div>
+          <div class="route-track">
+            <span class="packet packet-cyan"></span>
+          </div>
+          <div class="route-node cockpit">COCKPIT</div>
+          <div class="route-track">
+            <span class="packet packet-gold"></span>
+          </div>
+          <div class="route-node os">OS</div>
         </div>
 
         <div class="ticker">
