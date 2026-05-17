@@ -351,8 +351,87 @@
   .hero-tagline {
     font-size: clamp(17px, 2.1vw, 22px);
     color: var(--text-dim);
-    max-width: 580px;
-    margin-bottom: 48px;
+    max-width: 620px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* V9 hero proof line — 14px mono, cyan, underline animates on "live" */
+  .hero-proof {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--cyan);
+    text-align: center;
+    margin: 0 0 32px;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+  }
+  .hero-proof .proof-live {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 2px;
+  }
+  .hero-proof .proof-live::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: proof-live-line 2.6s ease-in-out infinite;
+  }
+  @keyframes proof-live-line {
+    0%   { transform: scaleX(0);   opacity: 0.4; }
+    45%  { transform: scaleX(1);   opacity: 1;   transform-origin: left center; }
+    55%  { transform: scaleX(1);   opacity: 1;   transform-origin: right center; }
+    100% { transform: scaleX(0);   opacity: 0.4; transform-origin: right center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-proof .proof-live::after { animation: none; transform: scaleX(1); opacity: 0.7; }
+  }
+
+  /* V9 vertical-specificity strip — // BUILT FIRST FOR + 4 pills */
+  .vstrip {
+    margin: 28px 0 8px;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .vstrip-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .vstrip-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .vpill {
+    display: inline-block;
+    border: 1px solid var(--cyan);
+    background: transparent;
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .vstrip-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--text-mute);
     line-height: 1.5;
   }
 
@@ -516,11 +595,10 @@
     50% { transform: scaleY(1); }
   }
 
-  /* V8: when dashboard scrolls out of view, pause its CSS animations
-     to save battery + paint cost (counters/transcript also pause via JS) */
+  /* V9: pause expensive CSS animations when dashboard scrolls out of view */
   .cockpit.paused .wave-bar,
-  .cockpit.paused .signal-track span,
-  .cockpit.paused .ticker-track,
+  .cockpit.paused .packet,
+  .cockpit.paused .tile-state,
   .cockpit.paused #hb-now {
     animation-play-state: paused;
   }
@@ -565,24 +643,24 @@
 
   .tile-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(20px, 3vw, 26px);
+    font-size: clamp(18px, 2.6vw, 22px);
     font-weight: 600;
     color: var(--tile-color);
     line-height: 1;
-    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
     display: inline-block;
-    transform-origin: left center;
   }
-  .tile-value.tick {
-    animation: tile-tick 0.3s ease-out;
+  .tile-state {
+    animation: state-pulse 2.4s ease-in-out infinite;
+    will-change: opacity, text-shadow;
   }
-  @keyframes tile-tick {
-    0%   { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
-    40%  { transform: scale(1.08); filter: drop-shadow(0 0 14px var(--tile-color)); }
-    100% { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
+  @keyframes state-pulse {
+    0%, 100% { opacity: 1;    text-shadow: 0 0 6px  rgba(255,255,255,0); }
+    50%      { opacity: 0.7;  text-shadow: 0 0 14px var(--tile-color); }
   }
 
-  .signal-map {
+  /* V9 signal route map — pill nodes + animated dot packets, 60% opacity */
+  .route-map {
     position: relative;
     display: grid;
     grid-template-columns: auto 1fr auto 1fr auto;
@@ -590,80 +668,78 @@
     gap: 10px;
     margin: 8px 0 20px;
     font-family: 'JetBrains Mono', monospace;
+    opacity: 0.6;
   }
-  .signal-node {
+  .route-node {
     font-size: 9px;
-    letter-spacing: 0.18em;
-    border: 1px solid var(--border);
-    padding: 7px 9px;
+    letter-spacing: 0.2em;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 6px 12px;
     background: rgba(10, 10, 15, 0.6);
     font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
-  .signal-node.voice   { color: var(--cyan); }
-  .signal-node.cockpit { color: var(--magenta); }
-  .signal-node.os      { color: var(--gold); }
-  .signal-track {
+  .route-node.voice   { color: var(--cyan); }
+  .route-node.cockpit { color: var(--magenta); }
+  .route-node.os      { color: var(--gold); }
+  .route-track {
     position: relative;
     height: 1px;
     background: var(--border);
-    overflow: hidden;
+    overflow: visible;
   }
-  .signal-track span {
+  .packet {
     position: absolute;
-    inset: 0 auto 0 0;
-    width: 38%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    filter: drop-shadow(0 0 6px var(--cyan));
-    animation: packet 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) translateZ(0);
+    pointer-events: none;
+    will-change: left, opacity;
   }
-  .signal-track.two span {
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    filter: drop-shadow(0 0 6px var(--gold));
-    animation-delay: 1.35s;
+  .packet-cyan {
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan), 0 0 14px rgba(0, 212, 255, 0.55);
+    animation: packet-flow 3s linear infinite;
   }
-  @keyframes packet {
-    0%   { transform: translateX(-120%); opacity: 0; }
-    15%  { opacity: 1; }
-    85%  { opacity: 1; }
-    100% { transform: translateX(280%); opacity: 0; }
+  .packet-gold {
+    background: var(--gold);
+    box-shadow: 0 0 6px var(--gold), 0 0 14px rgba(255, 212, 0, 0.55);
+    animation: packet-flow 3s linear infinite;
+    animation-delay: 1.5s;
+  }
+  @keyframes packet-flow {
+    0%   { left: 0%;   opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
   }
 
-  /* Event ticker */
+  /* V9 signal-router ticker — single line, fades through 5 labels every 4s */
   .ticker {
     border-top: 1px solid var(--border);
     margin: 0 -20px;
-    padding: 14px 20px 4px;
+    padding: 14px 20px 8px;
     overflow: hidden;
     position: relative;
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    min-height: 36px;
   }
-
-  .ticker-track {
-    display: flex;
-    gap: 32px;
-    animation: ticker-scroll 28s linear infinite;
-    width: max-content;
-  }
-
-  @keyframes ticker-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  .ticker-item {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--text-dim);
-    white-space: nowrap;
+  .ticker-display {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    opacity: 1;
+    transition: opacity 0.32s ease;
   }
-
-  .ticker-item .arrow { color: var(--cyan); }
+  .ticker-display .arrow { color: var(--cyan); }
+  .ticker-display .ticker-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .avacard {
     margin-top: 16px;
@@ -1465,167 +1541,12 @@
   }
   .ql-close:hover { color: var(--text); }
 
-  /* ─── V8 APPLICATION FORM ─────────────────────────────── */
-  .apply-form {
-    max-width: 760px;
-    margin: 48px auto 0;
-    text-align: left;
-    display: grid;
-    gap: 18px;
-  }
-  .apply-form .row {
-    display: grid;
-    gap: 18px;
-  }
-  .apply-form .field { display: grid; gap: 8px; }
-  .apply-form label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-  .apply-form label .req { color: var(--cyan); margin-left: 4px; }
-  .apply-form input,
-  .apply-form select,
-  .apply-form textarea {
-    width: 100%;
-    background: rgba(20, 20, 28, 0.6);
-    border: 1px solid var(--border);
-    color: var(--text);
-    /* 16px+ keeps iOS Safari from auto-zooming on focus */
-    font-size: 16px;
-    font-family: 'Space Grotesk', system-ui, sans-serif;
-    padding: 14px 16px;
-    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 0;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-  .apply-form select {
-    background-image:
-      linear-gradient(45deg, transparent 50%, var(--cyan) 50%),
-      linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
-    background-position:
-      calc(100% - 18px) 21px,
-      calc(100% - 13px) 21px;
-    background-size: 5px 5px;
-    background-repeat: no-repeat;
-    padding-right: 38px;
-  }
-  .apply-form input:focus,
-  .apply-form select:focus,
-  .apply-form textarea:focus {
-    outline: none;
-    border-color: var(--cyan);
-    background: rgba(20, 20, 28, 0.9);
-    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
-  }
-  .apply-form input:invalid:not(:placeholder-shown),
-  .apply-form select:invalid:not(:focus),
-  .apply-form textarea:invalid:not(:placeholder-shown) {
-    border-color: rgba(255, 0, 212, 0.5);
-  }
-  .apply-form textarea {
-    min-height: 110px;
-    resize: vertical;
-    font-family: 'Space Grotesk', system-ui, sans-serif;
-    line-height: 1.5;
-  }
-  .apply-form .field-error {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--magenta);
-    min-height: 14px;
-    letter-spacing: 0.04em;
-  }
-  .apply-form .submit-row {
+  .footer-cta {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    margin-top: 12px;
+    justify-content: center;
+    margin: 8px 0 60px;
   }
-  .apply-form button[type="submit"] {
-    background: var(--cyan);
-    color: var(--void);
-    border: 1px solid var(--cyan);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 0.02em;
-    padding: 16px 36px;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    min-height: 52px;
-    min-width: 220px;
-  }
-  .apply-form button[type="submit"]:hover,
-  .apply-form button[type="submit"]:focus-visible {
-    background: var(--cyan-hot);
-    border-color: var(--cyan-hot);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0, 212, 255, 0.28);
-    outline: none;
-  }
-  .apply-form button[type="submit"]:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-  .apply-form .helper {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-mute);
-    letter-spacing: 0.04em;
-    text-align: center;
-  }
-
-  .apply-success {
-    max-width: 600px;
-    margin: 48px auto 0;
-    padding: 32px;
-    border: 1px solid var(--cyan);
-    background: rgba(0, 212, 255, 0.04);
-    text-align: center;
-  }
-  .apply-success-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--cyan);
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .apply-success-headline {
-    font-size: clamp(22px, 3vw, 28px);
-    line-height: 1.2;
-    color: var(--text);
-    margin-bottom: 12px;
-    font-weight: 600;
-  }
-  .apply-success-body {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-
-  @media (min-width: 640px) {
-    .apply-form .row.two { grid-template-columns: 1fr 1fr; }
-  }
-  /* ─── ROUTING INDICATOR ─────────────────────────────── */
-  .routing {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-style: italic;
-    color: #666;
-    letter-spacing: 0.08em;
-    margin: -4px 0 16px;
-    text-align: center;
-    transition: opacity 0.4s ease;
-  }
+  .footer-cta .btn { min-width: 280px; }
 
   /* ─── MICRO FOOTER ─────────────────────────────── */
   .microfooter {
@@ -1676,11 +1597,26 @@
       <div class="eyebrow">// AI100X</div>
       <h1 class="hero-headline">AI<span class="prism">100X</span></h1>
       <div class="hero-subhead">The Operator's Cockpit.</div>
-      <p class="hero-tagline">One screen. Every metric. Your AI runs the business.</p>
+      <p class="hero-tagline">Calls. Leads. Dispatch. Revenue. AI agents. One operating layer.</p>
+      <p class="hero-proof">
+        The first module is already <span class="proof-live">live</span>. Call AVA now.
+      </p>
       <div class="actions">
-        <a href="#apply" class="btn btn-ghost">By Application Only</a>
+        <a href="/apply/" class="btn btn-ghost">Apply for Early Operator Access →</a>
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
       </div>
+
+      <div class="vstrip" aria-label="Built for these operators">
+        <div class="vstrip-label">// BUILT FIRST FOR</div>
+        <div class="vstrip-pills">
+          <span class="vpill">Transportation</span>
+          <span class="vpill">Home Services</span>
+          <span class="vpill">Dispatch-heavy Operations</span>
+          <span class="vpill">Multi-location Service Businesses</span>
+        </div>
+        <div class="vstrip-sub">Operator-built for high-volume, phone-driven businesses</div>
+      </div>
+
       <div class="hero-credit">
         Built by <strong>Shane Handel</strong><span class="sep">·</span>30 years operator<span class="sep">·</span>Wisconsin-built
       </div>
@@ -1692,7 +1628,7 @@
         <div class="cockpit-header-left">
           <span class="pulse-dot" aria-hidden="true"></span>
           <span class="cockpit-header-tag">AI100X PREVIEW</span>
-          <span>· SIMULATED FEED</span>
+          <span>· SIGNAL ROUTER</span>
         </div>
         <div class="cockpit-header-right" id="clock">--:--:--</div>
       </div>
@@ -1737,44 +1673,35 @@
 
         <div class="telemetry">
           <div class="tile tile-cyan">
-            <div class="tile-label">Calls</div>
-            <div class="tile-value" id="metric-calls">247</div>
+            <div class="tile-label">Voice</div>
+            <div class="tile-value tile-state">ONLINE</div>
           </div>
           <div class="tile tile-magenta">
-            <div class="tile-label">Leads</div>
-            <div class="tile-value" id="metric-leads">19</div>
+            <div class="tile-label">Cockpit</div>
+            <div class="tile-value tile-state">ARMING</div>
           </div>
           <div class="tile tile-gold">
-            <div class="tile-label">Booked</div>
-            <div class="tile-value" id="metric-booked">8</div>
+            <div class="tile-label">OS</div>
+            <div class="tile-value tile-state">QUEUED</div>
           </div>
         </div>
 
-        <div class="routing" id="routing">// Routing call from Phoenix</div>
-
-        <div class="signal-map" aria-hidden="true">
-          <div class="signal-node voice">VOICE</div>
-          <div class="signal-track"><span></span></div>
-          <div class="signal-node cockpit">COCKPIT</div>
-          <div class="signal-track two"><span></span></div>
-          <div class="signal-node os">OS</div>
+        <div class="route-map" aria-hidden="true">
+          <div class="route-node voice">VOICE</div>
+          <div class="route-track">
+            <span class="packet packet-cyan"></span>
+          </div>
+          <div class="route-node cockpit">COCKPIT</div>
+          <div class="route-track">
+            <span class="packet packet-gold"></span>
+          </div>
+          <div class="route-node os">OS</div>
         </div>
 
         <div class="ticker">
-          <div class="ticker-track">
-            <div class="ticker-item"><span class="arrow">→</span> 21:47 · Call answered · 14s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:46 · Lead captured · West Phoenix</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:44 · Appointment booked · Tue 3:00pm</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:42 · Call answered · 9s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:39 · Quote routed · Corporate fleet</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
-            <!-- Duplicate for seamless loop -->
-            <div class="ticker-item"><span class="arrow">→</span> 21:47 · Call answered · 14s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:46 · Lead captured · West Phoenix</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:44 · Appointment booked · Tue 3:00pm</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:42 · Call answered · 9s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:39 · Quote routed · Corporate fleet</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
+          <div class="ticker-display" id="ticker-display">
+            <span class="arrow">→</span>
+            <span class="ticker-text" id="ticker-text">DEMO LINE · Voice path open</span>
           </div>
         </div>
 
@@ -1896,97 +1823,10 @@
 <footer id="apply">
   <div class="container reveal">
     <h2 class="footer-headline">BY APPLICATION ONLY.</h2>
-    <p class="footer-sub">Three new operators per month. No more.</p>
+    <p class="footer-sub">Founder-led onboarding. Currently onboarding a small number of operators.</p>
 
-    <form class="apply-form" id="apply-form" novalidate>
-      <div class="row two">
-        <div class="field">
-          <label for="ap-first">First name <span class="req">*</span></label>
-          <input id="ap-first" name="first_name" type="text" autocomplete="given-name" required placeholder="Shane">
-          <div class="field-error" data-for="ap-first"></div>
-        </div>
-        <div class="field">
-          <label for="ap-last">Last name <span class="req">*</span></label>
-          <input id="ap-last" name="last_name" type="text" autocomplete="family-name" required placeholder="Handel">
-          <div class="field-error" data-for="ap-last"></div>
-        </div>
-      </div>
-
-      <div class="row two">
-        <div class="field">
-          <label for="ap-biz">Business name <span class="req">*</span></label>
-          <input id="ap-biz" name="business_name" type="text" autocomplete="organization" required placeholder="Operator LLC">
-          <div class="field-error" data-for="ap-biz"></div>
-        </div>
-        <div class="field">
-          <label for="ap-role">Role / title <span class="req">*</span></label>
-          <input id="ap-role" name="role" type="text" autocomplete="organization-title" required placeholder="Owner / Operator">
-          <div class="field-error" data-for="ap-role"></div>
-        </div>
-      </div>
-
-      <div class="row two">
-        <div class="field">
-          <label for="ap-email">Email <span class="req">*</span></label>
-          <input id="ap-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
-          <div class="field-error" data-for="ap-email"></div>
-        </div>
-        <div class="field">
-          <label for="ap-phone">Phone <span class="req">*</span></label>
-          <input id="ap-phone" name="phone" type="tel" autocomplete="tel" required placeholder="(555) 123-4567" pattern="[\d\s().+\-]{10,}">
-          <div class="field-error" data-for="ap-phone"></div>
-        </div>
-      </div>
-
-      <div class="row two">
-        <div class="field">
-          <label for="ap-industry">Industry <span class="req">*</span></label>
-          <select id="ap-industry" name="industry" required>
-            <option value="">Select…</option>
-            <option value="ground_transportation">Ground Transportation</option>
-            <option value="real_estate">Real Estate</option>
-            <option value="service_business">Service Business</option>
-            <option value="other">Other</option>
-          </select>
-          <div class="field-error" data-for="ap-industry"></div>
-        </div>
-        <div class="field">
-          <label for="ap-volume">Monthly inbound call volume <span class="req">*</span></label>
-          <select id="ap-volume" name="call_volume" required>
-            <option value="">Select…</option>
-            <option value="lt_100">Under 100</option>
-            <option value="100_500">100 – 500</option>
-            <option value="500_2000">500 – 2,000</option>
-            <option value="gt_2000">2,000+</option>
-          </select>
-          <div class="field-error" data-for="ap-volume"></div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="ap-missed">What's the biggest call you've missed in the last 30 days? <span class="req">*</span></label>
-        <textarea id="ap-missed" name="biggest_missed" required placeholder="The wedding shuttle that never called back. The Tuesday 6am pickup that went to a competitor. Be specific."></textarea>
-        <div class="field-error" data-for="ap-missed"></div>
-      </div>
-
-      <div class="field">
-        <label for="ap-source">How did you hear about AI100X?</label>
-        <input id="ap-source" name="source" type="text" placeholder="LinkedIn, referral, search…">
-      </div>
-
-      <div class="submit-row">
-        <button type="submit" id="ap-submit">Submit application →</button>
-        <div class="helper">// Shane reviews each one personally · 48-hour reply</div>
-      </div>
-    </form>
-
-    <div class="apply-success" id="apply-success" hidden>
-      <div class="apply-success-eyebrow">// APPLICATION RECEIVED</div>
-      <h3 class="apply-success-headline">Thanks. Shane reviews each one personally.</h3>
-      <p class="apply-success-body">Expect a reply within 48 hours.<br>
-        If the form's having trouble: <a href="https://linkedin.com/in/shanehandel" target="_blank" rel="noopener" style="color:var(--cyan);">DM Shane on LinkedIn</a>
-        or call <a href="tel:+17869371218" style="color:var(--cyan);">786 · 937 · 1218</a>.
-      </p>
+    <div class="footer-cta">
+      <a href="/apply/" class="btn btn-primary">Apply for Early Operator Access →</a>
     </div>
 
     <div class="footer-divider"></div>
@@ -1999,7 +1839,9 @@
   <div class="container">
     <span>© 2026 CIRCULANT SYSTEMS</span>
     <span class="sep">·</span>
-    <span>Built in 47 hours by one operator · Wisconsin</span>
+    <span>Wisconsin-built</span>
+    <span class="sep">·</span>
+    <a href="https://aivoiceagency.ai" target="_blank" rel="noopener">AI Voice Agency is live now</a>
     <span class="sep">·</span>
     <a href="https://github.com/shanehandel-504/ai100x" target="_blank" rel="noopener">GitHub</a>
   </div>
@@ -2014,7 +1856,7 @@
       <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
       <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
       <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
-      <li data-action="#apply" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="/apply/" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
       <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
       <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
     </ul>
@@ -2029,7 +1871,7 @@
     <ul class="ql-list">
       <li data-action="#why"><span>What is AI100X?</span><span class="ql-arrow">→</span></li>
       <li data-action="tel:+17869371218"><span>Hear AVA Live</span><span class="ql-arrow">→</span></li>
-      <li data-action="#apply"><span>Apply for access</span><span class="ql-arrow">→</span></li>
+      <li data-action="/apply/"><span>Apply for access</span><span class="ql-arrow">→</span></li>
     </ul>
     <div class="ql-close">Tap outside or press ESC to close</div>
   </div>
@@ -2048,85 +1890,29 @@
   }
   tick(); setInterval(tick, 1000);
 
-  // ── V8: always-ticking telemetry, gated by IO on the .cockpit ──
-  //   Counters tick at randomized intervals only while the dashboard
-  //   is in view. Soft-reset every ~3 min of dwell so a long reader
-  //   sees fresh "shifts" of activity. Transcript cycle is also
-  //   visibility-gated and freezes/resumes from the current index.
-  const BASE = { calls: 252, leads: 22, booked: 10 };
-  const SOFT_RESET_MS = 3 * 60 * 1000;
-  const m = {
-    calls:  { el: document.getElementById('metric-calls'),  v: BASE.calls,  min: 6,  max: 14,
-              lines: [
-                'Call answered · 14s · airport pickup',
-                'Call answered · 9s · quote requested',
-                'Call answered · 22s · corporate fleet',
-                'Call answered · 11s · repeat caller',
-                'Call answered · 18s · after-hours line',
-                'Call answered · 7s · returning operator' ] },
-    leads:  { el: document.getElementById('metric-leads'),  v: BASE.leads,  min: 18, max: 45,
-              lines: [
-                'Lead captured · round-trip request',
-                'Lead captured · after-hours route',
-                'Lead captured · Wisconsin operator',
-                'Lead captured · sprinter van quote' ] },
-    booked: { el: document.getElementById('metric-booked'), v: BASE.booked, min: 60, max: 180,
-              lines: [
-                'Appointment booked · Tue 09:00',
-                'Appointment booked · Fri 18:30',
-                'Appointment booked · Thu 06:00',
-                'Appointment booked · Mon 14:15' ] }
-  };
-  // initial paint
-  ['calls', 'leads', 'booked'].forEach(k => { if (m[k].el) m[k].el.textContent = m[k].v; });
-
-  function bump(k, line) {
-    const x = m[k]; if (!x.el) return;
-    x.v++; x.el.textContent = x.v;
-    x.el.classList.remove('tick');
-    void x.el.offsetWidth;
-    x.el.classList.add('tick');
-    setTimeout(() => x.el.classList.remove('tick'), 350);
-  }
-  function setCounter(k, val) {
-    const x = m[k]; if (!x.el) return;
-    x.v = val; x.el.textContent = val;
-    x.el.classList.remove('tick');
-    void x.el.offsetWidth;
-    x.el.classList.add('tick');
-    setTimeout(() => x.el.classList.remove('tick'), 350);
-  }
-  function rnd(min, max) { return (min + Math.random() * (max - min)) * 1000; }
-
-  const counterTimers = { calls: null, leads: null, booked: null };
-  function startCounter(k) {
-    if (counterTimers[k]) return;
-    const tick = () => {
-      const lines = m[k].lines;
-      bump(k, lines[Math.floor(Math.random() * lines.length)]);
-      counterTimers[k] = setTimeout(tick, rnd(m[k].min, m[k].max));
-    };
-    counterTimers[k] = setTimeout(tick, rnd(m[k].min, m[k].max));
-  }
-  function stopCounter(k) {
-    if (counterTimers[k]) { clearTimeout(counterTimers[k]); counterTimers[k] = null; }
-  }
-  function startCounters() { ['calls', 'leads', 'booked'].forEach(startCounter); }
-  function stopCounters()  { ['calls', 'leads', 'booked'].forEach(stopCounter); }
-
-  let resetTimer = null;
-  function softReset() {
-    setCounter('calls',  BASE.calls);
-    setCounter('leads',  BASE.leads);
-    setCounter('booked', BASE.booked);
-  }
-  function startResetTimer() {
-    if (resetTimer) return;
-    resetTimer = setInterval(softReset, SOFT_RESET_MS);
-  }
-  function stopResetTimer() {
-    if (resetTimer) { clearInterval(resetTimer); resetTimer = null; }
-  }
+  // ── V9 signal-router ticker: rotates 5 labels every 4s, fade transition ──
+  (function() {
+    const wrap = document.getElementById('ticker-display');
+    const text = document.getElementById('ticker-text');
+    if (!wrap || !text) return;
+    const lines = [
+      'DEMO LINE · Voice path open',
+      'AVA · Caller intent captured',
+      'COCKPIT · Intake event received',
+      'OS · Routing layer queued',
+      'AI100X · Coming Q3 2026'
+    ];
+    let i = 0;
+    text.textContent = lines[i];
+    setInterval(() => {
+      wrap.style.opacity = '0';
+      setTimeout(() => {
+        i = (i + 1) % lines.length;
+        text.textContent = lines[i];
+        wrap.style.opacity = '1';
+      }, 380);
+    }, 4000);
+  })();
 
   // ── AVA transcript card (8 calls, types out, fades out, rotates) ──
   const transcriptLines = [
@@ -2185,30 +1971,19 @@
     if (typingId) { clearInterval(typingId); typingId = null; }
   }
 
-  // ── Visibility gate: dashboard in/out of viewport pauses all of the above ──
+  // ── Visibility gate: pause transcript + CSS animations when dashboard scrolls out ──
   (function() {
     const cockpitEl = document.querySelector('.cockpit');
-    if (!cockpitEl) {
-      // No dashboard — start everything unconditionally (fallback)
-      startCounters(); startTranscript(); startResetTimer();
-      return;
-    }
-    if (!('IntersectionObserver' in window)) {
-      startCounters(); startTranscript(); startResetTimer();
-      return;
-    }
+    if (!cockpitEl) { startTranscript(); return; }
+    if (!('IntersectionObserver' in window)) { startTranscript(); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           cockpitEl.classList.remove('paused');
-          startCounters();
           startTranscript();
-          startResetTimer();
         } else {
           cockpitEl.classList.add('paused');
-          stopCounters();
           stopTranscript();
-          stopResetTimer();
         }
       });
     }, { threshold: 0.1 });
@@ -2322,7 +2097,7 @@
       { sel: '.stack-grid', label: '// STACK · 3 LAYERS' },
       { sel: '.why',        label: '// WHY · 30 YEARS' },
       { sel: '#wedge',      label: '// WEDGE · CALL NOW' },
-      { sel: 'footer',      label: '// APPLY · 3 SEATS / MO' }
+      { sel: 'footer',      label: '// APPLY · BY APPLICATION ONLY' }
     ];
     const targets = stages.map(s => ({ ...s, node: document.querySelector(s.sel) })).filter(s => s.node);
     let current = '';
@@ -2388,90 +2163,6 @@
     setTimeout(spawnGroup, 2500);
   })();
 
-  // ── V8 application form: validate, submit, success state ──
-  (function() {
-    const form = document.getElementById('apply-form');
-    const successPanel = document.getElementById('apply-success');
-    const submitBtn = document.getElementById('ap-submit');
-    if (!form || !successPanel || !submitBtn) return;
-
-    const setError = (input, msg) => {
-      const err = form.querySelector(`.field-error[data-for="${input.id}"]`);
-      if (err) err.textContent = msg || '';
-    };
-    const clearAllErrors = () => {
-      form.querySelectorAll('.field-error').forEach(e => e.textContent = '');
-    };
-
-    function validate() {
-      clearAllErrors();
-      let firstBad = null;
-      const fields = form.querySelectorAll('[required]');
-      fields.forEach(input => {
-        const v = (input.value || '').trim();
-        if (!v) {
-          setError(input, 'Required.');
-          firstBad = firstBad || input;
-          return;
-        }
-        if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
-          setError(input, 'Looks off — check the email.');
-          firstBad = firstBad || input;
-          return;
-        }
-        if (input.type === 'tel') {
-          const digits = v.replace(/\D/g, '');
-          if (digits.length < 10) {
-            setError(input, 'Need at least 10 digits.');
-            firstBad = firstBad || input;
-            return;
-          }
-        }
-      });
-      return firstBad;
-    }
-
-    // live error clearing on input
-    form.addEventListener('input', (e) => {
-      if (e.target.matches('[required]')) setError(e.target, '');
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const firstBad = validate();
-      if (firstBad) {
-        firstBad.focus();
-        firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-
-      const payload = Object.fromEntries(new FormData(form).entries());
-      payload._submitted_at = new Date().toISOString();
-      payload._source = 'ai100x.ai/#apply';
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting…';
-
-      // Placeholder POST — Shane swaps the URL for the GoHighLevel
-      // webhook when it's wired. Failure is silent: we always show
-      // the success state because the operator has alt paths (LinkedIn,
-      // phone) and the form data is logged to console for recovery.
-      try {
-        await fetch('/api/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (_) { /* ignore — fall through to success state */ }
-
-      console.log('[AI100X application]', payload);
-
-      form.hidden = true;
-      successPanel.hidden = false;
-      successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-  })();
-
   // ── Anchor links: explicit smooth-scroll click handler ──
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href^="#"]');
@@ -2483,22 +2174,6 @@
     e.preventDefault();
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-
-  // ── Rotating routing-from-city indicator ──
-  (function() {
-    const el = document.getElementById('routing');
-    if (!el) return;
-    const cities = ['Phoenix', 'Miami', 'Scottsdale', 'Chicago', 'Denver', 'Austin'];
-    let i = 0;
-    setInterval(() => {
-      el.style.opacity = '0';
-      setTimeout(() => {
-        i = (i + 1) % cities.length;
-        el.textContent = `// Routing call from ${cities[i]}`;
-        el.style.opacity = '1';
-      }, 380);
-    }, 6000);
-  })();
 
   // ── AVA transcript audio playback ──
   //   Plays /audio/ava-call-{1..8}.mp3 matching the current
