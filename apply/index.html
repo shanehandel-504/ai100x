@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — AI100X Operator Qualification Intake</title>
+<meta name="description" content="Operator qualification intake for AI100X. Founder-led onboarding. Currently onboarding a small number of operators.">
+<link rel="canonical" href="https://ai100x.ai/apply/">
+
+<meta property="og:title" content="Apply — AI100X Operator Qualification Intake">
+<meta property="og:description" content="Founder-led onboarding. Currently onboarding a small number of operators.">
+<meta property="og:image" content="https://ai100x.ai/og-ai100x.png">
+<meta property="og:url" content="https://ai100x.ai/apply/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#0A0A0F">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #0A0A0F;
+    --void-2: #0E0E15;
+    --void-3: #08080C;
+    --card: #14141C;
+    --card-hot: #1A1A26;
+    --text: #EEF0F4;
+    --text-dim: #8B8D98;
+    --text-mute: #595B66;
+    --cyan: #00D4FF;
+    --cyan-hot: #00E5FF;
+    --magenta: #FF00D4;
+    --gold: #FFD400;
+    --border: #1F1F2E;
+    --border-hot: #2A2A3E;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    background: var(--void);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+      radial-gradient(ellipse 60% 50% at 18% 12%, rgba(0, 212, 255, 0.13), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 38%, rgba(255, 0, 212, 0.08), transparent 65%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(255, 212, 0, 0.04), transparent 65%),
+      var(--void);
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-image:
+      linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 80%);
+    opacity: 0.4;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  .container {
+    width: min(820px, calc(100% - 40px));
+    margin: 0 auto;
+  }
+
+  /* ─── HEADER ─────────────────────────────── */
+  .ap-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 10, 15, 0.72);
+    border-bottom: 1px solid var(--border);
+  }
+  .ap-header-inner {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .ap-badge {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+  .ap-back {
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+  .ap-back:hover, .ap-back:focus-visible { color: var(--cyan); outline: none; }
+
+  /* ─── HERO ─────────────────────────────── */
+  .ap-hero {
+    padding: 64px 0 32px;
+    text-align: center;
+  }
+  .ap-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .ap-headline {
+    font-size: clamp(34px, 6vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .ap-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* ─── FORM ─────────────────────────────── */
+  .ap-form {
+    margin: 40px auto 80px;
+    padding: 32px 24px;
+    background: linear-gradient(180deg, var(--card) 0%, var(--void-3) 100%);
+    border: 1px solid var(--border-hot);
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.4);
+    display: grid;
+    gap: 22px;
+  }
+  .ap-form::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.6;
+    margin: -32px -24px 0;
+  }
+  .row { display: grid; gap: 22px; }
+
+  .field { display: grid; gap: 8px; }
+  .field label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .field label .req { color: var(--cyan); margin-left: 4px; }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field input[type="number"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: rgba(20, 20, 28, 0.6);
+    border: 1px solid var(--border);
+    color: var(--text);
+    /* 16px min keeps iOS Safari from auto-zooming on focus */
+    font-size: 16px;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    padding: 14px 16px;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 0;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .field select {
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--cyan) 50%),
+      linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 21px,
+      calc(100% - 13px) 21px;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 38px;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    background: rgba(20, 20, 28, 0.9);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+  }
+  .field textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.55;
+  }
+  .field-error {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--magenta);
+    min-height: 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .check-group {
+    display: grid;
+    gap: 10px;
+    padding: 6px 0;
+  }
+  .check-group label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    cursor: pointer;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    background: rgba(20, 20, 28, 0.4);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .check-group label:hover { border-color: var(--border-hot); background: rgba(20, 20, 28, 0.7); }
+  .check-group input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-hot);
+    background: var(--void-2);
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .check-group input[type="checkbox"]:checked {
+    border-color: var(--cyan);
+    background: var(--cyan);
+  }
+  .check-group input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--void);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .check-group input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  .submit-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .ap-submit {
+    background: var(--cyan);
+    color: var(--void);
+    border: 1px solid var(--cyan);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    padding: 16px 36px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 52px;
+    min-width: 240px;
+  }
+  .ap-submit:hover, .ap-submit:focus-visible {
+    background: var(--cyan-hot);
+    border-color: var(--cyan-hot);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 212, 255, 0.28);
+    outline: none;
+  }
+  .ap-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .helper {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  .ap-success {
+    margin: 40px auto 80px;
+    padding: 40px 28px;
+    border: 1px solid var(--cyan);
+    background: rgba(0, 212, 255, 0.04);
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 32px rgba(0, 212, 255, 0.08);
+  }
+  .ap-success-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .ap-success-headline {
+    font-size: clamp(22px, 3vw, 28px);
+    line-height: 1.25;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .ap-success-body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .ap-success-body a { color: var(--cyan); }
+
+  /* ─── MICRO FOOTER ─────────────────────────────── */
+  .ap-microfooter {
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    text-align: center;
+  }
+  .ap-microfooter .container {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: 0.12em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 14px;
+  }
+  .ap-microfooter a {
+    color: var(--text-mute);
+    transition: color 0.2s ease;
+  }
+  .ap-microfooter a:hover { color: var(--cyan); }
+  .ap-microfooter .sep { color: var(--border); }
+
+  *:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+  }
+
+  @media (min-width: 640px) {
+    .row.two { grid-template-columns: 1fr 1fr; }
+    .ap-form { padding: 40px 36px; }
+    .ap-form::before { margin: -40px -36px 0; }
+  }
+
+  @media (max-width: 420px) {
+    .ap-headline { font-size: clamp(28px, 8vw, 36px); }
+    .ap-form { padding: 24px 16px; }
+    .ap-form::before { margin: -24px -16px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="ap-header">
+  <div class="container ap-header-inner">
+    <span class="ap-badge">// AI100X</span>
+    <a href="/" class="ap-back">← Back to ai100x.ai</a>
+  </div>
+</header>
+
+<main>
+  <section class="ap-hero">
+    <div class="container">
+      <div class="ap-eyebrow">// OPERATOR INTAKE</div>
+      <h1 class="ap-headline">Operator qualification intake</h1>
+      <p class="ap-sub">Founder-led onboarding. Currently onboarding a small number of operators.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <form class="ap-form" id="ap-form" novalidate aria-describedby="ap-helper">
+      <div class="row two">
+        <div class="field">
+          <label for="ap-first">First name <span class="req">*</span></label>
+          <input id="ap-first" name="first_name" type="text" autocomplete="given-name" required placeholder="Shane">
+          <div class="field-error" data-for="ap-first"></div>
+        </div>
+        <div class="field">
+          <label for="ap-last">Last name <span class="req">*</span></label>
+          <input id="ap-last" name="last_name" type="text" autocomplete="family-name" required placeholder="Handel">
+          <div class="field-error" data-for="ap-last"></div>
+        </div>
+      </div>
+
+      <div class="row two">
+        <div class="field">
+          <label for="ap-biz">Business name <span class="req">*</span></label>
+          <input id="ap-biz" name="business_name" type="text" autocomplete="organization" required placeholder="Operator LLC">
+          <div class="field-error" data-for="ap-biz"></div>
+        </div>
+        <div class="field">
+          <label for="ap-role">Role / title <span class="req">*</span></label>
+          <input id="ap-role" name="role" type="text" autocomplete="organization-title" required placeholder="Owner / Operator">
+          <div class="field-error" data-for="ap-role"></div>
+        </div>
+      </div>
+
+      <div class="row two">
+        <div class="field">
+          <label for="ap-email">Email <span class="req">*</span></label>
+          <input id="ap-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          <div class="field-error" data-for="ap-email"></div>
+        </div>
+        <div class="field">
+          <label for="ap-phone">Phone (US) <span class="req">*</span></label>
+          <input id="ap-phone" name="phone" type="tel" autocomplete="tel" required placeholder="(555) 123-4567" inputmode="tel" pattern="[\d\s().+\-]{10,}">
+          <div class="field-error" data-for="ap-phone"></div>
+        </div>
+      </div>
+
+      <div class="row two">
+        <div class="field">
+          <label for="ap-team">Fleet size or team size</label>
+          <input id="ap-team" name="team_size" type="number" inputmode="numeric" min="0" placeholder="e.g. 12">
+          <div class="field-error" data-for="ap-team"></div>
+        </div>
+        <div class="field">
+          <label for="ap-volume">Inbound calls per month <span class="req">*</span></label>
+          <select id="ap-volume" name="call_volume" required>
+            <option value="">Select…</option>
+            <option value="lt_100">&lt;100</option>
+            <option value="100_500">100–500</option>
+            <option value="500_2000">500–2,000</option>
+            <option value="gt_2000">2,000+</option>
+          </select>
+          <div class="field-error" data-for="ap-volume"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="ap-process">Current answering process <span class="req">*</span></label>
+        <select id="ap-process" name="answering_process" required>
+          <option value="">Select…</option>
+          <option value="in_house">In-house team</option>
+          <option value="answering_service">Answering service</option>
+          <option value="voicemail">Voicemail</option>
+          <option value="mix">Mix</option>
+          <option value="none">None</option>
+        </select>
+        <div class="field-error" data-for="ap-process"></div>
+      </div>
+
+      <div class="field">
+        <label>After-hours pain <span class="req" aria-hidden="true">*</span></label>
+        <div class="check-group" id="ap-pain-group" role="group" aria-label="After-hours pain (select all that apply)">
+          <label><input type="checkbox" name="after_hours_pain" value="missed_calls"> Missed calls</label>
+          <label><input type="checkbox" name="after_hours_pain" value="lost_revenue"> Lost revenue</label>
+          <label><input type="checkbox" name="after_hours_pain" value="dispatch_delays"> Dispatch delays</label>
+          <label><input type="checkbox" name="after_hours_pain" value="quote_bottlenecks"> Quote bottlenecks</label>
+          <label><input type="checkbox" name="after_hours_pain" value="lead_response_delays"> Lead response delays</label>
+        </div>
+        <div class="field-error" data-for="ap-pain-group"></div>
+      </div>
+
+      <div class="field">
+        <label for="ap-bottleneck">Biggest operational bottleneck <span class="req">*</span></label>
+        <textarea id="ap-bottleneck" name="biggest_bottleneck" required placeholder="What's the single biggest thing slowing your operation down right now? Be specific — give one real example from the last 30 days."></textarea>
+        <div class="field-error" data-for="ap-bottleneck"></div>
+      </div>
+
+      <div class="field">
+        <label for="ap-source">How did you hear about AI100X?</label>
+        <input id="ap-source" name="source" type="text" placeholder="LinkedIn, referral, search…">
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="ap-submit" id="ap-submit">Submit application →</button>
+        <div class="helper" id="ap-helper">// Shane reviews each one personally · 48-hour reply</div>
+      </div>
+    </form>
+
+    <div class="ap-success" id="ap-success" hidden>
+      <div class="ap-success-eyebrow">// APPLICATION RECEIVED</div>
+      <h2 class="ap-success-headline">Application received. Shane reviews each one personally.</h2>
+      <p class="ap-success-body">
+        Expect a reply within 48 hours.<br>
+        If the form's having trouble: <a href="https://linkedin.com/in/shanehandel" target="_blank" rel="noopener">DM Shane on LinkedIn</a>
+        or call <a href="tel:+17869371218">786 · 937 · 1218</a>.
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="ap-microfooter">
+  <div class="container">
+    <span>© 2026 CIRCULANT SYSTEMS</span>
+    <span class="sep">·</span>
+    <span>Wisconsin-built</span>
+    <span class="sep">·</span>
+    <a href="https://aivoiceagency.ai" target="_blank" rel="noopener">AI Voice Agency is live now</a>
+    <span class="sep">·</span>
+    <a href="/">ai100x.ai</a>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const form = document.getElementById('ap-form');
+    const successPanel = document.getElementById('ap-success');
+    const submitBtn = document.getElementById('ap-submit');
+    if (!form || !successPanel || !submitBtn) return;
+
+    const setError = (key, msg) => {
+      const err = form.querySelector('.field-error[data-for="' + key + '"]');
+      if (err) err.textContent = msg || '';
+    };
+    const clearAllErrors = () => {
+      form.querySelectorAll('.field-error').forEach(e => e.textContent = '');
+    };
+
+    function validate() {
+      clearAllErrors();
+      let firstBad = null;
+      form.querySelectorAll('[required]').forEach(input => {
+        const v = (input.value || '').trim();
+        if (!v) {
+          setError(input.id, 'Required.');
+          firstBad = firstBad || input;
+          return;
+        }
+        if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+          setError(input.id, 'Looks off — check the email.');
+          firstBad = firstBad || input;
+          return;
+        }
+        if (input.type === 'tel') {
+          const digits = v.replace(/\D/g, '');
+          if (digits.length < 10) {
+            setError(input.id, 'US number needs at least 10 digits.');
+            firstBad = firstBad || input;
+            return;
+          }
+        }
+      });
+      return firstBad;
+    }
+
+    form.addEventListener('input', (e) => {
+      if (e.target.matches('[required]')) setError(e.target.id, '');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstBad = validate();
+      if (firstBad) {
+        firstBad.focus();
+        firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      const fd = new FormData(form);
+      const payload = {};
+      fd.forEach((value, key) => {
+        if (key === 'after_hours_pain') {
+          payload.after_hours_pain = payload.after_hours_pain || [];
+          payload.after_hours_pain.push(value);
+        } else {
+          payload[key] = value;
+        }
+      });
+      payload._submitted_at = new Date().toISOString();
+      payload._source = 'ai100x.ai/apply/';
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      try {
+        await fetch('/api/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) { /* silent — alt paths in success panel */ }
+
+      form.hidden = true;
+      successPanel.hidden = false;
+      successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Allow: /apply/
 
 Sitemap: https://ai100x.ai/sitemap.xml

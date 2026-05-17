@@ -1541,156 +1541,13 @@
   }
   .ql-close:hover { color: var(--text); }
 
-  /* ─── V8 APPLICATION FORM ─────────────────────────────── */
-  .apply-form {
-    max-width: 760px;
-    margin: 48px auto 0;
-    text-align: left;
-    display: grid;
-    gap: 18px;
-  }
-  .apply-form .row {
-    display: grid;
-    gap: 18px;
-  }
-  .apply-form .field { display: grid; gap: 8px; }
-  .apply-form label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-  .apply-form label .req { color: var(--cyan); margin-left: 4px; }
-  .apply-form input,
-  .apply-form select,
-  .apply-form textarea {
-    width: 100%;
-    background: rgba(20, 20, 28, 0.6);
-    border: 1px solid var(--border);
-    color: var(--text);
-    /* 16px+ keeps iOS Safari from auto-zooming on focus */
-    font-size: 16px;
-    font-family: 'Space Grotesk', system-ui, sans-serif;
-    padding: 14px 16px;
-    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 0;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-  .apply-form select {
-    background-image:
-      linear-gradient(45deg, transparent 50%, var(--cyan) 50%),
-      linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
-    background-position:
-      calc(100% - 18px) 21px,
-      calc(100% - 13px) 21px;
-    background-size: 5px 5px;
-    background-repeat: no-repeat;
-    padding-right: 38px;
-  }
-  .apply-form input:focus,
-  .apply-form select:focus,
-  .apply-form textarea:focus {
-    outline: none;
-    border-color: var(--cyan);
-    background: rgba(20, 20, 28, 0.9);
-    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
-  }
-  .apply-form input:invalid:not(:placeholder-shown),
-  .apply-form select:invalid:not(:focus),
-  .apply-form textarea:invalid:not(:placeholder-shown) {
-    border-color: rgba(255, 0, 212, 0.5);
-  }
-  .apply-form textarea {
-    min-height: 110px;
-    resize: vertical;
-    font-family: 'Space Grotesk', system-ui, sans-serif;
-    line-height: 1.5;
-  }
-  .apply-form .field-error {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--magenta);
-    min-height: 14px;
-    letter-spacing: 0.04em;
-  }
-  .apply-form .submit-row {
+  .footer-cta {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    margin-top: 12px;
+    justify-content: center;
+    margin: 8px 0 60px;
   }
-  .apply-form button[type="submit"] {
-    background: var(--cyan);
-    color: var(--void);
-    border: 1px solid var(--cyan);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 0.02em;
-    padding: 16px 36px;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    min-height: 52px;
-    min-width: 220px;
-  }
-  .apply-form button[type="submit"]:hover,
-  .apply-form button[type="submit"]:focus-visible {
-    background: var(--cyan-hot);
-    border-color: var(--cyan-hot);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0, 212, 255, 0.28);
-    outline: none;
-  }
-  .apply-form button[type="submit"]:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-  .apply-form .helper {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-mute);
-    letter-spacing: 0.04em;
-    text-align: center;
-  }
+  .footer-cta .btn { min-width: 280px; }
 
-  .apply-success {
-    max-width: 600px;
-    margin: 48px auto 0;
-    padding: 32px;
-    border: 1px solid var(--cyan);
-    background: rgba(0, 212, 255, 0.04);
-    text-align: center;
-  }
-  .apply-success-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--cyan);
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .apply-success-headline {
-    font-size: clamp(22px, 3vw, 28px);
-    line-height: 1.2;
-    color: var(--text);
-    margin-bottom: 12px;
-    font-weight: 600;
-  }
-  .apply-success-body {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-
-  @media (min-width: 640px) {
-    .apply-form .row.two { grid-template-columns: 1fr 1fr; }
-  }
   /* ─── MICRO FOOTER ─────────────────────────────── */
   .microfooter {
     padding: 24px 0;
@@ -1745,7 +1602,7 @@
         The first module is already <span class="proof-live">live</span>. Call AVA now.
       </p>
       <div class="actions">
-        <a href="#apply" class="btn btn-ghost">By Application Only</a>
+        <a href="/apply/" class="btn btn-ghost">Apply for Early Operator Access →</a>
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
       </div>
 
@@ -1966,97 +1823,10 @@
 <footer id="apply">
   <div class="container reveal">
     <h2 class="footer-headline">BY APPLICATION ONLY.</h2>
-    <p class="footer-sub">Three new operators per month. No more.</p>
+    <p class="footer-sub">Founder-led onboarding. Currently onboarding a small number of operators.</p>
 
-    <form class="apply-form" id="apply-form" novalidate>
-      <div class="row two">
-        <div class="field">
-          <label for="ap-first">First name <span class="req">*</span></label>
-          <input id="ap-first" name="first_name" type="text" autocomplete="given-name" required placeholder="Shane">
-          <div class="field-error" data-for="ap-first"></div>
-        </div>
-        <div class="field">
-          <label for="ap-last">Last name <span class="req">*</span></label>
-          <input id="ap-last" name="last_name" type="text" autocomplete="family-name" required placeholder="Handel">
-          <div class="field-error" data-for="ap-last"></div>
-        </div>
-      </div>
-
-      <div class="row two">
-        <div class="field">
-          <label for="ap-biz">Business name <span class="req">*</span></label>
-          <input id="ap-biz" name="business_name" type="text" autocomplete="organization" required placeholder="Operator LLC">
-          <div class="field-error" data-for="ap-biz"></div>
-        </div>
-        <div class="field">
-          <label for="ap-role">Role / title <span class="req">*</span></label>
-          <input id="ap-role" name="role" type="text" autocomplete="organization-title" required placeholder="Owner / Operator">
-          <div class="field-error" data-for="ap-role"></div>
-        </div>
-      </div>
-
-      <div class="row two">
-        <div class="field">
-          <label for="ap-email">Email <span class="req">*</span></label>
-          <input id="ap-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
-          <div class="field-error" data-for="ap-email"></div>
-        </div>
-        <div class="field">
-          <label for="ap-phone">Phone <span class="req">*</span></label>
-          <input id="ap-phone" name="phone" type="tel" autocomplete="tel" required placeholder="(555) 123-4567" pattern="[\d\s().+\-]{10,}">
-          <div class="field-error" data-for="ap-phone"></div>
-        </div>
-      </div>
-
-      <div class="row two">
-        <div class="field">
-          <label for="ap-industry">Industry <span class="req">*</span></label>
-          <select id="ap-industry" name="industry" required>
-            <option value="">Select…</option>
-            <option value="ground_transportation">Ground Transportation</option>
-            <option value="real_estate">Real Estate</option>
-            <option value="service_business">Service Business</option>
-            <option value="other">Other</option>
-          </select>
-          <div class="field-error" data-for="ap-industry"></div>
-        </div>
-        <div class="field">
-          <label for="ap-volume">Monthly inbound call volume <span class="req">*</span></label>
-          <select id="ap-volume" name="call_volume" required>
-            <option value="">Select…</option>
-            <option value="lt_100">Under 100</option>
-            <option value="100_500">100 – 500</option>
-            <option value="500_2000">500 – 2,000</option>
-            <option value="gt_2000">2,000+</option>
-          </select>
-          <div class="field-error" data-for="ap-volume"></div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="ap-missed">What's the biggest call you've missed in the last 30 days? <span class="req">*</span></label>
-        <textarea id="ap-missed" name="biggest_missed" required placeholder="The wedding shuttle that never called back. The Tuesday 6am pickup that went to a competitor. Be specific."></textarea>
-        <div class="field-error" data-for="ap-missed"></div>
-      </div>
-
-      <div class="field">
-        <label for="ap-source">How did you hear about AI100X?</label>
-        <input id="ap-source" name="source" type="text" placeholder="LinkedIn, referral, search…">
-      </div>
-
-      <div class="submit-row">
-        <button type="submit" id="ap-submit">Submit application →</button>
-        <div class="helper">// Shane reviews each one personally · 48-hour reply</div>
-      </div>
-    </form>
-
-    <div class="apply-success" id="apply-success" hidden>
-      <div class="apply-success-eyebrow">// APPLICATION RECEIVED</div>
-      <h3 class="apply-success-headline">Thanks. Shane reviews each one personally.</h3>
-      <p class="apply-success-body">Expect a reply within 48 hours.<br>
-        If the form's having trouble: <a href="https://linkedin.com/in/shanehandel" target="_blank" rel="noopener" style="color:var(--cyan);">DM Shane on LinkedIn</a>
-        or call <a href="tel:+17869371218" style="color:var(--cyan);">786 · 937 · 1218</a>.
-      </p>
+    <div class="footer-cta">
+      <a href="/apply/" class="btn btn-primary">Apply for Early Operator Access →</a>
     </div>
 
     <div class="footer-divider"></div>
@@ -2086,7 +1856,7 @@
       <li data-action="tel:+17869371218" data-key="1"><span class="cmdk-k">1</span> Call AVA Live <span class="cmdk-meta">786 · 937 · 1218</span></li>
       <li data-action="https://linkedin.com/in/shanehandel" data-key="2"><span class="cmdk-k">2</span> DM Shane on LinkedIn</li>
       <li data-action="#why" data-key="3"><span class="cmdk-k">3</span> Read the Manifesto</li>
-      <li data-action="#apply" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
+      <li data-action="/apply/" data-key="4"><span class="cmdk-k">4</span> Apply for an Operator Seat</li>
       <li data-action="https://aivoiceagency.ai" data-key="5"><span class="cmdk-k">5</span> Visit AVA <span class="cmdk-meta">aivoiceagency.ai</span></li>
       <li data-action="#stack" data-key="6"><span class="cmdk-k">6</span> Jump to The Stack</li>
     </ul>
@@ -2101,7 +1871,7 @@
     <ul class="ql-list">
       <li data-action="#why"><span>What is AI100X?</span><span class="ql-arrow">→</span></li>
       <li data-action="tel:+17869371218"><span>Hear AVA Live</span><span class="ql-arrow">→</span></li>
-      <li data-action="#apply"><span>Apply for access</span><span class="ql-arrow">→</span></li>
+      <li data-action="/apply/"><span>Apply for access</span><span class="ql-arrow">→</span></li>
     </ul>
     <div class="ql-close">Tap outside or press ESC to close</div>
   </div>
@@ -2327,7 +2097,7 @@
       { sel: '.stack-grid', label: '// STACK · 3 LAYERS' },
       { sel: '.why',        label: '// WHY · 30 YEARS' },
       { sel: '#wedge',      label: '// WEDGE · CALL NOW' },
-      { sel: 'footer',      label: '// APPLY · 3 SEATS / MO' }
+      { sel: 'footer',      label: '// APPLY · BY APPLICATION ONLY' }
     ];
     const targets = stages.map(s => ({ ...s, node: document.querySelector(s.sel) })).filter(s => s.node);
     let current = '';
@@ -2391,90 +2161,6 @@
       setTimeout(spawnGroup, 4000 + Math.random() * 3000); // every 4–7s
     }
     setTimeout(spawnGroup, 2500);
-  })();
-
-  // ── V8 application form: validate, submit, success state ──
-  (function() {
-    const form = document.getElementById('apply-form');
-    const successPanel = document.getElementById('apply-success');
-    const submitBtn = document.getElementById('ap-submit');
-    if (!form || !successPanel || !submitBtn) return;
-
-    const setError = (input, msg) => {
-      const err = form.querySelector(`.field-error[data-for="${input.id}"]`);
-      if (err) err.textContent = msg || '';
-    };
-    const clearAllErrors = () => {
-      form.querySelectorAll('.field-error').forEach(e => e.textContent = '');
-    };
-
-    function validate() {
-      clearAllErrors();
-      let firstBad = null;
-      const fields = form.querySelectorAll('[required]');
-      fields.forEach(input => {
-        const v = (input.value || '').trim();
-        if (!v) {
-          setError(input, 'Required.');
-          firstBad = firstBad || input;
-          return;
-        }
-        if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
-          setError(input, 'Looks off — check the email.');
-          firstBad = firstBad || input;
-          return;
-        }
-        if (input.type === 'tel') {
-          const digits = v.replace(/\D/g, '');
-          if (digits.length < 10) {
-            setError(input, 'Need at least 10 digits.');
-            firstBad = firstBad || input;
-            return;
-          }
-        }
-      });
-      return firstBad;
-    }
-
-    // live error clearing on input
-    form.addEventListener('input', (e) => {
-      if (e.target.matches('[required]')) setError(e.target, '');
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const firstBad = validate();
-      if (firstBad) {
-        firstBad.focus();
-        firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-
-      const payload = Object.fromEntries(new FormData(form).entries());
-      payload._submitted_at = new Date().toISOString();
-      payload._source = 'ai100x.ai/#apply';
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting…';
-
-      // Placeholder POST — Shane swaps the URL for the GoHighLevel
-      // webhook when it's wired. Failure is silent: we always show
-      // the success state because the operator has alt paths (LinkedIn,
-      // phone) and the form data is logged to console for recovery.
-      try {
-        await fetch('/api/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (_) { /* ignore — fall through to success state */ }
-
-      console.log('[AI100X application]', payload);
-
-      form.hidden = true;
-      successPanel.hidden = false;
-      successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
   })();
 
   // ── Anchor links: explicit smooth-scroll click handler ──
