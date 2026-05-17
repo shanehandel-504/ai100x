@@ -351,9 +351,46 @@
   .hero-tagline {
     font-size: clamp(17px, 2.1vw, 22px);
     color: var(--text-dim);
-    max-width: 580px;
-    margin-bottom: 48px;
+    max-width: 620px;
+    margin-bottom: 20px;
     line-height: 1.5;
+  }
+
+  /* V9 hero proof line — 14px mono, cyan, underline animates on "live" */
+  .hero-proof {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--cyan);
+    text-align: center;
+    margin: 0 0 32px;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+  }
+  .hero-proof .proof-live {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 2px;
+  }
+  .hero-proof .proof-live::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: proof-live-line 2.6s ease-in-out infinite;
+  }
+  @keyframes proof-live-line {
+    0%   { transform: scaleX(0);   opacity: 0.4; }
+    45%  { transform: scaleX(1);   opacity: 1;   transform-origin: left center; }
+    55%  { transform: scaleX(1);   opacity: 1;   transform-origin: right center; }
+    100% { transform: scaleX(0);   opacity: 0.4; transform-origin: right center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-proof .proof-live::after { animation: none; transform: scaleX(1); opacity: 0.7; }
   }
 
   .actions {
@@ -516,11 +553,10 @@
     50% { transform: scaleY(1); }
   }
 
-  /* V8: when dashboard scrolls out of view, pause its CSS animations
-     to save battery + paint cost (counters/transcript also pause via JS) */
+  /* V9: pause expensive CSS animations when dashboard scrolls out of view */
   .cockpit.paused .wave-bar,
   .cockpit.paused .signal-track span,
-  .cockpit.paused .ticker-track,
+  .cockpit.paused .tile-state,
   .cockpit.paused #hb-now {
     animation-play-state: paused;
   }
@@ -565,21 +601,20 @@
 
   .tile-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(20px, 3vw, 26px);
+    font-size: clamp(18px, 2.6vw, 22px);
     font-weight: 600;
     color: var(--tile-color);
     line-height: 1;
-    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
     display: inline-block;
-    transform-origin: left center;
   }
-  .tile-value.tick {
-    animation: tile-tick 0.3s ease-out;
+  .tile-state {
+    animation: state-pulse 2.4s ease-in-out infinite;
+    will-change: opacity, text-shadow;
   }
-  @keyframes tile-tick {
-    0%   { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
-    40%  { transform: scale(1.08); filter: drop-shadow(0 0 14px var(--tile-color)); }
-    100% { transform: scale(1);    filter: drop-shadow(0 0 0 transparent); }
+  @keyframes state-pulse {
+    0%, 100% { opacity: 1;    text-shadow: 0 0 6px  rgba(255,255,255,0); }
+    50%      { opacity: 0.7;  text-shadow: 0 0 14px var(--tile-color); }
   }
 
   .signal-map {
@@ -629,41 +664,28 @@
     100% { transform: translateX(280%); opacity: 0; }
   }
 
-  /* Event ticker */
+  /* V9 signal-router ticker — single line, fades through 5 labels every 4s */
   .ticker {
     border-top: 1px solid var(--border);
     margin: 0 -20px;
-    padding: 14px 20px 4px;
+    padding: 14px 20px 8px;
     overflow: hidden;
     position: relative;
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    min-height: 36px;
   }
-
-  .ticker-track {
-    display: flex;
-    gap: 32px;
-    animation: ticker-scroll 28s linear infinite;
-    width: max-content;
-  }
-
-  @keyframes ticker-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  .ticker-item {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--text-dim);
-    white-space: nowrap;
+  .ticker-display {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    opacity: 1;
+    transition: opacity 0.32s ease;
   }
-
-  .ticker-item .arrow { color: var(--cyan); }
+  .ticker-display .arrow { color: var(--cyan); }
+  .ticker-display .ticker-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .avacard {
     margin-top: 16px;
@@ -1615,18 +1637,6 @@
   @media (min-width: 640px) {
     .apply-form .row.two { grid-template-columns: 1fr 1fr; }
   }
-  /* ─── ROUTING INDICATOR ─────────────────────────────── */
-  .routing {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-style: italic;
-    color: #666;
-    letter-spacing: 0.08em;
-    margin: -4px 0 16px;
-    text-align: center;
-    transition: opacity 0.4s ease;
-  }
-
   /* ─── MICRO FOOTER ─────────────────────────────── */
   .microfooter {
     padding: 24px 0;
@@ -1677,6 +1687,9 @@
       <h1 class="hero-headline">AI<span class="prism">100X</span></h1>
       <div class="hero-subhead">The Operator's Cockpit.</div>
       <p class="hero-tagline">One screen. Every metric. Your AI runs the business.</p>
+      <p class="hero-proof">
+        The first module is already <span class="proof-live">live</span>. Call AVA now.
+      </p>
       <div class="actions">
         <a href="#apply" class="btn btn-ghost">By Application Only</a>
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
@@ -1692,7 +1705,7 @@
         <div class="cockpit-header-left">
           <span class="pulse-dot" aria-hidden="true"></span>
           <span class="cockpit-header-tag">AI100X PREVIEW</span>
-          <span>· SIMULATED FEED</span>
+          <span>· SIGNAL ROUTER</span>
         </div>
         <div class="cockpit-header-right" id="clock">--:--:--</div>
       </div>
@@ -1737,20 +1750,18 @@
 
         <div class="telemetry">
           <div class="tile tile-cyan">
-            <div class="tile-label">Calls</div>
-            <div class="tile-value" id="metric-calls">247</div>
+            <div class="tile-label">Voice</div>
+            <div class="tile-value tile-state">ONLINE</div>
           </div>
           <div class="tile tile-magenta">
-            <div class="tile-label">Leads</div>
-            <div class="tile-value" id="metric-leads">19</div>
+            <div class="tile-label">Cockpit</div>
+            <div class="tile-value tile-state">ARMING</div>
           </div>
           <div class="tile tile-gold">
-            <div class="tile-label">Booked</div>
-            <div class="tile-value" id="metric-booked">8</div>
+            <div class="tile-label">OS</div>
+            <div class="tile-value tile-state">QUEUED</div>
           </div>
         </div>
-
-        <div class="routing" id="routing">// Routing call from Phoenix</div>
 
         <div class="signal-map" aria-hidden="true">
           <div class="signal-node voice">VOICE</div>
@@ -1761,20 +1772,9 @@
         </div>
 
         <div class="ticker">
-          <div class="ticker-track">
-            <div class="ticker-item"><span class="arrow">→</span> 21:47 · Call answered · 14s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:46 · Lead captured · West Phoenix</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:44 · Appointment booked · Tue 3:00pm</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:42 · Call answered · 9s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:39 · Quote routed · Corporate fleet</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
-            <!-- Duplicate for seamless loop -->
-            <div class="ticker-item"><span class="arrow">→</span> 21:47 · Call answered · 14s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:46 · Lead captured · West Phoenix</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:44 · Appointment booked · Tue 3:00pm</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:42 · Call answered · 9s</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:39 · Quote routed · Corporate fleet</div>
-            <div class="ticker-item"><span class="arrow">→</span> 21:36 · Call answered · 11s</div>
+          <div class="ticker-display" id="ticker-display">
+            <span class="arrow">→</span>
+            <span class="ticker-text" id="ticker-text">DEMO LINE · Voice path open</span>
           </div>
         </div>
 
@@ -1999,7 +1999,9 @@
   <div class="container">
     <span>© 2026 CIRCULANT SYSTEMS</span>
     <span class="sep">·</span>
-    <span>Built in 47 hours by one operator · Wisconsin</span>
+    <span>Wisconsin-built</span>
+    <span class="sep">·</span>
+    <a href="https://aivoiceagency.ai" target="_blank" rel="noopener">AI Voice Agency is live now</a>
     <span class="sep">·</span>
     <a href="https://github.com/shanehandel-504/ai100x" target="_blank" rel="noopener">GitHub</a>
   </div>
@@ -2048,85 +2050,29 @@
   }
   tick(); setInterval(tick, 1000);
 
-  // ── V8: always-ticking telemetry, gated by IO on the .cockpit ──
-  //   Counters tick at randomized intervals only while the dashboard
-  //   is in view. Soft-reset every ~3 min of dwell so a long reader
-  //   sees fresh "shifts" of activity. Transcript cycle is also
-  //   visibility-gated and freezes/resumes from the current index.
-  const BASE = { calls: 252, leads: 22, booked: 10 };
-  const SOFT_RESET_MS = 3 * 60 * 1000;
-  const m = {
-    calls:  { el: document.getElementById('metric-calls'),  v: BASE.calls,  min: 6,  max: 14,
-              lines: [
-                'Call answered · 14s · airport pickup',
-                'Call answered · 9s · quote requested',
-                'Call answered · 22s · corporate fleet',
-                'Call answered · 11s · repeat caller',
-                'Call answered · 18s · after-hours line',
-                'Call answered · 7s · returning operator' ] },
-    leads:  { el: document.getElementById('metric-leads'),  v: BASE.leads,  min: 18, max: 45,
-              lines: [
-                'Lead captured · round-trip request',
-                'Lead captured · after-hours route',
-                'Lead captured · Wisconsin operator',
-                'Lead captured · sprinter van quote' ] },
-    booked: { el: document.getElementById('metric-booked'), v: BASE.booked, min: 60, max: 180,
-              lines: [
-                'Appointment booked · Tue 09:00',
-                'Appointment booked · Fri 18:30',
-                'Appointment booked · Thu 06:00',
-                'Appointment booked · Mon 14:15' ] }
-  };
-  // initial paint
-  ['calls', 'leads', 'booked'].forEach(k => { if (m[k].el) m[k].el.textContent = m[k].v; });
-
-  function bump(k, line) {
-    const x = m[k]; if (!x.el) return;
-    x.v++; x.el.textContent = x.v;
-    x.el.classList.remove('tick');
-    void x.el.offsetWidth;
-    x.el.classList.add('tick');
-    setTimeout(() => x.el.classList.remove('tick'), 350);
-  }
-  function setCounter(k, val) {
-    const x = m[k]; if (!x.el) return;
-    x.v = val; x.el.textContent = val;
-    x.el.classList.remove('tick');
-    void x.el.offsetWidth;
-    x.el.classList.add('tick');
-    setTimeout(() => x.el.classList.remove('tick'), 350);
-  }
-  function rnd(min, max) { return (min + Math.random() * (max - min)) * 1000; }
-
-  const counterTimers = { calls: null, leads: null, booked: null };
-  function startCounter(k) {
-    if (counterTimers[k]) return;
-    const tick = () => {
-      const lines = m[k].lines;
-      bump(k, lines[Math.floor(Math.random() * lines.length)]);
-      counterTimers[k] = setTimeout(tick, rnd(m[k].min, m[k].max));
-    };
-    counterTimers[k] = setTimeout(tick, rnd(m[k].min, m[k].max));
-  }
-  function stopCounter(k) {
-    if (counterTimers[k]) { clearTimeout(counterTimers[k]); counterTimers[k] = null; }
-  }
-  function startCounters() { ['calls', 'leads', 'booked'].forEach(startCounter); }
-  function stopCounters()  { ['calls', 'leads', 'booked'].forEach(stopCounter); }
-
-  let resetTimer = null;
-  function softReset() {
-    setCounter('calls',  BASE.calls);
-    setCounter('leads',  BASE.leads);
-    setCounter('booked', BASE.booked);
-  }
-  function startResetTimer() {
-    if (resetTimer) return;
-    resetTimer = setInterval(softReset, SOFT_RESET_MS);
-  }
-  function stopResetTimer() {
-    if (resetTimer) { clearInterval(resetTimer); resetTimer = null; }
-  }
+  // ── V9 signal-router ticker: rotates 5 labels every 4s, fade transition ──
+  (function() {
+    const wrap = document.getElementById('ticker-display');
+    const text = document.getElementById('ticker-text');
+    if (!wrap || !text) return;
+    const lines = [
+      'DEMO LINE · Voice path open',
+      'AVA · Caller intent captured',
+      'COCKPIT · Intake event received',
+      'OS · Routing layer queued',
+      'AI100X · Coming Q3 2026'
+    ];
+    let i = 0;
+    text.textContent = lines[i];
+    setInterval(() => {
+      wrap.style.opacity = '0';
+      setTimeout(() => {
+        i = (i + 1) % lines.length;
+        text.textContent = lines[i];
+        wrap.style.opacity = '1';
+      }, 380);
+    }, 4000);
+  })();
 
   // ── AVA transcript card (8 calls, types out, fades out, rotates) ──
   const transcriptLines = [
@@ -2185,30 +2131,19 @@
     if (typingId) { clearInterval(typingId); typingId = null; }
   }
 
-  // ── Visibility gate: dashboard in/out of viewport pauses all of the above ──
+  // ── Visibility gate: pause transcript + CSS animations when dashboard scrolls out ──
   (function() {
     const cockpitEl = document.querySelector('.cockpit');
-    if (!cockpitEl) {
-      // No dashboard — start everything unconditionally (fallback)
-      startCounters(); startTranscript(); startResetTimer();
-      return;
-    }
-    if (!('IntersectionObserver' in window)) {
-      startCounters(); startTranscript(); startResetTimer();
-      return;
-    }
+    if (!cockpitEl) { startTranscript(); return; }
+    if (!('IntersectionObserver' in window)) { startTranscript(); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           cockpitEl.classList.remove('paused');
-          startCounters();
           startTranscript();
-          startResetTimer();
         } else {
           cockpitEl.classList.add('paused');
-          stopCounters();
           stopTranscript();
-          stopResetTimer();
         }
       });
     }, { threshold: 0.1 });
@@ -2483,22 +2418,6 @@
     e.preventDefault();
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-
-  // ── Rotating routing-from-city indicator ──
-  (function() {
-    const el = document.getElementById('routing');
-    if (!el) return;
-    const cities = ['Phoenix', 'Miami', 'Scottsdale', 'Chicago', 'Denver', 'Austin'];
-    let i = 0;
-    setInterval(() => {
-      el.style.opacity = '0';
-      setTimeout(() => {
-        i = (i + 1) % cities.length;
-        el.textContent = `// Routing call from ${cities[i]}`;
-        el.style.opacity = '1';
-      }, 380);
-    }, 6000);
-  })();
 
   // ── AVA transcript audio playback ──
   //   Plays /audio/ava-call-{1..8}.mp3 matching the current
