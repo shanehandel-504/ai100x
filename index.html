@@ -393,6 +393,48 @@
     .hero-proof .proof-live::after { animation: none; transform: scaleX(1); opacity: 0.7; }
   }
 
+  /* V9 vertical-specificity strip — // BUILT FIRST FOR + 4 pills */
+  .vstrip {
+    margin: 28px 0 8px;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .vstrip-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .vstrip-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .vpill {
+    display: inline-block;
+    border: 1px solid var(--cyan);
+    background: transparent;
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .vstrip-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--text-mute);
+    line-height: 1.5;
+  }
+
   .actions {
     display: flex;
     flex-wrap: wrap;
@@ -1686,7 +1728,7 @@
       <div class="eyebrow">// AI100X</div>
       <h1 class="hero-headline">AI<span class="prism">100X</span></h1>
       <div class="hero-subhead">The Operator's Cockpit.</div>
-      <p class="hero-tagline">One screen. Every metric. Your AI runs the business.</p>
+      <p class="hero-tagline">Calls. Leads. Dispatch. Revenue. AI agents. One operating layer.</p>
       <p class="hero-proof">
         The first module is already <span class="proof-live">live</span>. Call AVA now.
       </p>
@@ -1694,6 +1736,18 @@
         <a href="#apply" class="btn btn-ghost">By Application Only</a>
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
       </div>
+
+      <div class="vstrip" aria-label="Built for these operators">
+        <div class="vstrip-label">// BUILT FIRST FOR</div>
+        <div class="vstrip-pills">
+          <span class="vpill">Transportation</span>
+          <span class="vpill">Home Services</span>
+          <span class="vpill">Dispatch-heavy Operations</span>
+          <span class="vpill">Multi-location Service Businesses</span>
+        </div>
+        <div class="vstrip-sub">Operator-built for high-volume, phone-driven businesses</div>
+      </div>
+
       <div class="hero-credit">
         Built by <strong>Shane Handel</strong><span class="sep">·</span>30 years operator<span class="sep">·</span>Wisconsin-built
       </div>
