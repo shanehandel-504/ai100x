@@ -139,6 +139,7 @@
     box-shadow: 0 0 14px var(--cyan), 0 0 28px rgba(0, 212, 255, 0.55);
     opacity: 0;
     animation: grid-point-flash 1.4s ease-out forwards;
+    will-change: opacity, transform;
   }
   @keyframes grid-point-flash {
     0%   { opacity: 0; transform: scale(0.4); }
@@ -238,6 +239,7 @@
     box-shadow: 0 0 14px var(--cyan), 0 0 28px rgba(0, 212, 255, 0.4);
     animation: pulse 2.2s ease-in-out infinite;
     flex-shrink: 0;
+    will-change: opacity, transform;
   }
 
   @keyframes pulse {
@@ -1505,10 +1507,12 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    will-change: opacity, transform;
   }
   .reveal.show {
     opacity: 1;
     transform: translateY(0);
+    will-change: auto;
   }
   /* V6 stagger: 80ms each — eye walks down the stack */
   .pillar.reveal:nth-child(1) { transition-delay: 0ms; }
