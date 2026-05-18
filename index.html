@@ -247,13 +247,33 @@
     50% { opacity: 0.4; transform: scale(0.65); }
   }
 
-  /* Status-bar dot: gentler 2s pulse, scale 1→1.2, opacity 1→0.7 */
+  /* AVA LIVE bar dot — cinematic pulse: 1.2s loop, scale 1.0→1.4, opacity 1.0→0.6,
+     ease-in-out infinite. Outer halo ring expands and fades for the "alive" feel. */
   .status-left .pulse-dot {
-    animation: pulse-subtle 2s ease-in-out infinite;
+    position: relative;
+    animation: pulse-subtle 1.2s ease-in-out infinite;
+  }
+  .status-left .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(0, 212, 255, 0.5);
+    pointer-events: none;
+    animation: pulse-halo 1.2s ease-in-out infinite;
+    will-change: transform, opacity;
   }
   @keyframes pulse-subtle {
-    0%, 100% { opacity: 1;   transform: scale(1); }
-    50%      { opacity: 0.7; transform: scale(1.2); }
+    0%, 100% { opacity: 1;   transform: scale(1);   }
+    50%      { opacity: 0.6; transform: scale(1.4); }
+  }
+  @keyframes pulse-halo {
+    0%, 100% { opacity: 0.6; transform: scale(1);   }
+    50%      { opacity: 0;   transform: scale(1.6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-left .pulse-dot,
+    .status-left .pulse-dot::after { animation: none; }
   }
 
   /* ─── SECTIONS ─────────────────────────────── */
