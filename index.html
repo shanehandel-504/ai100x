@@ -2119,7 +2119,7 @@
     }, 4000);
   })();
 
-  // ── Live activity stream: 5 rolling rows, new event every 4s ──
+  // ── Live activity stream: 5 rolling rows, new event every 1.5–2.5s ──
   (function() {
     const list = document.getElementById('actstream');
     if (!list) return;
@@ -2127,23 +2127,63 @@
       'Lead captured · routed to CRM',
       'Quote sent via SMS',
       'Calendar event created',
-      'Missed call rescued · voicemail transcribed',
-      'Inbound captured · qualifying',
-      'Follow-up SMS queued',
-      'Pricing inquiry · quote auto-routed',
-      'After-hours call · routed',
-      'Lead profile enriched · CRM updated',
-      'Sales call scheduled',
+      'Missed call rescued',
       'Voicemail captured · transcribed',
-      'Web form lead · contact created'
+      'Web form lead · contact created',
+      'Follow-up SMS queued',
+      'Sales call scheduled',
+      'Lead profile enriched · CRM updated',
+      'Appointment confirmed',
+      'Reschedule processed',
+      'After-hours call · routed',
+      'Inbound captured · qualifying',
+      'Pricing inquiry · quote auto-routed',
+      'Quote accepted · invoice queued',
+      'Deal stage advanced',
+      'Pipeline updated',
+      'Task assigned · owner notified',
+      'Task completed · stage closed',
+      'Reminder dispatched',
+      'Outbound call placed',
+      'Call disposition logged',
+      'Email campaign delivered',
+      'Email reply detected · thread routed',
+      'Calendar slot held',
+      'Booking confirmation sent',
+      'No-show flagged · follow-up queued',
+      'New contact deduplicated',
+      'Tag applied · segment refreshed',
+      'Note attached to record',
+      'Estimate revised · sent',
+      'Contract delivered',
+      'E-sign request opened',
+      'E-sign completed',
+      'Payment link sent',
+      'Payment received · receipt issued',
+      'Refund processed',
+      'Review request sent',
+      'Survey response received',
+      'SMS opt-in confirmed',
+      'Workflow triggered · 3 actions',
+      'Webhook ingested · record updated',
+      'Routing rule matched · agent assigned',
+      'Escalation flagged · supervisor pinged',
+      'SLA timer started',
+      'SLA met · ticket closed',
+      'Knowledge base hit · answered'
     ];
     const MAX_ROWS = 5;
     const TICK_MS = 1000;
-    const SPAWN_MS = 4000;
+    const MIN_SPAWN_MS = 1500;
+    const MAX_SPAWN_MS = 2500;
     let bag = [];
+    let lastEvent = '';
     function nextEvent() {
       if (bag.length === 0) bag = EVENTS.slice().sort(() => Math.random() - 0.5);
-      return bag.pop();
+      let pick = bag.pop();
+      if (pick === lastEvent && bag.length > 0) { bag.unshift(pick); pick = bag.pop(); }
+      lastEvent = pick;
+      return pick;
     }
     function agoText(s) { return s < 1 ? 'NOW' : s + 's ago'; }
     function makeRow(text, bornAt) {
@@ -2176,19 +2216,28 @@
         if (tag) tag.textContent = agoText(s);
       });
     }
-    // seed with 5 rows back-dated so timestamps read believably on first paint
+    // Seed with 5 rows back-dated at the new cadence
     const seedNow = Date.now();
+    const SEED_GAP = 2000;
     for (let i = MAX_ROWS - 1; i >= 0; i--) {
-      list.appendChild(makeRow(nextEvent(), seedNow - i * SPAWN_MS));
+      list.appendChild(makeRow(nextEvent(), seedNow - i * SEED_GAP));
     }
     refreshAgo();
     let spawnId = null, agoId = null;
+    let stopped = false;
+    function scheduleNext() {
+      if (stopped) return;
+      const wait = MIN_SPAWN_MS + Math.random() * (MAX_SPAWN_MS - MIN_SPAWN_MS);
+      spawnId = setTimeout(() => { spawn(); scheduleNext(); }, wait);
+    }
     function start() {
-      if (spawnId == null) spawnId = setInterval(spawn, SPAWN_MS);
+      stopped = false;
+      if (spawnId == null) scheduleNext();
       if (agoId == null) agoId = setInterval(refreshAgo, TICK_MS);
     }
     function stop() {
-      if (spawnId != null) { clearInterval(spawnId); spawnId = null; }
+      stopped = true;
+      if (spawnId != null) { clearTimeout(spawnId); spawnId = null; }
       if (agoId != null) { clearInterval(agoId); agoId = null; }
     }
     start();
