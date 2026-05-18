@@ -1127,9 +1127,41 @@
     font-weight: 400;
     letter-spacing: 0;
   }
+  /* Tactile tile feedback on any number change — 500ms cyan border glow */
+  .ops-tile.tile-glow {
+    border-color: var(--cyan);
+    border-top-color: var(--cyan-hot);
+    box-shadow:
+      0 0 14px rgba(0, 212, 255, 0.55),
+      inset 0 0 20px rgba(0, 212, 255, 0.25);
+  }
+  /* Simultaneous 300ms top→bottom scanline sweep across the tile */
+  .ops-tile.tile-scan::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 212, 255, 0.0) 30%,
+      rgba(0, 212, 255, 0.55) 50%,
+      rgba(0, 212, 255, 0.0) 70%,
+      transparent 100%
+    );
+    transform: translateY(-100%);
+    animation: tile-scan-sweep 300ms ease-out forwards;
+    z-index: 1;
+  }
+  @keyframes tile-scan-sweep {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100%);  }
+  }
   @media (prefers-reduced-motion: reduce) {
     .ops-strip .ops-dot { animation: none; }
     .ops-tile-value.flash { transition: none; }
+    .ops-tile.tile-scan::before { animation: none; opacity: 0; }
+    .ops-tile.tile-glow { box-shadow: none; border-color: var(--border); }
   }
 
   .stack-grid {
@@ -2399,21 +2431,26 @@
     const grid = document.getElementById('ops-grid');
     if (!grid) return;
     const rand = (lo, hi) => lo + Math.random() * (hi - lo);
+    // Faster, more tactile cadence per spec:
+    //  leads 4–7s, calls 1–3s (boom boom), emails 2–4s (+1–3),
+    //  booked 20–35s, quotes 5–9s, tasks ±1 every 10–20s
     const tiles = {
-      leads:    { v: 23,  delta: () => 1,                              minMs: 6000,  maxMs: 9000  },
-      calls:    { v: 47,  delta: () => 1,                              minMs: 2000,  maxMs: 4000  },
-      emails:   { v: 184, delta: () => 1 + Math.floor(Math.random()*3),minMs: 3000,  maxMs: 5000  },
-      booked:   { v: 8,   delta: () => 1,                              minMs: 25000, maxMs: 40000 },
-      quotes:   { v: 31,  delta: () => 1,                              minMs: 8000,  maxMs: 12000 },
+      leads:    { v: 23,  delta: () => 1,                                  minMs: 4000,  maxMs: 7000  },
+      calls:    { v: 47,  delta: () => 1,                                  minMs: 1000,  maxMs: 3000  },
+      emails:   { v: 184, delta: () => 1 + Math.floor(Math.random() * 3),  minMs: 2000,  maxMs: 4000  },
+      booked:   { v: 8,   delta: () => 1,                                  minMs: 20000, maxMs: 35000 },
+      quotes:   { v: 31,  delta: () => 1,                                  minMs: 5000,  maxMs: 9000  },
       tasks:    { v: 14,  floor: 8, ceil: 22,
                   schedulers: [
-                    { delta: -1, minMs: 15000, maxMs: 25000 },
-                    { delta:  1, minMs: 20000, maxMs: 35000 }
+                    { delta: -1, minMs: 10000, maxMs: 20000 },
+                    { delta:  1, minMs: 10000, maxMs: 20000 }
                   ] }
     };
     const els = {};
+    const tileEls = {};
     Object.keys(tiles).forEach(k => {
       els[k] = grid.querySelector('[data-value="' + k + '"]');
+      tileEls[k] = grid.querySelector('.ops-tile[data-key="' + k + '"]');
     });
     function flash(el) {
       if (!el) return;
@@ -2422,12 +2459,22 @@
       el.classList.add('flash');
       setTimeout(() => el.classList.remove('flash'), 400);
     }
+    function tileFx(tileEl) {
+      if (!tileEl) return;
+      // 500ms cyan border glow + simultaneous 300ms top→bottom scanline sweep
+      tileEl.classList.remove('tile-glow', 'tile-scan');
+      void tileEl.offsetWidth;
+      tileEl.classList.add('tile-glow', 'tile-scan');
+      setTimeout(() => tileEl.classList.remove('tile-scan'), 300);
+      setTimeout(() => tileEl.classList.remove('tile-glow'), 500);
+    }
     function paint(key) {
       const t = tiles[key];
       const el = els[key];
       if (!el) return;
       el.textContent = String(t.v);
       flash(el);
+      tileFx(tileEls[key]);
     }
     let timers = [];
     let stopped = false;
