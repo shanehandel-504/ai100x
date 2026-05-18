@@ -1168,11 +1168,93 @@
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
+    animation: status-dot-pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 0 0 rgba(0, 212, 255, 0);
+  }
+  @keyframes status-dot-pulse {
+    0%, 100% { opacity: 0.55; box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+    50%      { opacity: 1;    box-shadow: 0 0 10px rgba(0, 212, 255, 0.55); }
   }
 
   .status-dot.live {
     animation: pulse 2s ease-in-out infinite;
     box-shadow: 0 0 12px var(--accent);
+    opacity: 1;
+  }
+
+  /* Pillar progress + sparkline (P3 polish) */
+  .pillar-progress {
+    height: 4px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 4px;
+    min-width: 100px;
+    flex: 1;
+    max-width: 140px;
+  }
+  .pillar-progress-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0.55) 0%, var(--cyan) 100%);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+    width: var(--progress, 0%);
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .pillar-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 24px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 100%);
+    animation: pillar-progress-shimmer 2.2s ease-in-out infinite;
+  }
+  @keyframes pillar-progress-shimmer {
+    0%, 100% { opacity: 0.2; }
+    50%      { opacity: 0.7; }
+  }
+  .pillar-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .pillar-progress-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+  .pillar-spark {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    width: 64px;
+    height: 22px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .pillar-spark polyline {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px var(--accent));
+  }
+  .pillar:hover .pillar-spark { opacity: 0.85; }
+  .pillar:hover {
+    box-shadow: inset 0 0 36px -10px rgba(0, 212, 255, 0.35),
+                0 0 36px -2px rgba(0, 212, 255, 0.18);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot,
+    .pillar-progress-fill::after { animation: none; }
   }
 
   .pillar-link {
@@ -1912,6 +1994,9 @@
     <div class="stack-grid">
 
       <article class="pillar cyan reveal">
+        <svg class="pillar-spark" viewBox="0 0 64 22" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,16 8,14 16,12 24,10 32,8 40,6 48,4 56,3 64,2"/>
+        </svg>
         <div class="pillar-label">// AVA — THE VOICE</div>
         <p class="pillar-body">Answers every call. First ring. 24/7. Captures every lead. Books every appointment.</p>
         <div class="pillar-readout">FIRST RING · 24/7</div>
@@ -1922,22 +2007,32 @@
       </article>
 
       <article class="pillar magenta reveal">
+        <svg class="pillar-spark" viewBox="0 0 64 22" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,20 8,18 16,17 24,15 32,12 40,10 48,9 56,6 64,4"/>
+        </svg>
         <div class="pillar-label">// AI100X — THE COCKPIT</div>
         <p class="pillar-body">Tracks every dollar. Routes every metric. Real-time pulse on your whole business — one screen.</p>
         <div class="pillar-readout">ONE SCREEN · EVERY METRIC</div>
         <div class="pillar-footer">
-          <div class="pillar-status"><span class="status-dot"></span> IN ACTIVE BUILD</div>
-          <span class="pillar-link" style="opacity:.5;">Active</span>
+          <div class="pillar-progress-wrap">
+            <span class="pillar-progress-label"><span class="status-dot" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span>IN ACTIVE BUILD · 64%</span>
+            <div class="pillar-progress"><div class="pillar-progress-fill" style="--progress: 64%;"></div></div>
+          </div>
         </div>
       </article>
 
       <article class="pillar gold reveal">
+        <svg class="pillar-spark" viewBox="0 0 64 22" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,21 8,20 16,19 24,18 32,16 40,15 48,13 56,11 64,9"/>
+        </svg>
         <div class="pillar-label">// THE OS — OPERATING SYSTEM</div>
         <p class="pillar-body">Everything connected. Voice, sales, calendar, CRM, reporting. One AI runs the entire business.</p>
         <div class="pillar-readout">STAGED</div>
         <div class="pillar-footer">
-          <div class="pillar-status"><span class="status-dot"></span> In Build</div>
-          <span class="pillar-link" style="opacity:.5;">Active</span>
+          <div class="pillar-progress-wrap">
+            <span class="pillar-progress-label"><span class="status-dot" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span>IN BUILD · 28%</span>
+            <div class="pillar-progress"><div class="pillar-progress-fill" style="--progress: 28%;"></div></div>
+          </div>
         </div>
       </article>
 
