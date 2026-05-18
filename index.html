@@ -1686,6 +1686,25 @@
   .pillar.reveal:nth-child(2) { transition-delay: 80ms; }
   .pillar.reveal:nth-child(3) { transition-delay: 160ms; }
 
+  /* ─── SECTION FADE-UP ─────────────────────────────
+     Every <section> below the hero. Triggers via IntersectionObserver
+     at threshold 0.15. Stagger applied via inline transition-delay in JS
+     when multiple sections enter the viewport together. */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: opacity, transform;
+  }
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    will-change: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-up { opacity: 1; transform: none; }
+  }
+
   /* ─── RESPONSIVE ─────────────────────────────── */
   @media (min-width: 640px) {
     .stack-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -2118,7 +2137,7 @@
 </section>
 
 <!-- ─── THE STACK ─────────────────────────────── -->
-<section id="stack">
+<section id="stack" class="fade-up">
   <div class="container">
     <div class="section-header reveal">
       <div class="eyebrow">// THE STACK</div>
@@ -2176,7 +2195,7 @@
 </section>
 
 <!-- ─── WHY ─────────────────────────────── -->
-<section class="why" id="why">
+<section class="why fade-up" id="why">
   <div class="container why-inner reveal">
     <div class="eyebrow">// THE WHY</div>
     <p class="why-lead">AI100X is the command layer above your AI tools.</p>
@@ -2188,7 +2207,7 @@
 </section>
 
 <!-- ─── WEDGE ─────────────────────────────── -->
-<section id="wedge" class="wedge-section">
+<section id="wedge" class="wedge-section fade-up">
   <div class="container">
     <div class="wedge reveal">
       <div class="eyebrow">// LIVE PROOF</div>
@@ -2726,6 +2745,24 @@
     });
   }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
   reveals.forEach(r => io.observe(r));
+
+  // ── Section fade-up — opacity + translateY + scale on first viewport entry ──
+  (function() {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.fade-up').forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const fadeIo = new IntersectionObserver((entries) => {
+      // Stagger any group entering together by 80ms per index
+      const visible = entries.filter(e => e.isIntersecting);
+      visible.forEach((e, i) => {
+        if (i > 0) e.target.style.transitionDelay = (i * 80) + 'ms';
+        e.target.classList.add('in-view');
+        fadeIo.unobserve(e.target);
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeIo.observe(el));
+  })();
 
   // ── Command bar ⌘K ──
   (function() {
