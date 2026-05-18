@@ -276,6 +276,77 @@
     .status-left .pulse-dot::after { animation: none; }
   }
 
+  /* ─── PERIMETER PULSE ─────────────────────────────
+     A 2px cyan light traveling around the viewport edge on a 10s loop.
+     Four fixed pseudo-elements (one per edge); only one is visible at a time.
+     Uses compositor-only transforms — zero layout impact. */
+  .perimeter {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    contain: layout style;
+  }
+  .perim-light {
+    position: absolute;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px rgba(0, 212, 255, 0.9));
+    will-change: transform, opacity;
+  }
+  .perim-top {
+    top: 0; left: 0;
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #00D4FF 50%, transparent 100%);
+    transform: translateX(-80px);
+    animation: perim-top 10s linear infinite;
+  }
+  .perim-right {
+    top: 0; right: 0;
+    width: 2px; height: 80px;
+    background: linear-gradient(180deg, transparent 0%, #00D4FF 50%, transparent 100%);
+    transform: translateY(-80px);
+    animation: perim-right 10s linear infinite;
+  }
+  .perim-bottom {
+    bottom: 0; right: 0;
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #00D4FF 50%, transparent 100%);
+    transform: translateX(80px);
+    animation: perim-bottom 10s linear infinite;
+  }
+  .perim-left {
+    bottom: 0; left: 0;
+    width: 2px; height: 80px;
+    background: linear-gradient(180deg, transparent 0%, #00D4FF 50%, transparent 100%);
+    transform: translateY(80px);
+    animation: perim-left 10s linear infinite;
+  }
+  @keyframes perim-top {
+    0%           { opacity: 1; transform: translateX(-80px); }
+    25%          { opacity: 1; transform: translateX(100vw); }
+    25.01%, 100% { opacity: 0; transform: translateX(100vw); }
+  }
+  @keyframes perim-right {
+    0%, 25%      { opacity: 0; transform: translateY(-80px); }
+    25.01%       { opacity: 1; transform: translateY(-80px); }
+    50%          { opacity: 1; transform: translateY(100vh); }
+    50.01%, 100% { opacity: 0; transform: translateY(100vh); }
+  }
+  @keyframes perim-bottom {
+    0%, 50%      { opacity: 0; transform: translateX(80px); }
+    50.01%       { opacity: 1; transform: translateX(80px); }
+    75%          { opacity: 1; transform: translateX(-100vw); }
+    75.01%, 100% { opacity: 0; transform: translateX(-100vw); }
+  }
+  @keyframes perim-left {
+    0%, 75%      { opacity: 0; transform: translateY(80px); }
+    75.01%       { opacity: 1; transform: translateY(80px); }
+    100%         { opacity: 1; transform: translateY(-100vh); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .perimeter { display: none; }
+  }
+
   /* ─── SECTIONS ─────────────────────────────── */
   section { position: relative; padding: 112px 0; }
 
@@ -1828,6 +1899,14 @@
 </style>
 </head>
 <body>
+
+<!-- ─── PERIMETER PULSE — cyan light traveling viewport edges on 10s loop ─── -->
+<div class="perimeter" aria-hidden="true">
+  <span class="perim-light perim-top"></span>
+  <span class="perim-light perim-right"></span>
+  <span class="perim-light perim-bottom"></span>
+  <span class="perim-light perim-left"></span>
+</div>
 
 <div id="grid-points" aria-hidden="true"></div>
 
