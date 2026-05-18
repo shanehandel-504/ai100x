@@ -1980,6 +1980,44 @@
   }
   .microfooter a:hover { color: var(--cyan); }
   .microfooter .sep { color: var(--border); }
+
+  /* Cross-brand stack strip — sits ABOVE the microfooter copyright row.
+     SEO juice + brand network. AI100X is the active node, AVA + AI CHAUFFEUR
+     link out to siblings. */
+  .microfooter .stack-strip {
+    padding: 22px 0 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+  }
+  .microfooter .stack-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .microfooter .stack-links {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 12px;
+  }
+  .microfooter .stack-links a {
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+  .microfooter .stack-links a:hover { color: var(--cyan); }
+  .microfooter .stack-links a.active {
+    color: var(--cyan);
+    cursor: default;
+  }
+  .microfooter .stack-links .sep { color: var(--border); }
 </style>
 </head>
 <body>
@@ -2256,6 +2294,16 @@
 
 <!-- ─── MICRO FOOTER ─────────────────────────────── -->
 <footer class="microfooter">
+  <div class="stack-strip">
+    <div class="stack-eyebrow">// part of the stack</div>
+    <div class="stack-links">
+      <a href="https://aivoiceagency.ai" target="_blank" rel="noopener">AVA</a>
+      <span class="sep">·</span>
+      <a href="https://ai100x.ai" class="active" aria-current="page">AI100X</a>
+      <span class="sep">·</span>
+      <a href="https://aichauffeur.ai" target="_blank" rel="noopener">AI CHAUFFEUR</a>
+    </div>
+  </div>
   <div class="container">
     <span>© 2026 CIRCULANT SYSTEMS</span>
     <span class="sep">·</span>
