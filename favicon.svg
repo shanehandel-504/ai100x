@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" fill="#0A0A0F"/>
+  <rect x="1" y="1" width="62" height="62" fill="none" stroke="#00D4FF" stroke-opacity="0.35" stroke-width="1"/>
+  <g font-family="'Space Grotesk', system-ui, -apple-system, sans-serif" font-weight="700" fill="#00D4FF" text-anchor="middle">
+    <text x="32" y="44" font-size="32" letter-spacing="-2">100X</text>
+  </g>
+</svg>
