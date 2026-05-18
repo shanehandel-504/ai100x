@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI100X — The Operator's Cockpit | One AI Runs the Business</title>
-<meta name="description" content="AI100X is the command layer above your AI tools. Built by a 30-year operator for operators. AVA voice agent live now at 786-937-1218. Cockpit and OS shipping Q3 and Q4 2026.">
-<meta name="keywords" content="AI voice agent, operator cockpit, AI business operating system, AI receptionist, corporate transportation AI">
+<meta name="description" content="AI100X is the command layer above your AI tools. Built by a 30-year operator for operators. AVA voice agent live now at 786-937-1218. Cockpit and OS in active build.">
+<meta name="keywords" content="AI voice agent, operator cockpit, AI business operating system, AI receptionist">
 <link rel="canonical" href="https://ai100x.ai/">
 
 <!-- Open Graph -->
@@ -67,8 +67,8 @@
     --text-mute: #595B66;
     --cyan: #00D4FF;
     --cyan-hot: #00E5FF;
-    --magenta: #FF00D4;
-    --gold: #FFD400;
+    --magenta: rgba(0, 212, 255, 0.7);
+    --gold: rgba(0, 212, 255, 0.4);
     --border: #1F1F2E;
     --border-hot: #2A2A3E;
   }
@@ -325,19 +325,9 @@
   }
 
   .prism {
-    background: linear-gradient(90deg, #00D4FF 0%, #FF00D4 50%, #FFD400 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    animation: prism-shift 10s ease-in-out infinite;
-    filter: drop-shadow(0 0 40px rgba(255, 0, 212, 0.18));
-  }
-
-  @keyframes prism-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    color: #EEF0F4;
+    font-weight: 700;
+    letter-spacing: inherit;
   }
 
   .hero-subhead {
@@ -814,6 +804,49 @@
   }
   @keyframes caret { 50% { opacity: 0; } }
 
+  .actstream {
+    list-style: none;
+    margin: 0;
+    padding: 6px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 140px;
+  }
+  .actrow {
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(-6px);
+    animation: actrow-in .35s ease forwards;
+  }
+  .actdot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+    animation: actdot-pulse 1.8s ease-in-out infinite;
+  }
+  .acttext { letter-spacing: 0.01em; }
+  .actago {
+    color: var(--text-mute);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .actrow.leaving { animation: actrow-out .35s ease forwards; }
+  @keyframes actrow-in  { to { opacity: 1; transform: translateY(0); } }
+  @keyframes actrow-out { to { opacity: 0; transform: translateY(8px); } }
+  @keyframes actdot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
   .heartbeat {
     margin-top: 14px;
     padding: 12px 0 0;
@@ -927,14 +960,14 @@
                border-color: rgba(0, 212, 255, 0.22); }
   }
   @keyframes pillar-glow-magenta {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 212, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
-    50%      { box-shadow: 0 0 28px -4px rgba(255, 0, 212, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-               border-color: rgba(255, 0, 212, 0.22); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
+    50%      { box-shadow: 0 0 28px -4px rgba(0, 212, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+               border-color: rgba(0, 212, 255, 0.22); }
   }
   @keyframes pillar-glow-gold {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 212, 0, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
-    50%      { box-shadow: 0 0 28px -4px rgba(255, 212, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-               border-color: rgba(255, 212, 0, 0.22); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0),   inset 0 1px 0 rgba(255, 255, 255, 0.03); }
+    50%      { box-shadow: 0 0 28px -4px rgba(0, 212, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+               border-color: rgba(0, 212, 255, 0.18); }
   }
   @keyframes pillar-edge {
     0%, 100% { height: 2px; opacity: 0.75; }
@@ -1597,17 +1630,6 @@
         <a href="https://aivoiceagency.ai" class="btn btn-primary">Hear AVA Live →</a>
       </div>
 
-      <div class="vstrip" aria-label="Built for these operators">
-        <div class="vstrip-label">// BUILT FIRST FOR</div>
-        <div class="vstrip-pills">
-          <span class="vpill">Transportation</span>
-          <span class="vpill">Home Services</span>
-          <span class="vpill">Dispatch-heavy Operations</span>
-          <span class="vpill">Multi-location Service Businesses</span>
-        </div>
-        <div class="vstrip-sub">Operator-built for high-volume, phone-driven businesses</div>
-      </div>
-
       <div class="hero-credit">
         Built by <strong>Shane Handel</strong><span class="sep">·</span>30 years operator<span class="sep">·</span>Wisconsin-built
       </div>
@@ -1699,24 +1721,9 @@
         <div class="avacard">
           <div class="avacard-head">
             <span class="status-dot live" style="background: var(--cyan); width:6px; height:6px; border-radius:50%; box-shadow: 0 0 10px var(--cyan);"></span>
-            AVA · LIVE CALL
-            <span class="avacard-time" id="avacard-time">— now</span>
+            // LIVE ACTIVITY · LAST 60 SECONDS
           </div>
-          <div class="avacard-body">
-            <button class="avacard-play" id="avacard-play" type="button" aria-label="Play call recording">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.07v2.06c2.89.86 5 3.54 5 6.87s-2.11 6.01-5 6.87v2.06c4-.91 7-4.49 7-8.93s-3-8.02-7-8.93z"/>
-              </svg>
-            </button>
-            <svg class="avacard-wave" viewBox="0 0 28 40" preserveAspectRatio="none" aria-hidden="true">
-              <rect class="wave-bar" x="2"  y="14" width="3" height="12" style="animation-delay:-0.1s"/>
-              <rect class="wave-bar" x="9"  y="14" width="3" height="12" style="animation-delay:-0.3s"/>
-              <rect class="wave-bar" x="16" y="14" width="3" height="12" style="animation-delay:-0.5s"/>
-              <rect class="wave-bar" x="23" y="14" width="3" height="12" style="animation-delay:-0.7s"/>
-            </svg>
-            <p class="avacard-text" id="avacard-text"></p>
-            <audio id="ava-audio" preload="none"></audio>
-          </div>
+          <ul class="actstream" id="actstream" aria-live="polite" aria-label="Live activity stream"></ul>
         </div>
 
         <div class="heartbeat">
@@ -1759,18 +1766,18 @@
         <p class="pillar-body">Tracks every dollar. Routes every metric. Real-time pulse on your whole business — one screen.</p>
         <div class="pillar-readout">ONE SCREEN · EVERY METRIC</div>
         <div class="pillar-footer">
-          <div class="pillar-status"><span class="status-dot"></span> Shipping Q3 2026</div>
-          <span class="pillar-link" style="opacity:.5;">In dev</span>
+          <div class="pillar-status"><span class="status-dot"></span> IN ACTIVE BUILD</div>
+          <span class="pillar-link" style="opacity:.5;">Active</span>
         </div>
       </article>
 
       <article class="pillar gold reveal">
         <div class="pillar-label">// THE OS — OPERATING SYSTEM</div>
         <p class="pillar-body">Everything connected. Voice, sales, calendar, CRM, reporting. One AI runs the entire business.</p>
-        <div class="pillar-readout">Full Stack · Q4 2026</div>
+        <div class="pillar-readout">STAGED</div>
         <div class="pillar-footer">
           <div class="pillar-status"><span class="status-dot"></span> In Build</div>
-          <span class="pillar-link" style="opacity:.5;">In dev</span>
+          <span class="pillar-link" style="opacity:.5;">Active</span>
         </div>
       </article>
 
@@ -1891,7 +1898,7 @@
       'AVA · Caller intent captured',
       'COCKPIT · Intake event received',
       'OS · Routing layer queued',
-      'AI100X · Coming Q3 2026'
+      'AI100X · IN PREVIEW'
     ];
     let i = 0;
     text.textContent = lines[i];
@@ -1905,77 +1912,92 @@
     }, 4000);
   })();
 
-  // ── AVA transcript card (8 calls, types out, fades out, rotates) ──
-  const transcriptLines = [
-    '"This is AVA. Pickup or one-way?" → "Round trip, downtown to Scottsdale." → Routed. 24s.',
-    '"AI Voice Agency, this is AVA — where you headed?" → "PHX, 6am Tuesday." → Quote sent. 38s.',
-    '"AVA here. What time do you need the car?" → "Friday 6:30pm, four passengers." → Booked. 19s.',
-    '"AVA. What vehicle size do you need?" → "Sprinter van, eight people, airport run." → Routed. 22s.',
-    '"This is AVA. How can I help?" → "I need a quote for a Wednesday wedding shuttle." → Quote queued. 31s.',
-    '"AI Voice Agency. Where are you headed?" → "JFK pickup Monday at 5am, two passengers." → Confirmed. 17s.',
-    '"AVA here. What’s the pickup address?" → "1200 Brickell, going to Miami Beach hotel." → Booked. 14s.',
-    '"AVA. One-way or round trip?" → "Corporate roadshow, three stops, Thursday." → Routed to ops. 41s.'
-  ];
-  const cardText = document.getElementById('avacard-text');
-  const HOLD_MS = 7500;   // V8: ~12s per call total (type ~3s + hold 7.5s + fade .4s + reset)
-  const FADE_MS = 400;
-  const TYPE_MS = 22;
-  let lineIdx = 0;
-  let cycleActive = false;
-  let typingId = null;
-  window.__avaLineIdx = () => lineIdx;
-
-  function typeLine(s, done) {
-    if (!cardText) return;
-    if (typingId) { clearInterval(typingId); typingId = null; }
-    cardText.textContent = '';
-    let i = 0;
-    typingId = setInterval(() => {
-      if (!cycleActive) { clearInterval(typingId); typingId = null; return; }
-      cardText.textContent += s[i++] || '';
-      if (i >= s.length) { clearInterval(typingId); typingId = null; done && done(); }
-    }, TYPE_MS);
-  }
-  function cycleTranscript() {
-    if (!cycleActive || !cardText) return;
-    cardText.style.opacity = '1';
-    typeLine(transcriptLines[lineIdx], () => {
-      if (!cycleActive) return;
-      setTimeout(() => {
-        if (!cycleActive) return;
-        cardText.style.opacity = '0';
-        setTimeout(() => {
-          if (!cycleActive) return;
-          lineIdx = (lineIdx + 1) % transcriptLines.length;
-          cycleTranscript();
-        }, FADE_MS);
-      }, HOLD_MS);
+  // ── Live activity stream: 5 rolling rows, new event every 4s ──
+  (function() {
+    const list = document.getElementById('actstream');
+    if (!list) return;
+    const EVENTS = [
+      'Lead captured · routed to CRM',
+      'Quote sent via SMS',
+      'Calendar event created',
+      'Missed call rescued · voicemail transcribed',
+      'Inbound captured · qualifying',
+      'Follow-up SMS queued',
+      'Pricing inquiry · quote auto-routed',
+      'After-hours call · routed',
+      'Lead profile enriched · CRM updated',
+      'Sales call scheduled',
+      'Voicemail captured · transcribed',
+      'Web form lead · contact created'
+    ];
+    const MAX_ROWS = 5;
+    const TICK_MS = 1000;
+    const SPAWN_MS = 4000;
+    let bag = [];
+    function nextEvent() {
+      if (bag.length === 0) bag = EVENTS.slice().sort(() => Math.random() - 0.5);
+      return bag.pop();
+    }
+    function agoText(s) { return s < 1 ? 'NOW' : s + 's ago'; }
+    function makeRow(text, bornAt) {
+      const li = document.createElement('li');
+      li.className = 'actrow';
+      li.dataset.born = String(bornAt);
+      const dot = document.createElement('span'); dot.className = 'actdot';
+      const txt = document.createElement('span'); txt.className = 'acttext'; txt.textContent = text;
+      const ago = document.createElement('span'); ago.className = 'actago'; ago.textContent = 'NOW';
+      li.appendChild(dot); li.appendChild(txt); li.appendChild(ago);
+      return li;
+    }
+    function spawn() {
+      const row = makeRow(nextEvent(), Date.now());
+      list.insertBefore(row, list.firstChild);
+      while (list.children.length > MAX_ROWS) {
+        const oldRow = list.lastElementChild;
+        if (oldRow.classList.contains('leaving')) { oldRow.remove(); continue; }
+        oldRow.classList.add('leaving');
+        setTimeout(() => oldRow.remove(), 350);
+        break;
+      }
+    }
+    function refreshAgo() {
+      const now = Date.now();
+      Array.from(list.children).forEach((li) => {
+        const born = Number(li.dataset.born || now);
+        const s = Math.floor((now - born) / 1000);
+        const tag = li.querySelector('.actago');
+        if (tag) tag.textContent = agoText(s);
+      });
+    }
+    // seed with 5 rows back-dated so timestamps read believably on first paint
+    const seedNow = Date.now();
+    for (let i = MAX_ROWS - 1; i >= 0; i--) {
+      list.appendChild(makeRow(nextEvent(), seedNow - i * SPAWN_MS));
+    }
+    refreshAgo();
+    let spawnId = null, agoId = null;
+    function start() {
+      if (spawnId == null) spawnId = setInterval(spawn, SPAWN_MS);
+      if (agoId == null) agoId = setInterval(refreshAgo, TICK_MS);
+    }
+    function stop() {
+      if (spawnId != null) { clearInterval(spawnId); spawnId = null; }
+      if (agoId != null) { clearInterval(agoId); agoId = null; }
+    }
+    start();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop(); else start();
     });
-  }
-  function startTranscript() {
-    if (cycleActive) return;
-    cycleActive = true;
-    cycleTranscript();
-  }
-  function stopTranscript() {
-    cycleActive = false;
-    if (typingId) { clearInterval(typingId); typingId = null; }
-  }
+  })();
 
-  // ── Visibility gate: pause transcript + CSS animations when dashboard scrolls out ──
+  // ── Cockpit viewport gate: pause wave-bar CSS animations when scrolled out ──
   (function() {
     const cockpitEl = document.querySelector('.cockpit');
-    if (!cockpitEl) { startTranscript(); return; }
-    if (!('IntersectionObserver' in window)) { startTranscript(); return; }
+    if (!cockpitEl) return;
+    if (!('IntersectionObserver' in window)) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          cockpitEl.classList.remove('paused');
-          startTranscript();
-        } else {
-          cockpitEl.classList.add('paused');
-          stopTranscript();
-        }
+        cockpitEl.classList.toggle('paused', !e.isIntersecting);
       });
     }, { threshold: 0.1 });
     io.observe(cockpitEl);
@@ -2165,34 +2187,6 @@
     e.preventDefault();
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-
-  // ── AVA transcript audio playback ──
-  //   Plays /audio/ava-call-{1..8}.mp3 matching the current
-  //   transcript line. V8: silent-fail to the user on missing
-  //   audio files (Shane uploads via ElevenLabs separately) but
-  //   logs a console.warn so a missing file is visible in DevTools.
-  (function() {
-    const btn = document.getElementById('avacard-play');
-    const audio = document.getElementById('ava-audio');
-    if (!btn || !audio) return;
-    const stopPulse = () => btn.classList.remove('playing');
-    audio.addEventListener('ended', stopPulse);
-    audio.addEventListener('pause', stopPulse);
-    audio.addEventListener('error', () => {
-      stopPulse();
-      console.warn('[AVA audio] file missing or failed to load:', audio.currentSrc || audio.src);
-    });
-    btn.addEventListener('click', () => {
-      if (!audio.paused) { audio.pause(); return; }
-      const n = (window.__avaLineIdx ? window.__avaLineIdx() : 0) + 1;
-      audio.src = `/audio/ava-call-${n}.mp3`;
-      btn.classList.add('playing');
-      audio.play().catch((err) => {
-        stopPulse();
-        console.warn('[AVA audio] play() rejected for ava-call-' + n + '.mp3:', err && err.name);
-      });
-    });
-  })();
 
   // ── Quick Lookup slide-up (K launcher) ──
   (function() {
