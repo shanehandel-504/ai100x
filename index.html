@@ -901,9 +901,10 @@
     line-height: 1.5;
   }
 
-  /* ─── OPERATOR TILES (live counters under hero) ─────────────────────────────── */
+  /* ─── OPERATOR TILES (live counters, top of page) ─────────────────────────────── */
   .ops-strip {
-    padding: 64px 0 24px;
+    padding: 20px 0 12px;
+    border-bottom: 1px solid var(--border);
   }
   .ops-strip .ops-eyebrow {
     font-family: 'JetBrains Mono', monospace;
@@ -911,7 +912,7 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--cyan);
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -921,6 +922,7 @@
     background: var(--cyan);
     box-shadow: 0 0 10px var(--cyan);
     animation: ops-pulse 1.8s ease-in-out infinite;
+    will-change: opacity, transform;
   }
   @keyframes ops-pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
@@ -929,33 +931,27 @@
   .ops-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 8px;
   }
   @media (min-width: 640px) {
-    .ops-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .ops-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
   }
-  @media (min-width: 1000px) {
-    .ops-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 14px; }
+  @media (min-width: 1100px) {
+    .ops-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px; }
   }
   .ops-tile {
     position: relative;
-    padding: 14px 14px 12px;
+    padding: 12px 12px 11px;
     background: linear-gradient(180deg, rgba(13, 13, 20, 0.85) 0%, rgba(8, 8, 14, 0.92) 100%);
     border: 1px solid var(--border);
+    border-top: 1px solid rgba(0, 212, 255, 0.35);
     overflow: hidden;
     transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
     contain: layout style;
   }
-  .ops-tile::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--cyan) 50%, transparent 100%);
-    opacity: 0.35;
-  }
   .ops-tile:hover {
     border-color: rgba(0, 212, 255, 0.4);
+    border-top-color: rgba(0, 212, 255, 0.7);
     box-shadow: inset 0 0 24px -8px rgba(0, 212, 255, 0.35), 0 0 0 1px rgba(0, 212, 255, 0.15);
     transform: translateY(-1px);
   }
@@ -965,52 +961,38 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-mute);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .ops-tile-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 26px;
+    font-size: 24px;
     line-height: 1;
-    color: var(--text);
+    color: var(--cyan);
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.01em;
     display: flex;
     align-items: baseline;
-    gap: 6px;
-    min-height: 26px;
+    gap: 5px;
+    min-height: 24px;
+    transition: color 0.05s linear, text-shadow 0.05s linear;
+  }
+  .ops-tile-value.flash {
+    color: var(--cyan-hot);
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.85), 0 0 22px rgba(0, 229, 255, 0.45);
   }
   .ops-tile-value .ops-sub {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-mute);
     font-weight: 400;
-  }
-  .ops-tile-bump {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--cyan);
-    opacity: 0;
-    transform: translateY(4px);
-    pointer-events: none;
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
-  }
-  .ops-tile-bump.show {
-    animation: ops-bump 1.1s ease-out forwards;
-  }
-  @keyframes ops-bump {
-    0%   { opacity: 0; transform: translateY(4px); }
-    20%  { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-10px); }
+    letter-spacing: 0;
   }
   @media (prefers-reduced-motion: reduce) {
-    .ops-strip .ops-dot,
-    .ops-tile-bump.show { animation: none; }
+    .ops-strip .ops-dot { animation: none; }
+    .ops-tile-value.flash { transition: none; }
   }
 
   .stack-grid {
@@ -1811,6 +1793,47 @@
 
 <main>
 
+<!-- ─── LIVE OPERATOR TICKER (top of page) ─────────────────────────────── -->
+<section class="ops-strip" aria-label="Live operator activity">
+  <div class="container">
+    <div class="ops-eyebrow"><span class="ops-dot" aria-hidden="true"></span> // LIVE · OPERATOR ACTIVITY</div>
+    <div class="ops-grid" id="ops-grid">
+      <div class="ops-tile" data-key="leads">
+        <div class="ops-tile-label">LEADS TODAY</div>
+        <div class="ops-tile-value" data-value="leads">23</div>
+      </div>
+      <div class="ops-tile" data-key="calls">
+        <div class="ops-tile-label">CALLS TODAY</div>
+        <div class="ops-tile-value" data-value="calls">47</div>
+      </div>
+      <div class="ops-tile" data-key="emails">
+        <div class="ops-tile-label">EMAILS SENT</div>
+        <div class="ops-tile-value" data-value="emails">184</div>
+      </div>
+      <div class="ops-tile" data-key="booked">
+        <div class="ops-tile-label">BOOKED TODAY</div>
+        <div class="ops-tile-value" data-value="booked">8</div>
+      </div>
+      <div class="ops-tile" data-key="quotes">
+        <div class="ops-tile-label">QUOTES OUT</div>
+        <div class="ops-tile-value" data-value="quotes">31</div>
+      </div>
+      <div class="ops-tile" data-key="campaigns">
+        <div class="ops-tile-label">ACTIVE CAMPAIGNS</div>
+        <div class="ops-tile-value">3<span class="ops-sub">/ 12</span></div>
+      </div>
+      <div class="ops-tile" data-key="tasks">
+        <div class="ops-tile-label">TASKS PENDING</div>
+        <div class="ops-tile-value" data-value="tasks">14</div>
+      </div>
+      <div class="ops-tile" data-key="calllist">
+        <div class="ops-tile-label">CALL LIST TODAY</div>
+        <div class="ops-tile-value">26<span class="ops-sub">/ 47</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ─── HERO ─────────────────────────────── -->
 <section class="hero">
   <div class="hero-scan" aria-hidden="true"></div>
@@ -1882,33 +1905,6 @@
           </svg>
         </div>
 
-        <div class="telemetry">
-          <div class="tile tile-cyan">
-            <div class="tile-label">Voice</div>
-            <div class="tile-value tile-state">ONLINE</div>
-          </div>
-          <div class="tile tile-magenta">
-            <div class="tile-label">Cockpit</div>
-            <div class="tile-value tile-state">ARMING</div>
-          </div>
-          <div class="tile tile-gold">
-            <div class="tile-label">OS</div>
-            <div class="tile-value tile-state">QUEUED</div>
-          </div>
-        </div>
-
-        <div class="route-map" aria-hidden="true">
-          <div class="route-node voice">VOICE</div>
-          <div class="route-track">
-            <span class="packet packet-cyan"></span>
-          </div>
-          <div class="route-node cockpit">COCKPIT</div>
-          <div class="route-track">
-            <span class="packet packet-gold"></span>
-          </div>
-          <div class="route-node os">OS</div>
-        </div>
-
         <div class="ticker">
           <div class="ticker-display" id="ticker-display">
             <span class="arrow">→</span>
@@ -1935,50 +1931,6 @@
       </div>
     </div>
 
-  </div>
-</section>
-
-<!-- ─── OPERATOR TILES (live counters) ─────────────────────────────── -->
-<section class="ops-strip" aria-label="Live operator activity">
-  <div class="container">
-    <div class="ops-eyebrow"><span class="ops-dot" aria-hidden="true"></span> // LIVE · OPERATOR ACTIVITY</div>
-    <div class="ops-grid" id="ops-grid">
-      <div class="ops-tile" data-key="leads">
-        <div class="ops-tile-bump" data-for="leads"></div>
-        <div class="ops-tile-label">Leads today</div>
-        <div class="ops-tile-value" data-value="leads">0</div>
-      </div>
-      <div class="ops-tile" data-key="calls">
-        <div class="ops-tile-bump" data-for="calls"></div>
-        <div class="ops-tile-label">Calls today</div>
-        <div class="ops-tile-value" data-value="calls">0</div>
-      </div>
-      <div class="ops-tile" data-key="emails">
-        <div class="ops-tile-bump" data-for="emails"></div>
-        <div class="ops-tile-label">Emails sent</div>
-        <div class="ops-tile-value" data-value="emails">0</div>
-      </div>
-      <div class="ops-tile" data-key="campaigns">
-        <div class="ops-tile-bump" data-for="campaigns"></div>
-        <div class="ops-tile-label">Active campaigns</div>
-        <div class="ops-tile-value"><span data-value="campaigns">3</span><span class="ops-sub">/ 12</span></div>
-      </div>
-      <div class="ops-tile" data-key="tasks">
-        <div class="ops-tile-bump" data-for="tasks"></div>
-        <div class="ops-tile-label">CRM tasks pending</div>
-        <div class="ops-tile-value" data-value="tasks">14</div>
-      </div>
-      <div class="ops-tile" data-key="calllist">
-        <div class="ops-tile-bump" data-for="calllist"></div>
-        <div class="ops-tile-label">Today's call list</div>
-        <div class="ops-tile-value" data-value="calllist">23</div>
-      </div>
-      <div class="ops-tile" data-key="quotes">
-        <div class="ops-tile-bump" data-for="quotes"></div>
-        <div class="ops-tile-label">Quotes out</div>
-        <div class="ops-tile-value" data-value="quotes">18</div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -2245,56 +2197,78 @@
     });
   })();
 
-  // ── Operator tiles: live counters with +1/+2 bumps every ~4s ──
+  // ── Operator tiles: per-tile schedulers, cyan flash on change ──
   (function() {
     const grid = document.getElementById('ops-grid');
     if (!grid) return;
-    // Each counter: starting val, ceiling, step weights {by: weight}
-    const counters = {
-      leads:     { v: 0,  cap: 47,  steps: [[1, 3], [2, 1]] },
-      calls:     { v: 0,  cap: 128, steps: [[1, 2], [2, 2], [3, 1]] },
-      emails:    { v: 0,  cap: 92,  steps: [[1, 3], [2, 1]] },
-      campaigns: { v: 3,  cap: 12,  steps: [[0, 9], [1, 1]] },
-      tasks:     { v: 14, cap: 32,  steps: [[0, 4], [1, 3], [-1, 2]] },
-      calllist:  { v: 23, cap: 48,  steps: [[0, 4], [1, 3], [-1, 2]] },
-      quotes:    { v: 18, cap: 38,  steps: [[0, 4], [1, 2], [2, 1]] }
+    const rand = (lo, hi) => lo + Math.random() * (hi - lo);
+    const tiles = {
+      leads:    { v: 23,  delta: () => 1,                              minMs: 6000,  maxMs: 9000  },
+      calls:    { v: 47,  delta: () => 1,                              minMs: 2000,  maxMs: 4000  },
+      emails:   { v: 184, delta: () => 1 + Math.floor(Math.random()*3),minMs: 3000,  maxMs: 5000  },
+      booked:   { v: 8,   delta: () => 1,                              minMs: 25000, maxMs: 40000 },
+      quotes:   { v: 31,  delta: () => 1,                              minMs: 8000,  maxMs: 12000 },
+      tasks:    { v: 14,  floor: 8, ceil: 22,
+                  schedulers: [
+                    { delta: -1, minMs: 15000, maxMs: 25000 },
+                    { delta:  1, minMs: 20000, maxMs: 35000 }
+                  ] }
     };
+    const els = {};
+    Object.keys(tiles).forEach(k => {
+      els[k] = grid.querySelector('[data-value="' + k + '"]');
+    });
+    function flash(el) {
+      if (!el) return;
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+      setTimeout(() => el.classList.remove('flash'), 400);
+    }
     function paint(key) {
-      const c = counters[key];
-      const el = grid.querySelector('[data-value="' + key + '"]');
-      if (el) el.textContent = String(c.v);
+      const t = tiles[key];
+      const el = els[key];
+      if (!el) return;
+      el.textContent = String(t.v);
+      flash(el);
     }
-    function pickStep(arr) {
-      const total = arr.reduce((a, s) => a + s[1], 0);
-      let r = Math.random() * total;
-      for (const [val, w] of arr) { r -= w; if (r <= 0) return val; }
-      return arr[0][0];
+    let timers = [];
+    let stopped = false;
+    function schedule(fn, minMs, maxMs) {
+      if (stopped) return;
+      const id = setTimeout(() => {
+        fn();
+        schedule(fn, minMs, maxMs);
+      }, rand(minMs, maxMs));
+      timers.push(id);
     }
-    function bumpFor(key, delta) {
-      if (delta === 0) return;
-      const b = grid.querySelector('.ops-tile-bump[data-for="' + key + '"]');
-      if (!b) return;
-      b.textContent = (delta > 0 ? '+' : '') + delta;
-      b.classList.remove('show');
-      void b.offsetWidth;
-      b.classList.add('show');
+    function startTile(key) {
+      const t = tiles[key];
+      if (t.schedulers) {
+        t.schedulers.forEach(s => {
+          schedule(() => {
+            const next = t.v + s.delta;
+            if (next < t.floor || next > t.ceil) return;
+            t.v = next;
+            paint(key);
+          }, s.minMs, s.maxMs);
+        });
+      } else {
+        schedule(() => {
+          t.v += t.delta();
+          paint(key);
+        }, t.minMs, t.maxMs);
+      }
     }
-    Object.keys(counters).forEach(paint);
-    let intId = null;
-    function tickOne() {
-      const keys = Object.keys(counters);
-      const key = keys[Math.floor(Math.random() * keys.length)];
-      const c = counters[key];
-      const delta = pickStep(c.steps);
-      if (delta === 0) return;
-      const next = Math.max(0, Math.min(c.cap, c.v + delta));
-      const applied = next - c.v;
-      c.v = next;
-      paint(key);
-      bumpFor(key, applied);
+    function start() {
+      stopped = false;
+      Object.keys(tiles).forEach(startTile);
     }
-    function start() { if (intId == null) intId = setInterval(tickOne, 4000); }
-    function stop()  { if (intId != null) { clearInterval(intId); intId = null; } }
+    function stop() {
+      stopped = true;
+      timers.forEach(clearTimeout);
+      timers = [];
+    }
     start();
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stop(); else start();
