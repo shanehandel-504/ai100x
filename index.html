@@ -344,12 +344,39 @@
     letter-spacing: -0.055em;
     font-weight: 700;
     margin-bottom: 32px;
+    /* Holographic shimmer — thin cyan-edged white band sweeps diagonally every 4s. */
+    background-image: linear-gradient(
+      115deg,
+      #EEF0F4 0%,
+      #EEF0F4 38%,
+      rgba(0, 212, 255, 0.55) 47%,
+      #FFFFFF 50%,
+      rgba(0, 212, 255, 0.55) 53%,
+      #EEF0F4 62%,
+      #EEF0F4 100%
+    );
+    background-size: 250% 100%;
+    background-position: 200% 50%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: holo-shimmer 4s linear infinite;
+    will-change: background-position;
+  }
+  @keyframes holo-shimmer {
+    0%   { background-position: 200% 50%; }
+    100% { background-position: -100% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-headline { animation: none; background-position: 50% 50%; }
   }
 
   .prism {
-    color: #EEF0F4;
     font-weight: 700;
     letter-spacing: inherit;
+    /* inherits the gradient from .hero-headline via background-clip: text */
   }
 
   .hero-subhead {
