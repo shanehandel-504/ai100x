@@ -1708,6 +1708,9 @@
     .status-inner { font-size: 10px; letter-spacing: 0.12em; }
     .status-bar .right-meta { display: none; }
     .hero { padding-top: 32px; padding-bottom: 64px; }
+    /* Mobile: Signal Router HUD lifts ABOVE the AI100X wordmark.
+       Grid items default to order:0; cockpit → -1 puts it first. Desktop unchanged. */
+    .hero-grid .cockpit { order: -1; margin-bottom: 8px; }
   }
 
   .right-meta { transition: opacity 0.2s ease; }
